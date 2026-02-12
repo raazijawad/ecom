@@ -31,7 +31,7 @@ class SignInController extends Controller
             'password' => $credentials['password'],
         ], $credentials['remember'] ?? false)) {
             return back()->withErrors([
-                'login' => 'The provided credentials are incorrect.',
+                'email' => 'The provided credentials are incorrect.',
             ])->onlyInput('email');
         }
 
