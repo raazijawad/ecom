@@ -150,7 +150,7 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 <section className="mb-10">
                     <h2 className="mb-4 text-xl font-semibold">Shop by collection</h2>
                     <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                        {categories.slice(0, 8).map((category) => (
+                        {categories.map((category) => (
                             <article key={category.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                                 <p className="text-xs font-semibold tracking-wide text-blue-600 uppercase">Collection</p>
                                 <h3 className="mt-2 text-lg font-semibold text-slate-900">{category.name}</h3>
@@ -158,7 +158,7 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                     {category.description || `Explore best-selling ${category.name.toLowerCase()} built for every step.`}
                                 </p>
                                 <button
-                                    onClick={() => search.setData('category', category.slug)}
+                                    onClick={() => router.get('/', { ...search.data, category: category.slug }, { preserveState: true, replace: true })}
                                     className="mt-4 rounded bg-slate-900 px-3 py-2 text-sm font-semibold text-white"
                                 >
                                     Shop now
