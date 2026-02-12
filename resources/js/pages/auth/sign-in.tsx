@@ -21,12 +21,12 @@ export default function SignIn() {
 
     const submitLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        loginForm.post(route('sign-in.login'));
+        loginForm.post('/sign-in');
     };
 
     const submitRegister = (e: React.FormEvent) => {
         e.preventDefault();
-        registerForm.post(route('sign-up.register'));
+        registerForm.post('/sign-up');
     };
 
     return (
@@ -69,7 +69,6 @@ export default function SignIn() {
 
                     {mode === 'login' ? (
                         <form onSubmit={submitLogin} className="space-y-4">
-                            {loginForm.errors.login && <p className="text-sm text-red-600">{loginForm.errors.login}</p>}
 
                             <div>
                                 <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
