@@ -50,23 +50,78 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
-            <section className="mb-8 rounded-2xl bg-gradient-to-r from-slate-900 to-blue-900 px-6 py-10 text-white">
-                <h1 className="text-3xl font-bold">SoleStyle Shoe Shop</h1>
-                <p className="mt-2 max-w-2xl text-slate-200">Discover running, casual, basketball, and hiking shoes with fast delivery and easy checkout.</p>
-            </section>
-
-            <section className="relative mb-8 overflow-hidden rounded-2xl bg-slate-950 px-6 py-12 text-white">
-                <p className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl font-black tracking-[0.35em] text-white/10 sm:text-7xl md:text-8xl">
-                    SOLESTYLE
-                </p>
-                <div className="relative z-10 flex flex-col items-center gap-4">
-                    <img
-                        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80"
-                        alt="Red athletic sneaker"
-                        className="h-52 w-full max-w-3xl rounded-2xl object-cover shadow-2xl shadow-slate-900/70"
-                    />
-                    <p className="text-sm text-slate-300">Step into comfort, performance, and street-ready style.</p>
+            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-[#f4f5f7] px-6 py-10 lg:px-10 lg:py-14">
+                <div className="pointer-events-none absolute inset-0 opacity-60">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.1),transparent_38%),radial-gradient(circle_at_80%_75%,rgba(15,23,42,0.1),transparent_36%)]" />
+                    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M-20 150C150 80 260 220 430 150C600 80 710 220 880 150C1020 95 1110 120 1220 170"
+                            stroke="#cfd8e3"
+                            strokeWidth="1.2"
+                        />
+                        <path
+                            d="M-10 240C160 170 270 310 440 240C610 170 720 310 890 240C1030 185 1120 210 1230 260"
+                            stroke="#d6dee8"
+                            strokeWidth="1.2"
+                        />
+                        <path
+                            d="M0 330C170 260 280 400 450 330C620 260 730 400 900 330C1040 275 1130 300 1240 350"
+                            stroke="#dce3ec"
+                            strokeWidth="1.2"
+                        />
+                    </svg>
                 </div>
+
+                <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
+                    <div>
+                        <p className="text-sm font-medium tracking-wide text-slate-500">Skip the Impossible.</p>
+                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                            Extraordinary Performance
+                        </h1>
+                        <p className="mt-4 max-w-lg text-slate-600">
+                            Engineered for speed and comfort, AERO Step performance sneakers blend responsive cushioning with minimalist style.
+                        </p>
+
+                        <div className="mt-8 flex flex-wrap items-center gap-3">
+                            <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
+                                Purchase Now
+                            </button>
+                            <button className="inline-flex items-center gap-2 rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white">
+                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">
+                                    ▶
+                                </span>
+                                Watch Video
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="relative flex min-h-[280px] items-center justify-center lg:min-h-[360px]">
+                        <img
+                            src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1200&q=80"
+                            alt="AERO Step performance sneaker side profile"
+                            className="absolute right-0 bottom-0 h-52 w-[88%] max-w-lg rotate-[-9deg] rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-64"
+                        />
+                        <img
+                            src="https://images.unsplash.com/photo-1597248881519-db089d3744a5?auto=format&fit=crop&w=900&q=80"
+                            alt="AERO Step performance sneaker heel and mesh texture"
+                            className="absolute top-0 left-6 h-44 w-[70%] max-w-sm rotate-[8deg] rounded-2xl border border-slate-100 object-cover shadow-xl shadow-slate-500/20 saturate-50 lg:h-52"
+                        />
+                    </div>
+                </div>
+
+                <aside className="absolute top-1/2 right-3 hidden -translate-y-1/2 flex-col items-center gap-3 lg:flex">
+                    <a href="#" className="rounded-full border border-slate-300 bg-white p-2 text-xs font-semibold text-slate-500">
+                        in
+                    </a>
+                    <a href="#" className="rounded-full border border-slate-300 bg-white p-2 text-xs font-semibold text-slate-500">
+                        ig
+                    </a>
+                    <a href="#" className="rounded-full border border-slate-300 bg-white p-2 text-xs font-semibold text-slate-500">
+                        yt
+                    </a>
+                </aside>
+
+                <p className="absolute right-4 bottom-4 text-[11px] font-semibold tracking-[0.3em] text-slate-500 uppercase">Scroll Down</p>
             </section>
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
@@ -125,7 +180,10 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="font-bold">${Number(product.price).toFixed(2)}</span>
-                                    <button onClick={() => addToCart(product.id)} className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white">
+                                    <button
+                                        onClick={() => addToCart(product.id)}
+                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                    >
                                         Add
                                     </button>
                                 </div>
@@ -146,7 +204,10 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="font-bold">${Number(product.price).toFixed(2)}</span>
-                                    <button onClick={() => addToCart(product.id)} className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white">
+                                    <button
+                                        onClick={() => addToCart(product.id)}
+                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                    >
                                         Add
                                     </button>
                                 </div>
@@ -167,7 +228,10 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="font-bold">${Number(product.price).toFixed(2)}</span>
-                                    <button onClick={() => addToCart(product.id)} className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white">
+                                    <button
+                                        onClick={() => addToCart(product.id)}
+                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                    >
                                         Add
                                     </button>
                                 </div>
@@ -213,9 +277,7 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
             <section className="mb-10 rounded-2xl bg-slate-900 p-6 text-white">
                 <h2 className="text-xl font-semibold">SoleStyle Newsletter</h2>
-                <p className="mt-2 max-w-2xl text-sm text-slate-300">
-                    Get alerts on limited releases, runner picks, and member-only discounts.
-                </p>
+                <p className="mt-2 max-w-2xl text-sm text-slate-300">Get alerts on limited releases, runner picks, and member-only discounts.</p>
                 <form className="mt-4 flex flex-col gap-3 sm:flex-row">
                     <input
                         type="email"
@@ -241,7 +303,10 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                     <Link href={`/products/${product.id}`} className="rounded border border-slate-300 px-3 py-2 text-sm">
                                         View
                                     </Link>
-                                    <button onClick={() => addToCart(product.id)} className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white">
+                                    <button
+                                        onClick={() => addToCart(product.id)}
+                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                    >
                                         Add
                                     </button>
                                 </div>
