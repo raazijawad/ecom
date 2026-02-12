@@ -1,5 +1,6 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import type { PropsWithChildren } from 'react';
+import { useState } from 'react';
 import type { Auth } from '@/types/auth';
 import type { CartSummary } from '@/types/shop';
 
@@ -19,6 +20,7 @@ type SharedProps = {
 
 export default function ShopLayout({ title, cartSummary, children }: Props) {
     const { auth, collections } = usePage<SharedProps>().props;
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
         <>
@@ -66,6 +68,17 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                         </nav>
 
                         <div className="flex items-center gap-3">
+                            <button
+                                type="button"
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-900 transition hover:border-slate-400 md:hidden"
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                aria-label="Open menu"
+                            >
+                                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                    <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+
                             {auth.user ? (
                                 <button
                                     type="button"
@@ -82,7 +95,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
 
                             <button
                                 type="button"
-                                className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+                                className="hidden rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 md:inline-flex"
                             >
                                 Contact Us
                             </button>
@@ -106,6 +119,65 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                         </div>
                     </div>
                 </header>
+
+                {isMobileMenuOpen ? (
+                    <div className="fixed inset-0 z-[60] md:hidden" role="dialog" aria-modal="true">
+                        <button
+                            type="button"
+                            className="absolute inset-0 bg-slate-950/35"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            aria-label="Close menu"
+                        />
+                        <aside className="absolute right-0 top-0 h-full w-72 bg-white p-5 shadow-2xl">
+                            <div className="mb-6 flex items-center justify-between">
+                                <span className="text-sm font-semibold uppercase tracking-wide text-slate-500">Menu</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 text-slate-700"
+                                    aria-label="Close menu"
+                                >
+                                    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                        <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <nav className="space-y-4 text-sm font-medium text-slate-700">
+                                <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                    Home
+                                </Link>
+                                <div className="space-y-2">
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Collections</p>
+                                    {collections.length > 0 ? (
+                                        collections.map((collection) => (
+                                            <Link
+                                                key={collection.id}
+                                                href={`/collections/${collection.slug}`}
+                                                className="block rounded-md px-2 py-1"
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                            >
+                                                {collection.name}
+                                            </Link>
+                                        ))
+                                    ) : (
+                                        <span className="block px-2 py-1 text-slate-500">No collections found</span>
+                                    )}
+                                </div>
+                                <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                    Shoes
+                                </Link>
+                                <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                    Quick find
+                                </Link>
+                                <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                    Pages
+                                </Link>
+                            </nav>
+                        </aside>
+                    </div>
+                ) : null}
+
                 <main className="relative z-0 mx-auto max-w-6xl px-4 py-8">{children}</main>
             </div>
         </>
