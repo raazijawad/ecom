@@ -70,6 +70,27 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 <button className="rounded bg-slate-900 px-4 py-2 font-semibold text-white">Apply</button>
             </form>
 
+            {categories.length > 0 && (
+                <section className="mb-8">
+                    <h2 className="mb-3 text-xl font-semibold">Shop by category</h2>
+                    <div className="flex flex-wrap gap-2">
+                        {categories.map((category) => (
+                            <button
+                                key={category.id}
+                                type="button"
+                                onClick={() => {
+                                    search.setData('category', category.slug);
+                                    router.get('/', { ...search.data, category: category.slug }, { preserveState: true, replace: true });
+                                }}
+                                className={`rounded-full border px-4 py-2 text-sm ${search.data.category === category.slug ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-300 bg-white text-slate-700'}`}
+                            >
+                                {category.name}
+                            </button>
+                        ))}
+                    </div>
+                </section>
+            )}
+
             {featuredProducts.length > 0 && (
                 <section className="mb-10">
                     <h2 className="mb-4 text-xl font-semibold">Featured products</h2>
