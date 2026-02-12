@@ -21,6 +21,9 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                             <Link href="/" className="hover:text-blue-600">
                                 Shop
                             </Link>
+                            <Link href="/sign-in" className="hover:text-blue-600">
+                                Sign in
+                            </Link>
                             <Link href="/cart" className="rounded bg-slate-900 px-3 py-2 text-white hover:bg-slate-700">
                                 Cart ({cartSummary?.count ?? 0})
                             </Link>

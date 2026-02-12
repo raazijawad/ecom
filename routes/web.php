@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\HomeController;
@@ -8,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+
+Route::get('/sign-in', SignInController::class)->name('sign-in');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
