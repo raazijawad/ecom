@@ -22,13 +22,13 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                         onClick={() => router.post('/cart', { product_id: product.id, quantity: 1 })}
                         className="mt-6 rounded bg-blue-600 px-4 py-3 font-semibold text-white"
                     >
-                        Add to cart
+                        Add to shoe bag
                     </button>
                 </div>
             </div>
 
             <section className="mt-10">
-                <h2 className="mb-4 text-xl font-semibold">Related products</h2>
+                <h2 className="mb-4 text-xl font-semibold">More shoes you may like</h2>
                 <div className="grid gap-4 md:grid-cols-4">
                     {relatedProducts.map((item) => (
                         <Link key={item.id} href={`/products/${item.id}`} className="rounded border border-slate-200 bg-white p-3 shadow-sm">

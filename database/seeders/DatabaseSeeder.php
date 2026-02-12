@@ -18,20 +18,20 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $catalog = [
-            'Electronics' => [
-                ['name' => 'Wireless Headphones', 'price' => 79.99, 'stock' => 25, 'featured' => true],
-                ['name' => '4K Monitor', 'price' => 299.00, 'stock' => 10, 'featured' => true],
-                ['name' => 'Mechanical Keyboard', 'price' => 99.50, 'stock' => 18, 'featured' => false],
+            'Running Shoes' => [
+                ['name' => 'AeroSprint Pro Runner', 'price' => 129.99, 'stock' => 25, 'featured' => true],
+                ['name' => 'CloudStride Cushion 2', 'price' => 149.00, 'stock' => 20, 'featured' => true],
+                ['name' => 'TempoFlex Daily Trainer', 'price' => 109.50, 'stock' => 30, 'featured' => false],
             ],
-            'Home & Kitchen' => [
-                ['name' => 'Ceramic Dinner Set', 'price' => 54.99, 'stock' => 40, 'featured' => true],
-                ['name' => 'French Press', 'price' => 24.49, 'stock' => 32, 'featured' => false],
-                ['name' => 'Air Fryer 5L', 'price' => 119.00, 'stock' => 12, 'featured' => false],
+            'Lifestyle Sneakers' => [
+                ['name' => 'StreetLite Classic Low', 'price' => 94.99, 'stock' => 40, 'featured' => true],
+                ['name' => 'MetroCourt Leather', 'price' => 119.49, 'stock' => 32, 'featured' => false],
+                ['name' => 'Urban Pulse Knit', 'price' => 99.00, 'stock' => 28, 'featured' => false],
             ],
-            'Fashion' => [
-                ['name' => 'Classic Hoodie', 'price' => 45.00, 'stock' => 50, 'featured' => true],
-                ['name' => 'Slim Fit Jeans', 'price' => 62.00, 'stock' => 35, 'featured' => false],
-                ['name' => 'Canvas Sneakers', 'price' => 58.75, 'stock' => 28, 'featured' => false],
+            'Outdoor & Hiking' => [
+                ['name' => 'TrailGuard Mid Hiker', 'price' => 139.00, 'stock' => 18, 'featured' => true],
+                ['name' => 'SummitGrip Waterproof', 'price' => 162.00, 'stock' => 16, 'featured' => false],
+                ['name' => 'RidgeRoam Trek Low', 'price' => 126.75, 'stock' => 22, 'featured' => false],
             ],
         ];
 
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             $category = Category::create([
                 'name' => $categoryName,
                 'slug' => Str::slug($categoryName),
-                'description' => "Best-selling {$categoryName} products for daily life.",
+                'description' => "Top-rated {$categoryName} designed for comfort and performance.",
             ]);
 
             foreach ($products as $entry) {
@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
                     'category_id' => $category->id,
                     'name' => $entry['name'],
                     'slug' => Str::slug($entry['name']),
-                    'description' => $entry['name'].' crafted with reliable quality and fast shipping.',
+                    'description' => $entry['name'].' engineered for long-lasting comfort and dependable grip.',
                     'price' => $entry['price'],
                     'stock' => $entry['stock'],
                     'is_featured' => $entry['featured'],
