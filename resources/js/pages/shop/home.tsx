@@ -17,6 +17,27 @@ type Props = {
 
 export default function Home({ filters, featuredProducts, products, categories, cartSummary }: Props) {
     const search = useForm({ q: filters.q, category: filters.category });
+    const bestSellers = products.data.slice(0, 4);
+    const newArrivals = products.data.slice(4, 8);
+    const dealOfTheDay = products.data.slice(0, 3);
+
+    const testimonials = [
+        {
+            name: 'Ava Thompson',
+            role: 'Fashion Buyer',
+            quote: 'Fast shipping, premium quality, and smooth checkout. NovaCart became my go-to store this season.',
+        },
+        {
+            name: 'Marcus Lee',
+            role: 'Gadget Enthusiast',
+            quote: 'Product pages are clear and detailed. I found exactly what I needed in minutes.',
+        },
+        {
+            name: 'Sofia Patel',
+            role: 'Interior Designer',
+            quote: 'Excellent customer support and reliable delivery. Highly recommend for home and lifestyle shopping.',
+        },
+    ];
 
     const submitFilters = (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,11 +91,34 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 <button className="rounded bg-slate-900 px-4 py-2 font-semibold text-white">Apply</button>
             </form>
 
+            {categories.length > 0 && (
+                <section className="mb-10">
+                    <h2 className="mb-4 text-xl font-semibold">Featured Categories</h2>
+                    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        {categories.slice(0, 8).map((category) => (
+                            <article key={category.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                                <p className="text-xs font-semibold tracking-wide text-blue-600 uppercase">Category</p>
+                                <h3 className="mt-2 text-lg font-semibold text-slate-900">{category.name}</h3>
+                                <p className="mt-2 text-sm text-slate-600">
+                                    {category.description || `Explore top picks and latest collections in ${category.name}.`}
+                                </p>
+                                <button
+                                    onClick={() => search.setData('category', category.slug)}
+                                    className="mt-4 rounded bg-slate-900 px-3 py-2 text-sm font-semibold text-white"
+                                >
+                                    Shop now
+                                </button>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
+
             {featuredProducts.length > 0 && (
                 <section className="mb-10">
-                    <h2 className="mb-4 text-xl font-semibold">Featured products</h2>
+                    <h2 className="mb-4 text-xl font-semibold">Best Sellers / Popular Products</h2>
                     <div className="grid gap-4 md:grid-cols-4">
-                        {featuredProducts.map((product) => (
+                        {(bestSellers.length > 0 ? bestSellers : featuredProducts).map((product) => (
                             <article key={product.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                                 <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-32 w-full rounded object-cover" />
                                 <h3 className="font-semibold">{product.name}</h3>
@@ -84,6 +128,82 @@ export default function Home({ filters, featuredProducts, products, categories, 
                     </div>
                 </section>
             )}
+
+            {newArrivals.length > 0 && (
+                <section className="mb-10">
+                    <div className="mb-4 flex items-center justify-between">
+                        <h2 className="text-xl font-semibold">New Arrivals</h2>
+                        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Just dropped</span>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-4">
+                        {newArrivals.map((product) => (
+                            <article key={product.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                                <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-32 w-full rounded object-cover" />
+                                <h3 className="font-semibold">{product.name}</h3>
+                                <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
+                                <div className="mt-4 flex items-center justify-between">
+                                    <span className="font-bold">${Number(product.price).toFixed(2)}</span>
+                                    <button
+                                        onClick={() => addToCart(product.id)}
+                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            {dealOfTheDay.length > 0 && (
+                <section className="mb-10 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 p-6 text-white">
+                    <h2 className="text-xl font-semibold">Special Offers / Deals of The Day</h2>
+                    <p className="mt-1 text-sm text-orange-100">Limited-time markdowns on customer favorites. Grab these before they're gone.</p>
+                    <div className="mt-4 grid gap-4 md:grid-cols-3">
+                        {dealOfTheDay.map((product) => {
+                            const basePrice = Number(product.price);
+                            const discountedPrice = (basePrice * 0.8).toFixed(2);
+
+                            return (
+                                <article key={product.id} className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
+                                    <h3 className="font-semibold">{product.name}</h3>
+                                    <p className="mt-2 text-sm line-through opacity-80">${basePrice.toFixed(2)}</p>
+                                    <p className="text-lg font-bold">${discountedPrice}</p>
+                                </article>
+                            );
+                        })}
+                    </div>
+                </section>
+            )}
+
+            <section className="mb-10">
+                <h2 className="mb-4 text-xl font-semibold">Testimonials / Customer Reviews</h2>
+                <div className="grid gap-4 md:grid-cols-3">
+                    {testimonials.map((testimonial) => (
+                        <article key={testimonial.name} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                            <p className="text-sm leading-6 text-slate-700">“{testimonial.quote}”</p>
+                            <p className="mt-4 font-semibold text-slate-900">{testimonial.name}</p>
+                            <p className="text-xs text-slate-500">{testimonial.role}</p>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
+            <section className="mb-10 rounded-2xl bg-slate-900 p-6 text-white">
+                <h2 className="text-xl font-semibold">Newsletter Signup</h2>
+                <p className="mt-2 max-w-2xl text-sm text-slate-300">
+                    Get updates on exclusive drops, seasonal offers, and members-only deals delivered straight to your inbox.
+                </p>
+                <form className="mt-4 flex flex-col gap-3 sm:flex-row">
+                    <input
+                        type="email"
+                        placeholder="Enter your email"
+                        className="w-full rounded border border-slate-500 bg-slate-800 px-4 py-2 text-white placeholder:text-slate-400"
+                    />
+                    <button className="rounded bg-blue-600 px-5 py-2 font-semibold text-white">Subscribe</button>
+                </form>
+            </section>
 
             <section>
                 <h2 className="mb-4 text-xl font-semibold">All products</h2>
@@ -122,6 +242,46 @@ export default function Home({ filters, featuredProducts, products, categories, 
                     ))}
                 </div>
             </section>
+
+            <footer className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="grid gap-6 md:grid-cols-4">
+                    <div>
+                        <h3 className="font-semibold text-slate-900">Quick Links</h3>
+                        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                            <li>Shop All</li>
+                            <li>Featured</li>
+                            <li>Best Sellers</li>
+                            <li>New Arrivals</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-slate-900">Contact Info</h3>
+                        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                            <li>support@novacart.com</li>
+                            <li>+1 (800) 555-0199</li>
+                            <li>Mon–Fri, 9AM–6PM</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-slate-900">Social Media</h3>
+                        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                            <li>Instagram</li>
+                            <li>Facebook</li>
+                            <li>X / Twitter</li>
+                            <li>YouTube</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-slate-900">Policies & FAQ</h3>
+                        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                            <li>Shipping Policy</li>
+                            <li>Returns & Refunds</li>
+                            <li>Privacy Policy</li>
+                            <li>FAQ</li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
         </ShopLayout>
     );
 }
