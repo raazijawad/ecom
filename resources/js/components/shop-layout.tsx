@@ -22,11 +22,11 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                 <header className="border-b border-slate-200 bg-white">
                     <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
                         <Link href="/" className="text-xl font-bold text-slate-900">
-                            NovaCart
+                            SoleStyle
                         </Link>
                         <nav className="flex items-center gap-4 text-sm font-medium">
                             <Link href="/" className="hover:text-blue-600">
-                                Shop
+                                Shoes
                             </Link>
                             {auth.user ? (
                                 <>

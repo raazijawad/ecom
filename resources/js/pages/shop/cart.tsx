@@ -6,10 +6,10 @@ type Props = { cartSummary: CartSummary };
 
 export default function Cart({ cartSummary }: Props) {
     return (
-        <ShopLayout title="Cart" cartSummary={cartSummary}>
-            <h1 className="mb-6 text-2xl font-bold">Your Cart</h1>
+        <ShopLayout title="Shoe Bag" cartSummary={cartSummary}>
+            <h1 className="mb-6 text-2xl font-bold">Your Shoe Bag</h1>
             {cartSummary.items.length === 0 ? (
-                <div className="rounded bg-white p-6 shadow">Your cart is empty.</div>
+                <div className="rounded bg-white p-6 shadow">Your shoe bag is empty.</div>
             ) : (
                 <div className="grid gap-6 lg:grid-cols-3">
                     <div className="space-y-3 lg:col-span-2">
@@ -39,7 +39,7 @@ export default function Cart({ cartSummary }: Props) {
                         ))}
                     </div>
                     <aside className="rounded bg-white p-5 shadow">
-                        <h2 className="text-lg font-semibold">Summary</h2>
+                        <h2 className="text-lg font-semibold">Bag Summary</h2>
                         <dl className="mt-4 space-y-2 text-sm">
                             <div className="flex justify-between">
                                 <dt>Subtotal</dt>
