@@ -34,6 +34,20 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 <p className="mt-2 max-w-2xl text-slate-200">Browse products, add items to cart, and place orders with a seamless checkout flow.</p>
             </section>
 
+            <section className="relative mb-8 overflow-hidden rounded-2xl bg-slate-950 px-6 py-12 text-white">
+                <p className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl font-black tracking-[0.35em] text-white/10 sm:text-7xl md:text-8xl">
+                    NOVACART
+                </p>
+                <div className="relative z-10 flex flex-col items-center gap-4">
+                    <img
+                        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80"
+                        alt="Red athletic shoe"
+                        className="h-52 w-full max-w-3xl rounded-2xl object-cover shadow-2xl shadow-slate-900/70"
+                    />
+                    <p className="text-sm text-slate-300">Step into style with NovaCart</p>
+                </div>
+            </section>
+
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
                     value={search.data.q}
