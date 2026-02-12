@@ -157,12 +157,12 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <p className="mt-2 text-sm text-slate-600">
                                     {category.description || `Explore best-selling ${category.name.toLowerCase()} built for every step.`}
                                 </p>
-                                <button
-                                    onClick={() => search.setData('category', category.slug)}
-                                    className="mt-4 rounded bg-slate-900 px-3 py-2 text-sm font-semibold text-white cursor-pointer"
+                                <Link
+                                    href={`/collections/${category.slug}`}
+                                    className="mt-4 inline-block rounded bg-slate-900 px-3 py-2 text-sm font-semibold text-white"
                                 >
                                     Shop now
-                                </button>
+                                </Link>
                             </article>
                         ))}
                     </div>
