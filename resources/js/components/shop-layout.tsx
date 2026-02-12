@@ -10,10 +10,15 @@ type Props = PropsWithChildren<{
 
 type SharedProps = {
     auth: Auth;
+    collections: Array<{
+        id: number;
+        name: string;
+        slug: string;
+    }>;
 };
 
 export default function ShopLayout({ title, cartSummary, children }: Props) {
-    const { auth } = usePage<SharedProps>().props;
+    const { auth, collections } = usePage<SharedProps>().props;
 
     return (
         <>
@@ -29,9 +34,26 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                             <Link href="/" className="transition hover:text-slate-900">
                                 Home
                             </Link>
-                            <Link href="/" className="transition hover:text-slate-900">
-                                Collections
-                            </Link>
+                            <div className="group relative">
+                                <button type="button" className="transition hover:text-slate-900">
+                                    Collections
+                                </button>
+                                <div className="invisible absolute left-0 top-full z-20 mt-2 w-56 rounded-xl border border-slate-200 bg-white p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:opacity-100">
+                                    {collections.length > 0 ? (
+                                        collections.map((collection) => (
+                                            <Link
+                                                key={collection.id}
+                                                href={`/collections/${collection.slug}`}
+                                                className="block rounded-md px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+                                            >
+                                                {collection.name}
+                                            </Link>
+                                        ))
+                                    ) : (
+                                        <span className="block px-3 py-2 text-sm text-slate-500">No collections found</span>
+                                    )}
+                                </div>
+                            </div>
                             <Link href="/" className="transition hover:text-slate-900">
                                 Shoes
                             </Link>
