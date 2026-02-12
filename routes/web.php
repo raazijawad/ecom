@@ -10,7 +10,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-Route::get('/sign-in', SignInController::class)->name('sign-in');
+Route::middleware('guest')->group(function (): void {
+    Route::get('/sign-in', SignInController::class)->name('sign-in');
+    Route::post('/sign-in', [SignInController::class, 'login'])->name('sign-in.login');
+    Route::post('/sign-up', [SignInController::class, 'register'])->name('sign-up.register');
+});
+
+Route::post('/logout', [SignInController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');

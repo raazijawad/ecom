@@ -17,6 +17,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'demo@example.com',
         ]);
 
+        User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'is_admin' => true,
+        ]);
+
         $catalog = [
             'Electronics' => [
                 ['name' => 'Wireless Headphones', 'price' => 79.99, 'stock' => 25, 'featured' => true],
