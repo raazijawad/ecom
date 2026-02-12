@@ -1,13 +1,20 @@
-import { Head, Link } from '@inertiajs/react';
-import { PropsWithChildren } from 'react';
-import { CartSummary } from '@/types/shop';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import type { PropsWithChildren } from 'react';
+import type { Auth } from '@/types/auth';
+import type { CartSummary } from '@/types/shop';
 
 type Props = PropsWithChildren<{
     title: string;
     cartSummary?: CartSummary;
 }>;
 
+type SharedProps = {
+    auth: Auth;
+};
+
 export default function ShopLayout({ title, cartSummary, children }: Props) {
+    const { auth } = usePage<SharedProps>().props;
+
     return (
         <>
             <Head title={title} />
@@ -21,9 +28,20 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                             <Link href="/" className="hover:text-blue-600">
                                 Shop
                             </Link>
-                            <Link href="/sign-in" className="hover:text-blue-600">
-                                Sign in
-                            </Link>
+                            {auth.user ? (
+                                <>
+                                    <Link href="/sign-in" className="hover:text-blue-600">
+                                        {auth.user.name}
+                                    </Link>
+                                    <button type="button" onClick={() => router.post('/sign-out')} className="hover:text-blue-600">
+                                        Sign out
+                                    </button>
+                                </>
+                            ) : (
+                                <Link href="/sign-in" className="hover:text-blue-600">
+                                    Sign in
+                                </Link>
+                            )}
                             <Link href="/cart" className="rounded bg-slate-900 px-3 py-2 text-white hover:bg-slate-700">
                                 Cart ({cartSummary?.count ?? 0})
                             </Link>

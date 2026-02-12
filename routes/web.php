@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CheckoutController;
@@ -10,7 +11,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-Route::get('/sign-in', SignInController::class)->name('sign-in');
+Route::get('/sign-in', [SignInController::class, 'create'])->name('sign-in');
+Route::post('/sign-in', [SignInController::class, 'store'])->name('sign-in.store');
+Route::post('/sign-out', [SignInController::class, 'destroy'])->name('sign-out');
+
+Route::get('/create-account', [CreateAccountController::class, 'create'])->name('create-account');
+Route::post('/create-account', [CreateAccountController::class, 'store'])->name('create-account.store');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
