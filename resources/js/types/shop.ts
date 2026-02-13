@@ -12,6 +12,8 @@ export type Product = {
     slug: string;
     description: string;
     price: string;
+    sizes: string | null;
+    colors: string | null;
     stock: number;
     image_url: string | null;
     is_featured: boolean;

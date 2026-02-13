@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description');
             $table->decimal('price', 10, 2);
+            $table->string('sizes')->nullable();
+            $table->string('colors')->nullable();
             $table->unsignedInteger('stock')->default(0);
             $table->string('image_url')->nullable();
             $table->boolean('is_featured')->default(false);

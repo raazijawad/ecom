@@ -55,6 +55,16 @@ class ProductResource extends Resource
                 ->required()
                 ->prefix('$')
                 ->minValue(0),
+            TextInput::make('sizes')
+                ->label('Sizes')
+                ->placeholder('6, 7, 8, 9, 10')
+                ->helperText('Comma-separated size options shown on the product page.')
+                ->maxLength(255),
+            TextInput::make('colors')
+                ->label('Colours')
+                ->placeholder('Black, White, Blue')
+                ->helperText('Comma-separated color options shown on the product page.')
+                ->maxLength(255),
             TextInput::make('stock')
                 ->numeric()
                 ->required()
@@ -90,6 +100,13 @@ class ProductResource extends Resource
                 TextColumn::make('price')
                     ->money('USD')
                     ->sortable(),
+                TextColumn::make('sizes')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->limit(30),
+                TextColumn::make('colors')
+                    ->label('Colours')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->limit(30),
                 TextColumn::make('stock')
                     ->sortable(),
                 IconColumn::make('is_featured')

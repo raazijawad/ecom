@@ -10,8 +10,16 @@ type Props = {
 };
 
 export default function ProductShow({ product, relatedProducts, cartSummary }: Props) {
-    const sizeOptions = ['6', '7', '8', '9', '10'];
-    const colorOptions = ['Black', 'White', 'Blue'];
+    const sizeOptions =
+        product.sizes
+            ?.split(',')
+            .map((size) => size.trim())
+            .filter(Boolean) ?? ['6', '7', '8', '9', '10'];
+    const colorOptions =
+        product.colors
+            ?.split(',')
+            .map((color) => color.trim())
+            .filter(Boolean) ?? ['Black', 'White', 'Blue'];
 
     const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0]);
     const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0]);
