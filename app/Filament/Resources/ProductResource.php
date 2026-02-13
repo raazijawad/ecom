@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -63,6 +64,12 @@ class ProductResource extends Resource
                 ->label('Image URL')
                 ->url()
                 ->maxLength(2048),
+            TagsInput::make('sizes')
+                ->label('Sizes')
+                ->placeholder('Add a size and press enter'),
+            TagsInput::make('colors')
+                ->label('Colors')
+                ->placeholder('Add a color and press enter'),
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),

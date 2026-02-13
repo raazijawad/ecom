@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ShopLayout from '@/components/shop-layout';
 import { CartSummary, Product } from '@/types/shop';
 
@@ -10,11 +10,11 @@ type Props = {
 };
 
 export default function ProductShow({ product, relatedProducts, cartSummary }: Props) {
-    const sizeOptions = ['6', '7', '8', '9', '10'];
-    const colorOptions = ['Black', 'White', 'Blue'];
+    const sizeOptions = useMemo(() => product.sizes ?? ['6', '7', '8', '9', '10'], [product.sizes]);
+    const colorOptions = useMemo(() => product.colors ?? ['Black', 'White', 'Blue'], [product.colors]);
 
-    const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0]);
-    const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0]);
+    const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0] ?? null);
+    const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0] ?? null);
 
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
@@ -26,45 +26,49 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                     <p className="mt-4 text-slate-700">{product.description}</p>
                     <p className="mt-5 text-2xl font-bold">${Number(product.price).toFixed(2)}</p>
 
-                    <div className="mt-6">
-                        <p className="mb-2 text-sm font-semibold text-slate-700">Select size</p>
-                        <div className="flex flex-wrap gap-2">
-                            {sizeOptions.map((size) => (
-                                <button
-                                    key={size}
-                                    type="button"
-                                    onClick={() => setSelectedSize(size)}
-                                    className={`rounded border px-4 py-2 text-sm font-medium transition ${
-                                        selectedSize === size
-                                            ? 'border-blue-600 bg-blue-50 text-blue-700'
-                                            : 'border-slate-300 text-slate-700 hover:border-slate-400'
-                                    }`}
-                                >
-                                    {size}
-                                </button>
-                            ))}
+                    {sizeOptions.length > 0 && (
+                        <div className="mt-6">
+                            <p className="mb-2 text-sm font-semibold text-slate-700">Select size</p>
+                            <div className="flex flex-wrap gap-2">
+                                {sizeOptions.map((size) => (
+                                    <button
+                                        key={size}
+                                        type="button"
+                                        onClick={() => setSelectedSize(size)}
+                                        className={`rounded border px-4 py-2 text-sm font-medium transition ${
+                                            selectedSize === size
+                                                ? 'border-blue-600 bg-blue-50 text-blue-700'
+                                                : 'border-slate-300 text-slate-700 hover:border-slate-400'
+                                        }`}
+                                    >
+                                        {size}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
-                    <div className="mt-4">
-                        <p className="mb-2 text-sm font-semibold text-slate-700">Select color</p>
-                        <div className="flex flex-wrap gap-2">
-                            {colorOptions.map((color) => (
-                                <button
-                                    key={color}
-                                    type="button"
-                                    onClick={() => setSelectedColor(color)}
-                                    className={`rounded border px-4 py-2 text-sm font-medium transition ${
-                                        selectedColor === color
-                                            ? 'border-blue-600 bg-blue-50 text-blue-700'
-                                            : 'border-slate-300 text-slate-700 hover:border-slate-400'
-                                    }`}
-                                >
-                                    {color}
-                                </button>
-                            ))}
+                    {colorOptions.length > 0 && (
+                        <div className="mt-4">
+                            <p className="mb-2 text-sm font-semibold text-slate-700">Select color</p>
+                            <div className="flex flex-wrap gap-2">
+                                {colorOptions.map((color) => (
+                                    <button
+                                        key={color}
+                                        type="button"
+                                        onClick={() => setSelectedColor(color)}
+                                        className={`rounded border px-4 py-2 text-sm font-medium transition ${
+                                            selectedColor === color
+                                                ? 'border-blue-600 bg-blue-50 text-blue-700'
+                                                : 'border-slate-300 text-slate-700 hover:border-slate-400'
+                                        }`}
+                                    >
+                                        {color}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <button
                         onClick={() =>

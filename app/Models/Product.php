@@ -19,6 +19,8 @@ class Product extends Model
         'price',
         'stock',
         'image_url',
+        'sizes',
+        'colors',
         'is_featured',
         'is_visible',
     ];
@@ -29,6 +31,8 @@ class Product extends Model
             'is_featured' => 'boolean',
             'is_visible' => 'boolean',
             'price' => 'decimal:2',
+            'sizes' => 'array',
+            'colors' => 'array',
         ];
     }
 
