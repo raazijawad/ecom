@@ -14,6 +14,10 @@ export type Product = {
     price: string;
     stock: number;
     image_url: string | null;
+    sizes: string[] | null;
+    colors: string[] | null;
+    shipping_details: string | null;
+    review_summary: string | null;
     is_featured: boolean;
     category?: Category;
 };
