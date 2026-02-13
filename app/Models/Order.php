@@ -16,6 +16,10 @@ class Order extends Model
         'customer_email',
         'customer_phone',
         'shipping_address',
+        'payment_method',
+        'payment_brand',
+        'payment_last_four',
+        'payment_reference',
         'subtotal',
         'shipping_fee',
         'total',
@@ -28,6 +32,7 @@ class Order extends Model
             'subtotal' => 'decimal:2',
             'shipping_fee' => 'decimal:2',
             'total' => 'decimal:2',
+            'paid_at' => 'datetime',
         ];
     }
 
