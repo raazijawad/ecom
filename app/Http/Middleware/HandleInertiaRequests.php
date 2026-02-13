@@ -46,6 +46,9 @@ class HandleInertiaRequests extends Middleware
                 ->select(['id', 'name', 'slug'])
                 ->orderBy('name')
                 ->get(),
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+            ],
         ];
     }
 }

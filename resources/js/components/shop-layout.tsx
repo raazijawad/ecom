@@ -16,10 +16,13 @@ type SharedProps = {
         name: string;
         slug: string;
     }>;
+    flash: {
+        success?: string | null;
+    };
 };
 
 export default function ShopLayout({ title, cartSummary, children }: Props) {
-    const { auth, collections } = usePage<SharedProps>().props;
+    const { auth, collections, flash } = usePage<SharedProps>().props;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
@@ -175,6 +178,12 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                 </Link>
                             </nav>
                         </aside>
+                    </div>
+                ) : null}
+
+                {flash.success ? (
+                    <div className="mx-auto mt-6 w-full max-w-6xl rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
+                        {flash.success}
                     </div>
                 ) : null}
 
