@@ -187,7 +187,7 @@ export default function Shoes({ products, cartSummary }: Props) {
                                                     onClick={() => addToCart(product.id)}
                                                     className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
                                                 >
-                                                    Add to cart
+                                                    Buy now
                                                 </button>
                                             </div>
                                         </article>
