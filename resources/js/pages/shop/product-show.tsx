@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ShopLayout from '@/components/shop-layout';
 import { CartSummary, Product } from '@/types/shop';
 
@@ -15,6 +15,19 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
 
     const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0] ?? null);
     const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0] ?? null);
+    const [showCartMessage, setShowCartMessage] = useState(false);
+
+    useEffect(() => {
+        if (!showCartMessage) {
+            return;
+        }
+
+        const timeout = window.setTimeout(() => {
+            setShowCartMessage(false);
+        }, 3000);
+
+        return () => window.clearTimeout(timeout);
+    }, [showCartMessage]);
 
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
@@ -77,12 +90,20 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                                 quantity: 1,
                                 size: selectedSize,
                                 color: selectedColor,
+                            }, {
+                                onSuccess: () => {
+                                    setShowCartMessage(true);
+                                },
                             })
                         }
                         className="mt-6 rounded cursor-pointer bg-blue-600 px-4 py-3 font-semibold text-white"
                     >
                         Add to shoe bag
                     </button>
+
+                    {showCartMessage && (
+                        <p className="mt-3 rounded bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700">Added to cart</p>
+                    )}
                 </div>
             </div>
 
