@@ -161,6 +161,30 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 <p className="absolute right-4 bottom-4 text-[11px] font-semibold tracking-[0.3em] text-slate-500 uppercase">Scroll Down</p>
             </section>
 
+
+
+            <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
+                <input
+                    value={search.data.q}
+                    onChange={(e) => search.setData('q', e.target.value)}
+                    placeholder="Search shoes..."
+                    className="col-span-2 rounded border border-slate-300 px-3 py-2"
+                />
+                <select
+                    value={search.data.category}
+                    onChange={(e) => search.setData('category', e.target.value)}
+                    className="rounded border border-slate-300 px-3 py-2"
+                >
+                    <option value="">All collections</option>
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.slug}>
+                            {category.name}
+                        </option>
+                    ))}
+                </select>
+                <button className="rounded bg-slate-900 px-4 py-2 font-semibold text-white">Apply</button>
+            </form>
+
             <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-10 lg:px-10">
                 <div className="pointer-events-none absolute inset-0 opacity-70">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(148,163,184,0.16),transparent_55%)]" />
@@ -211,28 +235,6 @@ export default function Home({ filters, featuredProducts, products, categories, 
                     </div>
                 </div>
             </section>
-
-            <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
-                <input
-                    value={search.data.q}
-                    onChange={(e) => search.setData('q', e.target.value)}
-                    placeholder="Search shoes..."
-                    className="col-span-2 rounded border border-slate-300 px-3 py-2"
-                />
-                <select
-                    value={search.data.category}
-                    onChange={(e) => search.setData('category', e.target.value)}
-                    className="rounded border border-slate-300 px-3 py-2"
-                >
-                    <option value="">All collections</option>
-                    {categories.map((category) => (
-                        <option key={category.id} value={category.slug}>
-                            {category.name}
-                        </option>
-                    ))}
-                </select>
-                <button className="rounded bg-slate-900 px-4 py-2 font-semibold text-white">Apply</button>
-            </form>
 
             {categories.length > 0 && (
                 <section className="mb-10">
