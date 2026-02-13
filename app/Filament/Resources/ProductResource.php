@@ -15,6 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Schema as SchemaFacade;
 
 class ProductResource extends Resource
 {
@@ -64,6 +65,11 @@ class ProductResource extends Resource
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),
+            Toggle::make('is_visible')
+                ->label('Visible')
+                ->default(true)
+                ->visible(fn (): bool => SchemaFacade::hasColumn('products', 'is_visible'))
+                ->dehydrated(fn (): bool => SchemaFacade::hasColumn('products', 'is_visible')),
             Textarea::make('description')
                 ->required()
                 ->rows(4)
@@ -90,6 +96,10 @@ class ProductResource extends Resource
                 IconColumn::make('is_featured')
                     ->label('Featured')
                     ->boolean(),
+                IconColumn::make('is_visible')
+                    ->label('Visible')
+                    ->boolean()
+                    ->visible(fn (): bool => SchemaFacade::hasColumn('products', 'is_visible')),
                 TextColumn::make('updated_at')
                     ->since()
                     ->sortable(),
