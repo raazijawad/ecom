@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('stock')->default(0);
             $table->string('image_url')->nullable();
             $table->boolean('is_featured')->default(false);
+            $table->boolean('is_visible')->default(true);
             $table->timestamps();
         });
     }
