@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ShopLayout from '@/components/shop-layout';
 import { CartSummary, Product } from '@/types/shop';
 
@@ -15,6 +15,42 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
 
     const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0] ?? null);
     const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0] ?? null);
+    const [showAddedToCartMessage, setShowAddedToCartMessage] = useState(false);
+    const successMessageTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (successMessageTimeoutRef.current) {
+                clearTimeout(successMessageTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    const handleAddToShoeBag = () => {
+        router.post(
+            '/cart',
+            {
+                product_id: product.id,
+                quantity: 1,
+                size: selectedSize,
+                color: selectedColor,
+            },
+            {
+                preserveState: true,
+                onSuccess: () => {
+                    setShowAddedToCartMessage(true);
+
+                    if (successMessageTimeoutRef.current) {
+                        clearTimeout(successMessageTimeoutRef.current);
+                    }
+
+                    successMessageTimeoutRef.current = setTimeout(() => {
+                        setShowAddedToCartMessage(false);
+                    }, 3000);
+                },
+            },
+        );
+    };
 
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
@@ -71,18 +107,15 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                     )}
 
                     <button
-                        onClick={() =>
-                            router.post('/cart', {
-                                product_id: product.id,
-                                quantity: 1,
-                                size: selectedSize,
-                                color: selectedColor,
-                            })
-                        }
+                        onClick={handleAddToShoeBag}
                         className="mt-6 rounded bg-blue-600 px-4 py-3 font-semibold text-white"
                     >
                         Add to shoe bag
                     </button>
+
+                    {showAddedToCartMessage && (
+                        <p className="mt-3 rounded bg-green-100 px-3 py-2 text-sm font-medium text-green-800">Added to cart</p>
+                    )}
                 </div>
             </div>
 
