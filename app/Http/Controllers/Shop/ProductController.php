@@ -14,6 +14,7 @@ class ProductController extends Controller
         return Inertia::render('shop/product-show', [
             'product' => $product->load('category'),
             'relatedProducts' => Product::query()
+                ->isVisible()
                 ->where('category_id', $product->category_id)
                 ->whereKeyNot($product->id)
                 ->take(4)

@@ -14,6 +14,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -65,6 +66,9 @@ class ProductResource extends Resource
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),
+            Toggle::make('is_visible')
+                ->label('Visible')
+                ->default(true),
             Textarea::make('description')
                 ->required()
                 ->rows(4)
@@ -91,6 +95,8 @@ class ProductResource extends Resource
                 IconColumn::make('is_featured')
                     ->label('Featured')
                     ->boolean(),
+                ToggleColumn::make('is_visible')
+                    ->label('Visible'),
                 TextColumn::make('updated_at')
                     ->since()
                     ->sortable(),
