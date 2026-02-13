@@ -155,42 +155,7 @@ export default function Shoes({ products, cartSummary }: Props) {
     return (
         <ShopLayout title="All Shoes" cartSummary={cartSummary}>
             <section className="space-y-12">
-                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] lg:p-10">
-                    <div className="mb-8 text-center">
-                        <h1 className="text-3xl font-black tracking-tight text-black lg:text-4xl">Athletic Shoe Technical Infographic</h1>
-                        <p className="mt-2 text-sm text-slate-400">Precision-built details for performance, comfort, and durability.</p>
-                    </div>
 
-                    <div
-                        className="grid items-center gap-6 lg:grid-cols-[1fr_minmax(280px,1.2fr)_1fr]"
-                        style={{
-                            backgroundImage:
-                                'radial-gradient(circle at center, rgba(148,163,184,0.16) 1px, transparent 1px), radial-gradient(circle at center, rgba(148,163,184,0.12) 1px, transparent 1px)',
-                            backgroundSize: '26px 26px, 56px 56px',
-                        }}
-                    >
-                        <div className="space-y-4">
-                            {leftFeatures.map((feature) => (
-                                <FeatureCard key={feature.title} feature={feature} side="left" />
-                            ))}
-                        </div>
-
-                        <div className="relative flex min-h-[280px] items-center justify-center rounded-3xl border border-slate-200 bg-white/90 p-6">
-                            <div className="absolute inset-4 rounded-3xl border border-slate-100" />
-                            <img
-                                src={heroShoe?.image_url ?? ''}
-                                alt={heroShoe?.name ?? 'Nike Air Max Alpha Trainer'}
-                                className="relative z-10 h-56 w-full max-w-md object-contain lg:h-64"
-                            />
-                        </div>
-
-                        <div className="space-y-4">
-                            {rightFeatures.map((feature) => (
-                                <FeatureCard key={feature.title} feature={feature} side="right" />
-                            ))}
-                        </div>
-                    </div>
-                </div>
 
                 <div>
                     <h2 className="text-2xl font-bold text-black">Shop Performance Shoes</h2>
