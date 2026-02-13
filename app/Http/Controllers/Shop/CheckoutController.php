@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Support\Billing\CardBillingService;
+use App\Support\Billing\PaypalBillingService;
 use App\Support\Billing\UnsupportedCardException;
 use App\Support\Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -29,7 +31,7 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function store(Request $request, CardBillingService $billingService): RedirectResponse
+    public function store(Request $request, CardBillingService $billingService, PaypalBillingService $paypalBillingService): RedirectResponse
     {
         $cartSummary = Cart::summary();
 
@@ -42,25 +44,31 @@ class CheckoutController extends Controller
             'customer_email' => ['required', 'email', 'max:255'],
             'customer_phone' => ['required', 'string', 'max:40'],
             'shipping_address' => ['required', 'string', 'max:1000'],
-            'payment_cardholder_name' => ['required', 'string', 'max:255'],
-            'payment_card_number' => ['required', 'string', 'max:25'],
-            'payment_exp_month' => ['required', 'integer', 'between:1,12'],
-            'payment_exp_year' => ['required', 'integer', 'between:'.now()->year.','.now()->addYears(20)->year],
-            'payment_cvv' => ['required', 'digits_between:3,4'],
+            'payment_method' => ['required', Rule::in(['card', 'paypal'])],
+            'payment_paypal_email' => ['nullable', Rule::requiredIf($request->input('payment_method') === 'paypal'), 'email', 'max:255'],
+            'payment_cardholder_name' => ['nullable', Rule::requiredIf($request->input('payment_method') === 'card'), 'string', 'max:255'],
+            'payment_card_number' => ['nullable', Rule::requiredIf($request->input('payment_method') === 'card'), 'string', 'max:25'],
+            'payment_exp_month' => ['nullable', Rule::requiredIf($request->input('payment_method') === 'card'), 'integer', 'between:1,12'],
+            'payment_exp_year' => ['nullable', Rule::requiredIf($request->input('payment_method') === 'card'), 'integer', 'between:'.now()->year.','.now()->addYears(20)->year],
+            'payment_cvv' => ['nullable', Rule::requiredIf($request->input('payment_method') === 'card'), 'digits_between:3,4'],
         ]);
 
-        try {
-            $charge = $billingService->charge([
-                'cardholder_name' => $validated['payment_cardholder_name'],
-                'number' => $validated['payment_card_number'],
-                'exp_month' => $validated['payment_exp_month'],
-                'exp_year' => $validated['payment_exp_year'],
-                'cvv' => $validated['payment_cvv'],
-            ], $cartSummary['total']);
-        } catch (UnsupportedCardException $exception) {
-            throw ValidationException::withMessages([
-                'payment_card_number' => $exception->getMessage(),
-            ]);
+        if ($validated['payment_method'] === 'paypal') {
+            $charge = $paypalBillingService->charge($validated['payment_paypal_email'], $cartSummary['total']);
+        } else {
+            try {
+                $charge = $billingService->charge([
+                    'cardholder_name' => $validated['payment_cardholder_name'],
+                    'number' => $validated['payment_card_number'],
+                    'exp_month' => $validated['payment_exp_month'],
+                    'exp_year' => $validated['payment_exp_year'],
+                    'cvv' => $validated['payment_cvv'],
+                ], $cartSummary['total']);
+            } catch (UnsupportedCardException $exception) {
+                throw ValidationException::withMessages([
+                    'payment_card_number' => $exception->getMessage(),
+                ]);
+            }
         }
 
         $order = DB::transaction(function () use ($validated, $cartSummary, $charge) {
@@ -74,7 +82,7 @@ class CheckoutController extends Controller
                 'shipping_fee' => $cartSummary['shipping_fee'],
                 'total' => $cartSummary['total'],
                 'status' => $charge['status'] === 'captured' ? 'paid' : 'pending',
-                'payment_method' => 'card',
+                'payment_method' => $validated['payment_method'],
                 'payment_brand' => $charge['brand'],
                 'payment_last_four' => $charge['last_four'],
                 'payment_reference' => $charge['reference'],

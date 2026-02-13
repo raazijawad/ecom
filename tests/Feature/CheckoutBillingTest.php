@@ -12,6 +12,31 @@ class CheckoutBillingTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_it_accepts_paypal_and_creates_paid_order(): void
+    {
+        $product = $this->createVisibleProduct();
+
+        $response = $this->withSession([
+            'cart.items' => [$product->id => 1],
+        ])->post(route('checkout.store'), [
+            'customer_name' => 'Jane Buyer',
+            'customer_email' => 'jane@example.com',
+            'customer_phone' => '+12345678',
+            'shipping_address' => '123 Main St',
+            'payment_method' => 'paypal',
+            'payment_paypal_email' => 'buyer-paypal@example.com',
+        ]);
+
+        $response->assertRedirect();
+
+        $order = Order::first();
+
+        $this->assertNotNull($order);
+        $this->assertSame('paid', $order->status);
+        $this->assertSame('paypal', $order->payment_method);
+        $this->assertSame('paypal', $order->payment_brand);
+    }
+
     public function test_it_accepts_visa_and_creates_paid_order(): void
     {
         $product = $this->createVisibleProduct();
@@ -23,6 +48,7 @@ class CheckoutBillingTest extends TestCase
             'customer_email' => 'jane@example.com',
             'customer_phone' => '+12345678',
             'shipping_address' => '123 Main St',
+            'payment_method' => 'card',
             'payment_cardholder_name' => 'Jane Buyer',
             'payment_card_number' => '4111111111111111',
             'payment_exp_month' => now()->month,
@@ -36,6 +62,7 @@ class CheckoutBillingTest extends TestCase
 
         $this->assertNotNull($order);
         $this->assertSame('paid', $order->status);
+        $this->assertSame('card', $order->payment_method);
         $this->assertSame('visa', $order->payment_brand);
         $this->assertSame('1111', $order->payment_last_four);
     }
@@ -51,6 +78,7 @@ class CheckoutBillingTest extends TestCase
             'customer_email' => 'jane@example.com',
             'customer_phone' => '+12345678',
             'shipping_address' => '123 Main St',
+            'payment_method' => 'card',
             'payment_cardholder_name' => 'Jane Buyer',
             'payment_card_number' => '378282246310005',
             'payment_exp_month' => now()->month,
