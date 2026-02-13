@@ -19,6 +19,7 @@ class Cart
         }
 
         $products = Product::query()
+            ->visible()
             ->whereIn('id', $items->keys()->all())
             ->get()
             ->keyBy('id');
