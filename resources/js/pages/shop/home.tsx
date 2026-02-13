@@ -1,6 +1,6 @@
 import { Link, router, useForm } from '@inertiajs/react';
 import ShopLayout from '@/components/shop-layout';
-import { CartSummary, Category, Product } from '@/types/shop';
+import { Banner, CartSummary, Category, Product } from '@/types/shop';
 
 type PaginatedProducts = {
     data: Product[];
@@ -10,12 +10,13 @@ type PaginatedProducts = {
 type Props = {
     filters: { q: string; category: string };
     featuredProducts: Product[];
+    banners: Banner[];
     products: PaginatedProducts;
     categories: Category[];
     cartSummary: CartSummary;
 };
 
-export default function Home({ filters, featuredProducts, products, categories, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, banners, products, categories, cartSummary }: Props) {
     const search = useForm({ q: filters.q, category: filters.category });
     const bestSellers = products.data.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
@@ -87,6 +88,42 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
+
+            {banners.length > 0 && (
+                <section className="mb-8 overflow-x-auto">
+                    <div className="flex snap-x snap-mandatory gap-4">
+                        {banners.map((banner) => (
+                            <article
+                                key={banner.id}
+                                className="relative min-h-[260px] min-w-full snap-start overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 text-white"
+                            >
+                                {banner.image_url && (
+                                    <img
+                                        src={banner.image_url}
+                                        alt={banner.title}
+                                        className="absolute inset-0 h-full w-full object-cover opacity-55"
+                                    />
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-900/60 to-slate-900/20" />
+                                <div className="relative z-10 flex h-full max-w-xl flex-col justify-center px-6 py-10 lg:px-10">
+                                    <p className="text-xs font-semibold tracking-[0.2em] text-blue-200 uppercase">Promo Banner</p>
+                                    <h2 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">{banner.title}</h2>
+                                    {banner.subtitle && <p className="mt-3 text-sm text-slate-100 sm:text-base">{banner.subtitle}</p>}
+                                    {banner.button_text && banner.button_url && (
+                                        <a
+                                            href={banner.button_url}
+                                            className="mt-6 inline-block w-fit rounded bg-white px-4 py-2 text-sm font-semibold text-slate-900"
+                                        >
+                                            {banner.button_text}
+                                        </a>
+                                    )}
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
+
             <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-[#f4f5f7] px-6 py-10 lg:px-10 lg:py-14">
                 <div className="pointer-events-none absolute inset-0 opacity-60">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.1),transparent_38%),radial-gradient(circle_at_80%_75%,rgba(15,23,42,0.1),transparent_36%)]" />

@@ -18,6 +18,18 @@ export type Product = {
     category?: Category;
 };
 
+
+export type Banner = {
+    id: number;
+    title: string;
+    subtitle: string | null;
+    image_url: string | null;
+    button_text: string | null;
+    button_url: string | null;
+    sort_order: number;
+    is_active: boolean;
+};
+
 export type CartItem = {
     product_id: number;
     name: string;

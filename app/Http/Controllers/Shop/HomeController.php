@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
 use App\Support\Cart;
@@ -29,6 +30,7 @@ class HomeController extends Controller
                 'category' => $categorySlug,
             ],
             'featuredProducts' => Product::query()->isVisible()->where('is_featured', true)->take(4)->get(),
+            'banners' => Banner::query()->active()->orderBy('sort_order')->get(),
             'products' => $productsQuery->paginate(8)->withQueryString(),
             'categories' => Category::query()->orderBy('name')->get(),
             'cartSummary' => Cart::summary(),
