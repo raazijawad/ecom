@@ -56,7 +56,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                     )}
                                 </div>
                             </div>
-                            <Link href="/" className="transition hover:text-slate-900">
+                            <Link href="/shoes" className="transition hover:text-slate-900">
                                 Shoes
                             </Link>
                             <Link href="/" className="transition hover:text-slate-900">
@@ -164,7 +164,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                         <span className="block px-2 py-1 text-slate-500">No collections found</span>
                                     )}
                                 </div>
-                                <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                <Link href="/shoes" className="block" onClick={() => setIsMobileMenuOpen(false)}>
                                     Shoes
                                 </Link>
                                 <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
