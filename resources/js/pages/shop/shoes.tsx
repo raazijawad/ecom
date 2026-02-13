@@ -146,7 +146,16 @@ function FeatureCard({ feature, side }: { feature: FeaturePoint; side: 'left' | 
 }
 
 export default function Shoes({ products, cartSummary }: Props) {
-    const heroShoe = products.data[0];
+    const categorizedProducts = products.data.reduce<Record<string, Product[]>>((groups, product) => {
+        const categoryName = product.category?.name ?? 'Training Shoes';
+
+        if (!groups[categoryName]) {
+            groups[categoryName] = [];
+        }
+
+        groups[categoryName].push(product);
+        return groups;
+    }, {});
 
     const addToCart = (productId: number) => {
         router.post('/cart', { product_id: productId, quantity: 1 }, { preserveScroll: true });
@@ -155,31 +164,36 @@ export default function Shoes({ products, cartSummary }: Props) {
     return (
         <ShopLayout title="All Shoes" cartSummary={cartSummary}>
             <section className="space-y-12">
-
-
                 <div>
                     <h2 className="text-2xl font-bold text-black">Shop Performance Shoes</h2>
                     <p className="mt-1 text-sm text-slate-500">Premium picks inspired by the same technical design language.</p>
 
-                    <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-                        {products.data.map((product) => (
-                            <article key={product.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                                <div className="flex h-44 items-center justify-center rounded-xl bg-slate-50 p-3">
-                                    <img src={product.image_url ?? ''} alt={product.name} className="h-full w-full object-contain" />
+                    <div className="mt-6 space-y-10">
+                        {Object.entries(categorizedProducts).map(([categoryName, categoryProducts]) => (
+                            <div key={categoryName}>
+                                <h3 className="text-xl font-semibold text-black">{categoryName}</h3>
+                                <div className="mt-4 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                                    {categoryProducts.map((product) => (
+                                        <article key={product.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                                            <div className="flex h-44 items-center justify-center rounded-xl bg-slate-50 p-3">
+                                                <img src={product.image_url ?? ''} alt={product.name} className="h-full w-full object-contain" />
+                                            </div>
+                                            <h4 className="mt-4 text-base font-bold text-black">{product.name}</h4>
+                                            <p className="mt-1 text-sm text-slate-400">{categoryName}</p>
+                                            <div className="mt-3 flex items-center justify-between">
+                                                <span className="text-lg font-bold text-black">${Number(product.price).toFixed(2)}</span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => addToCart(product.id)}
+                                                    className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
+                                                >
+                                                    Add to cart
+                                                </button>
+                                            </div>
+                                        </article>
+                                    ))}
                                 </div>
-                                <h3 className="mt-4 text-base font-bold text-black">{product.name}</h3>
-                                <p className="mt-1 text-sm text-slate-400">{product.category?.name ?? 'Training Shoe'}</p>
-                                <div className="mt-3 flex items-center justify-between">
-                                    <span className="text-lg font-bold text-black">${Number(product.price).toFixed(2)}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => addToCart(product.id)}
-                                        className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
-                                    >
-                                        Add to cart
-                                    </button>
-                                </div>
-                            </article>
+                            </div>
                         ))}
                     </div>
                 </div>
