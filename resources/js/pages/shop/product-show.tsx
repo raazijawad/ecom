@@ -79,7 +79,7 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                                 color: selectedColor,
                             })
                         }
-                        className="mt-6 rounded bg-blue-600 px-4 py-3 font-semibold text-white"
+                        className="mt-6 rounded cursor-pointer bg-blue-600 px-4 py-3 font-semibold text-white"
                     >
                         Add to shoe bag
                     </button>
