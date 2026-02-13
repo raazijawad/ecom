@@ -21,6 +21,10 @@ export default function Home({ filters, featuredProducts, products, categories, 
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
 
+    const viewProductDetails = (productId: number) => {
+        router.get(`/products/${productId}`);
+    };
+
     const testimonials = [
         {
             name: 'Ava Thompson',
@@ -271,10 +275,10 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="font-bold">${Number(product.price).toFixed(2)}</span>
                                     <button
-                                        onClick={() => addToCart(product.id)}
+                                        onClick={() => viewProductDetails(product.id)}
                                         className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
                                     >
-                                        Add
+                                        Buy Now
                                     </button>
                                 </div>
                             </article>
@@ -295,10 +299,10 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="font-bold">${Number(product.price).toFixed(2)}</span>
                                     <button
-                                        onClick={() => addToCart(product.id)}
+                                        onClick={() => viewProductDetails(product.id)}
                                         className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
                                     >
-                                        Add
+                                        Buy Now
                                     </button>
                                 </div>
                             </article>
@@ -319,10 +323,10 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="font-bold">${Number(product.price).toFixed(2)}</span>
                                     <button
-                                        onClick={() => addToCart(product.id)}
+                                        onClick={() => viewProductDetails(product.id)}
                                         className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
                                     >
-                                        Add
+                                        Buy Now
                                     </button>
                                 </div>
                             </article>
