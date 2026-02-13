@@ -13,6 +13,8 @@ export type Product = {
     description: string;
     price: string;
     stock: number;
+    sizes: string[] | null;
+    colors: string[] | null;
     image_url: string | null;
     is_featured: boolean;
     category?: Category;
