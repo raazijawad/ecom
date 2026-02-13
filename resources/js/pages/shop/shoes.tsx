@@ -180,15 +180,36 @@ export default function Shoes({ products, cartSummary }: Props) {
                                             </div>
                                             <h4 className="mt-4 text-base font-bold text-black">{product.name}</h4>
                                             <p className="mt-1 text-sm text-slate-400">{categoryName}</p>
-                                            <div className="mt-3 flex items-center justify-between">
+                                            <div className="mt-3 flex items-center justify-between gap-2">
                                                 <span className="text-lg font-bold text-black">${Number(product.price).toFixed(2)}</span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => addToCart(product.id)}
-                                                    className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
-                                                >
-                                                    Add to cart
-                                                </button>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => router.get(`/products/${product.id}`)}
+                                                        className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
+                                                    >
+                                                        Buy now
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => addToCart(product.id)}
+                                                        className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                                                        aria-label={`Add ${product.name} to cart`}
+                                                    >
+                                                        <svg
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            className="h-4 w-4"
+                                                            aria-hidden="true"
+                                                        >
+                                                            <circle cx="9" cy="20" r="1" />
+                                                            <circle cx="18" cy="20" r="1" />
+                                                            <path d="M2 3h3l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H7" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </article>
                                     ))}
