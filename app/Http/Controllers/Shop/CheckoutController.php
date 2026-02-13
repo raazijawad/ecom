@@ -48,7 +48,7 @@ class CheckoutController extends Controller
                 'subtotal' => $cartSummary['subtotal'],
                 'shipping_fee' => $cartSummary['shipping_fee'],
                 'total' => $cartSummary['total'],
-                'status' => 'paid',
+                'status' => 'pending',
             ]);
 
             foreach ($cartSummary['items'] as $item) {
