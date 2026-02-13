@@ -157,8 +157,8 @@ export default function Shoes({ products, cartSummary }: Props) {
         return groups;
     }, {});
 
-    const addToCart = (productId: number) => {
-        router.post('/cart', { product_id: productId, quantity: 1 }, { preserveScroll: true });
+    const viewProductDetails = (productId: number) => {
+        router.get(`/products/${productId}`);
     };
 
     return (
@@ -184,7 +184,7 @@ export default function Shoes({ products, cartSummary }: Props) {
                                                 <span className="text-lg font-bold text-black">${Number(product.price).toFixed(2)}</span>
                                                 <button
                                                     type="button"
-                                                    onClick={() => addToCart(product.id)}
+                                                    onClick={() => viewProductDetails(product.id)}
                                                     className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
                                                 >
                                                     Buy now
