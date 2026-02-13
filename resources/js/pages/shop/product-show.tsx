@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import ShopLayout from '@/components/shop-layout';
-import { CartSummary, Product } from '@/types/shop';
+import type { CartSummary, Product } from '@/types/shop';
 
 type Props = {
     product: Product;
@@ -9,8 +10,39 @@ type Props = {
 };
 
 export default function ProductShow({ product, relatedProducts, cartSummary }: Props) {
+    const [showAddedNotice, setShowAddedNotice] = useState(false);
+
+    useEffect(() => {
+        if (!showAddedNotice) {
+            return;
+        }
+
+        const timeoutId = window.setTimeout(() => {
+            setShowAddedNotice(false);
+        }, 2500);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [showAddedNotice]);
+
+    const addToCart = () => {
+        router.post(
+            '/cart',
+            { product_id: product.id, quantity: 1 },
+            {
+                preserveScroll: true,
+                onSuccess: () => setShowAddedNotice(true),
+            },
+        );
+    };
+
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
+            {showAddedNotice ? (
+                <div className="fixed top-6 right-6 z-[100] rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-800 shadow-md">
+                    Product added to cart.
+                </div>
+            ) : null}
+
             <div className="grid gap-8 md:grid-cols-2">
                 <img src={product.image_url ?? ''} alt={product.name} className="w-full rounded-xl object-cover" />
                 <div>
@@ -18,10 +50,7 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                     <h1 className="mt-2 text-3xl font-bold">{product.name}</h1>
                     <p className="mt-4 text-slate-700">{product.description}</p>
                     <p className="mt-5 text-2xl font-bold">${Number(product.price).toFixed(2)}</p>
-                    <button
-                        onClick={() => router.post('/cart', { product_id: product.id, quantity: 1 })}
-                        className="mt-6 rounded bg-blue-600 px-4 py-3 font-semibold text-white"
-                    >
+                    <button onClick={addToCart} className="mt-6 rounded bg-blue-600 px-4 py-3 font-semibold text-white">
                         Add to shoe bag
                     </button>
                 </div>
