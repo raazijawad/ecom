@@ -25,7 +25,7 @@ class CartController extends Controller
             'quantity' => ['nullable', 'integer', 'min:1'],
         ]);
 
-        $product = Product::findOrFail($validated['product_id']);
+        $product = Product::query()->isVisible()->findOrFail($validated['product_id']);
         Cart::add($product, $validated['quantity'] ?? 1);
 
         return back()->with('success', 'Product added to cart.');
