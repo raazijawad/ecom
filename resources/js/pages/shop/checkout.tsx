@@ -10,6 +10,11 @@ export default function Checkout({ cartSummary }: Props) {
         customer_email: '',
         customer_phone: '',
         shipping_address: '',
+        payment_cardholder_name: '',
+        payment_card_number: '',
+        payment_exp_month: '',
+        payment_exp_year: '',
+        payment_cvv: '',
     });
 
     return (
@@ -22,17 +27,33 @@ export default function Checkout({ cartSummary }: Props) {
                 }}
                 className="grid gap-6 lg:grid-cols-3"
             >
-                <div className="space-y-4 lg:col-span-2 rounded bg-white p-5 shadow">
-                    <input className="w-full rounded border px-3 py-2" placeholder="Full name" value={form.data.customer_name} onChange={(e) => form.setData('customer_name', e.target.value)} />
-                    <input className="w-full rounded border px-3 py-2" placeholder="Email" value={form.data.customer_email} onChange={(e) => form.setData('customer_email', e.target.value)} />
-                    <input className="w-full rounded border px-3 py-2" placeholder="Phone" value={form.data.customer_phone} onChange={(e) => form.setData('customer_phone', e.target.value)} />
-                    <textarea className="w-full rounded border px-3 py-2" rows={4} placeholder="Shipping address" value={form.data.shipping_address} onChange={(e) => form.setData('shipping_address', e.target.value)} />
+                <div className="space-y-6 lg:col-span-2">
+                    <section className="space-y-4 rounded bg-white p-5 shadow">
+                        <h2 className="font-semibold">Shipping details</h2>
+                        <input className="w-full rounded border px-3 py-2" placeholder="Full name" value={form.data.customer_name} onChange={(e) => form.setData('customer_name', e.target.value)} />
+                        <input className="w-full rounded border px-3 py-2" placeholder="Email" value={form.data.customer_email} onChange={(e) => form.setData('customer_email', e.target.value)} />
+                        <input className="w-full rounded border px-3 py-2" placeholder="Phone" value={form.data.customer_phone} onChange={(e) => form.setData('customer_phone', e.target.value)} />
+                        <textarea className="w-full rounded border px-3 py-2" rows={4} placeholder="Shipping address" value={form.data.shipping_address} onChange={(e) => form.setData('shipping_address', e.target.value)} />
+                    </section>
+
+                    <section className="space-y-4 rounded bg-white p-5 shadow">
+                        <h2 className="font-semibold">Billing details (Visa / Mastercard)</h2>
+                        <input className="w-full rounded border px-3 py-2" placeholder="Cardholder name" value={form.data.payment_cardholder_name} onChange={(e) => form.setData('payment_cardholder_name', e.target.value)} />
+                        <input className="w-full rounded border px-3 py-2" placeholder="Card number" value={form.data.payment_card_number} onChange={(e) => form.setData('payment_card_number', e.target.value)} />
+                        <div className="grid grid-cols-3 gap-3">
+                            <input className="rounded border px-3 py-2" placeholder="MM" value={form.data.payment_exp_month} onChange={(e) => form.setData('payment_exp_month', e.target.value)} />
+                            <input className="rounded border px-3 py-2" placeholder="YYYY" value={form.data.payment_exp_year} onChange={(e) => form.setData('payment_exp_year', e.target.value)} />
+                            <input className="rounded border px-3 py-2" placeholder="CVV" value={form.data.payment_cvv} onChange={(e) => form.setData('payment_cvv', e.target.value)} />
+                        </div>
+                        {form.errors.payment_card_number ? <p className="text-sm text-red-600">{form.errors.payment_card_number}</p> : null}
+                    </section>
                 </div>
-                <aside className="rounded bg-white p-5 shadow">
+
+                <aside className="h-fit rounded bg-white p-5 shadow">
                     <h2 className="font-semibold">Shoe order total</h2>
                     <p className="mt-2 text-2xl font-bold">${cartSummary.total.toFixed(2)}</p>
                     <button className="mt-4 w-full rounded bg-slate-900 px-4 py-2 font-semibold text-white" disabled={form.processing}>
-                        Place shoe order
+                        Pay & place shoe order
                     </button>
                 </aside>
             </form>

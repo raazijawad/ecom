@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Support\Billing\CardBillingService;
+use App\Support\Billing\UnsupportedCardException;
 use App\Support\Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CheckoutController extends Controller
@@ -26,7 +29,7 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, CardBillingService $billingService): RedirectResponse
     {
         $cartSummary = Cart::summary();
 
@@ -39,16 +42,43 @@ class CheckoutController extends Controller
             'customer_email' => ['required', 'email', 'max:255'],
             'customer_phone' => ['required', 'string', 'max:40'],
             'shipping_address' => ['required', 'string', 'max:1000'],
+            'payment_cardholder_name' => ['required', 'string', 'max:255'],
+            'payment_card_number' => ['required', 'string', 'max:25'],
+            'payment_exp_month' => ['required', 'integer', 'between:1,12'],
+            'payment_exp_year' => ['required', 'integer', 'between:'.now()->year.','.now()->addYears(20)->year],
+            'payment_cvv' => ['required', 'digits_between:3,4'],
         ]);
 
-        $order = DB::transaction(function () use ($validated, $cartSummary) {
+        try {
+            $charge = $billingService->charge([
+                'cardholder_name' => $validated['payment_cardholder_name'],
+                'number' => $validated['payment_card_number'],
+                'exp_month' => $validated['payment_exp_month'],
+                'exp_year' => $validated['payment_exp_year'],
+                'cvv' => $validated['payment_cvv'],
+            ], $cartSummary['total']);
+        } catch (UnsupportedCardException $exception) {
+            throw ValidationException::withMessages([
+                'payment_card_number' => $exception->getMessage(),
+            ]);
+        }
+
+        $order = DB::transaction(function () use ($validated, $cartSummary, $charge) {
             $order = Order::create([
-                ...$validated,
+                'customer_name' => $validated['customer_name'],
+                'customer_email' => $validated['customer_email'],
+                'customer_phone' => $validated['customer_phone'],
+                'shipping_address' => $validated['shipping_address'],
                 'order_number' => 'ORD-'.strtoupper(Str::random(8)),
                 'subtotal' => $cartSummary['subtotal'],
                 'shipping_fee' => $cartSummary['shipping_fee'],
                 'total' => $cartSummary['total'],
-                'status' => 'pending',
+                'status' => $charge['status'] === 'captured' ? 'paid' : 'pending',
+                'payment_method' => 'card',
+                'payment_brand' => $charge['brand'],
+                'payment_last_four' => $charge['last_four'],
+                'payment_reference' => $charge['reference'],
+                'paid_at' => $charge['paid_at'],
             ]);
 
             foreach ($cartSummary['items'] as $item) {
