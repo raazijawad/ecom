@@ -64,6 +64,9 @@ class ProductResource extends Resource
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),
+            Toggle::make('is_active')
+                ->label('Visible on Storefront')
+                ->default(true),
             Textarea::make('description')
                 ->required()
                 ->rows(4)
@@ -89,6 +92,9 @@ class ProductResource extends Resource
                     ->sortable(),
                 IconColumn::make('is_featured')
                     ->label('Featured')
+                    ->boolean(),
+                IconColumn::make('is_active')
+                    ->label('Visible')
                     ->boolean(),
                 TextColumn::make('updated_at')
                     ->since()

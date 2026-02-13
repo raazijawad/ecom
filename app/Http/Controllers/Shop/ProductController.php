@@ -11,9 +11,12 @@ class ProductController extends Controller
 {
     public function show(Product $product)
     {
+        abort_unless($product->is_active, 404);
+
         return Inertia::render('shop/product-show', [
             'product' => $product->load('category'),
             'relatedProducts' => Product::query()
+                ->active()
                 ->where('category_id', $product->category_id)
                 ->whereKeyNot($product->id)
                 ->take(4)

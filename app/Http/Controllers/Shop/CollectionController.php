@@ -13,7 +13,7 @@ class CollectionController extends Controller
     {
         return Inertia::render('shop/collection-show', [
             'category' => $category,
-            'products' => $category->products()->latest()->paginate(12)->withQueryString(),
+            'products' => $category->products()->active()->latest()->paginate(12)->withQueryString(),
             'cartSummary' => Cart::summary(),
         ]);
     }

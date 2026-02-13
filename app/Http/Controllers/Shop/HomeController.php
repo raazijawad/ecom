@@ -17,6 +17,7 @@ class HomeController extends Controller
         $categorySlug = (string) $request->query('category', '');
 
         $productsQuery = Product::query()
+            ->active()
             ->with('category')
             ->when($search !== '', fn ($query) => $query->where('name', 'like', "%{$search}%"))
             ->when($categorySlug !== '', fn ($query) => $query->whereHas('category', fn ($q) => $q->where('slug', $categorySlug)))
@@ -27,7 +28,7 @@ class HomeController extends Controller
                 'q' => $search,
                 'category' => $categorySlug,
             ],
-            'featuredProducts' => Product::query()->where('is_featured', true)->take(4)->get(),
+            'featuredProducts' => Product::query()->active()->where('is_featured', true)->take(4)->get(),
             'products' => $productsQuery->paginate(8)->withQueryString(),
             'categories' => Category::query()->orderBy('name')->get(),
             'cartSummary' => Cart::summary(),
