@@ -7,10 +7,10 @@ use App\Models\Product;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
@@ -62,9 +62,6 @@ class ProductResource extends Resource
                 ->label('Image URL')
                 ->url()
                 ->maxLength(2048),
-            Toggle::make('is_featured')
-                ->label('Featured')
-                ->default(false),
             Textarea::make('description')
                 ->required()
                 ->rows(4)
@@ -96,6 +93,7 @@ class ProductResource extends Resource
                     ->sortable(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
