@@ -39,6 +39,43 @@ export default function Home({ filters, featuredProducts, products, categories, 
         },
     ];
 
+    const featureCallouts = {
+        left: [
+            {
+                title: 'Extraordinary Performance',
+                description: 'Designed with a lightweight aerodynamic frame for maximum speed.',
+                icon: <path d="M10 4L5 12h5l-1 8 5-8H9l1-8z" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />,
+            },
+            {
+                title: 'Premium Air Cushioning',
+                description: 'The visible Air Max unit in the heel provides responsive, all-day comfort.',
+                icon: <path d="M7 15c-2 0-4-1.6-4-3.7A4.1 4.1 0 017.7 7 4.8 4.8 0 0117 9.4c2.2 0 4 1.8 4 4s-1.8 3.6-4 3.6H7z" strokeWidth="1.6" />,
+            },
+            {
+                title: 'Breathable Mesh Upper',
+                description: 'Engineered mesh offers targeted support and enhanced airflow.',
+                icon: <path d="M12 5a7 7 0 100 14 7 7 0 000-14zm-4 7h8M12 8v8" strokeWidth="1.6" />,
+            },
+        ],
+        right: [
+            {
+                title: 'Superior Grip & Traction',
+                description: 'Rugged gum-rubber outsole ensures stability on various surfaces.',
+                icon: <path d="M12 3l8 4v5c0 4.4-2.8 7.8-8 9-5.2-1.2-8-4.6-8-9V7l8-4z" strokeWidth="1.6" />,
+            },
+            {
+                title: 'Affordable Premium',
+                description: 'Elite-level athletic technology delivered at an accessible price point.',
+                icon: <path d="M4 8h9l7 7-5 5-7-7V4h4" strokeWidth="1.6" strokeLinejoin="round" />,
+            },
+            {
+                title: 'Modern Aesthetic',
+                description: 'A versatile silhouette that blends gym performance with street style.',
+                icon: <path d="M12 4l2.4 4.8L20 10l-4 3.8.9 5.2-4.9-2.6L7.1 19l.9-5.2L4 10l5.6-1.2L12 4z" strokeWidth="1.6" strokeLinejoin="round" />,
+            },
+        ],
+    };
+
     const submitFilters = (e: React.FormEvent) => {
         e.preventDefault();
         router.get('/', search.data, { preserveState: true, replace: true });
@@ -122,6 +159,57 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 </aside>
 
                 <p className="absolute right-4 bottom-4 text-[11px] font-semibold tracking-[0.3em] text-slate-500 uppercase">Scroll Down</p>
+            </section>
+
+            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-10 lg:px-10">
+                <div className="pointer-events-none absolute inset-0 opacity-70">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(148,163,184,0.16),transparent_55%)]" />
+                    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 120c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#dbe1e7" strokeWidth="1" />
+                        <path d="M0 190c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#e2e8f0" strokeWidth="1" />
+                        <path d="M0 260c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#dbe1e7" strokeWidth="1" />
+                    </svg>
+                </div>
+
+                <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+                    <div className="space-y-6">
+                        {featureCallouts.left.map((feature) => (
+                            <article key={feature.title} className="group">
+                                <div className="flex items-center gap-3">
+                                    <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 shrink-0 text-blue-600" stroke="currentColor">
+                                        {feature.icon}
+                                    </svg>
+                                    <h3 className="text-lg font-bold text-slate-950">{feature.title}</h3>
+                                    <span className="hidden h-px flex-1 bg-slate-300 lg:block" />
+                                </div>
+                                <p className="mt-2 pl-10 text-sm text-slate-500">{feature.description}</p>
+                            </article>
+                        ))}
+                    </div>
+
+                    <div className="relative mx-auto flex w-full max-w-md items-center justify-center py-8 lg:py-0">
+                        <img
+                            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80"
+                            alt="Nike Air Max side profile in grey mesh with black accents and gum outsole"
+                            className="relative z-10 w-full max-w-md rounded-2xl object-cover shadow-xl shadow-slate-300/60"
+                        />
+                    </div>
+
+                    <div className="space-y-6">
+                        {featureCallouts.right.map((feature) => (
+                            <article key={feature.title} className="group">
+                                <div className="flex items-center gap-3">
+                                    <span className="hidden h-px flex-1 bg-slate-300 lg:block" />
+                                    <h3 className="text-right text-lg font-bold text-slate-950">{feature.title}</h3>
+                                    <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 shrink-0 text-blue-600" stroke="currentColor">
+                                        {feature.icon}
+                                    </svg>
+                                </div>
+                                <p className="mt-2 pr-10 text-right text-sm text-slate-500">{feature.description}</p>
+                            </article>
+                        ))}
+                    </div>
+                </div>
             </section>
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
