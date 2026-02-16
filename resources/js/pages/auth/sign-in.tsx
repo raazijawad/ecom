@@ -1,5 +1,6 @@
 import { Head, useForm, usePage } from '@inertiajs/react';
 import AppLink from '@/components/app-link';
+import { loginWithRole, logoutWithRole } from '@/lib/role-auth';
 import type { Auth } from '@/types/auth';
 
 type SharedProps = {
@@ -17,10 +18,13 @@ export default function SignIn() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        loginWithRole(form.data.email);
         form.post('/sign-in');
     };
 
     const signOut = () => {
+        logoutWithRole();
         form.post('/sign-out');
     };
 
