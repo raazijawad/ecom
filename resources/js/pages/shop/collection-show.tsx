@@ -1,6 +1,8 @@
 import { Link, router } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+import AddToCartToast from '@/components/add-to-cart-toast';
 import ShopLayout from '@/components/shop-layout';
-import { CartSummary, Category, Product } from '@/types/shop';
+import type { CartSummary, Category, Product } from '@/types/shop';
 
 type PaginatedProducts = {
     data: Product[];
@@ -14,8 +16,33 @@ type Props = {
 };
 
 export default function CollectionShow({ category, products, cartSummary }: Props) {
-    const addToCart = (productId: number) => {
-        router.post('/cart', { product_id: productId, quantity: 1 }, { preserveScroll: true });
+    const [showCartMessage, setShowCartMessage] = useState(false);
+    const [lastAddedProductName, setLastAddedProductName] = useState('');
+
+    useEffect(() => {
+        if (!showCartMessage) {
+            return;
+        }
+
+        const timeout = window.setTimeout(() => {
+            setShowCartMessage(false);
+        }, 3000);
+
+        return () => window.clearTimeout(timeout);
+    }, [showCartMessage]);
+
+    const addToCart = (productId: number, productName: string) => {
+        router.post(
+            '/cart',
+            { product_id: productId, quantity: 1 },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setLastAddedProductName(productName);
+                    setShowCartMessage(true);
+                },
+            },
+        );
     };
 
     return (
@@ -25,6 +52,8 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
                 <h1 className="mt-2 text-3xl font-bold text-slate-900">{category.name}</h1>
                 <p className="mt-3 text-slate-600">{category.description ?? `Browse products from the ${category.name} collection.`}</p>
             </section>
+
+            <AddToCartToast productName={lastAddedProductName} isVisible={showCartMessage} />
 
             <section>
                 <div className="mb-4 flex items-center justify-between gap-2">
@@ -53,7 +82,7 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
                                                 View
                                             </Link>
                                             <button
-                                                onClick={() => addToCart(product.id)}
+                                                onClick={() => addToCart(product.id, product.name)}
                                                 className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
                                             >
                                                 Add

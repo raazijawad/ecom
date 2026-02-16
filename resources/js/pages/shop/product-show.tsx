@@ -1,7 +1,8 @@
 import { Link, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import AddToCartToast from '@/components/add-to-cart-toast';
 import ShopLayout from '@/components/shop-layout';
-import { CartSummary, Product } from '@/types/shop';
+import type { CartSummary, Product } from '@/types/shop';
 
 type Props = {
     product: Product;
@@ -85,27 +86,29 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
 
                     <button
                         onClick={() =>
-                            router.post('/cart', {
-                                product_id: product.id,
-                                quantity: 1,
-                                size: selectedSize,
-                                color: selectedColor,
-                            }, {
-                                onSuccess: () => {
-                                    setShowCartMessage(true);
+                            router.post(
+                                '/cart',
+                                {
+                                    product_id: product.id,
+                                    quantity: 1,
+                                    size: selectedSize,
+                                    color: selectedColor,
                                 },
-                            })
+                                {
+                                    onSuccess: () => {
+                                        setShowCartMessage(true);
+                                    },
+                                },
+                            )
                         }
-                        className="mt-6 rounded cursor-pointer bg-blue-600 px-4 py-3 font-semibold text-white"
+                        className="mt-6 cursor-pointer rounded bg-blue-600 px-4 py-3 font-semibold text-white"
                     >
                         Add to shoe bag
                     </button>
-
-                    {showCartMessage && (
-                        <p className="mt-3 rounded bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-700">Added to cart</p>
-                    )}
                 </div>
             </div>
+
+            <AddToCartToast productName={product.name} isVisible={showCartMessage} />
 
             <section className="mt-10">
                 <h2 className="mb-4 text-xl font-semibold">More shoes you may like</h2>
