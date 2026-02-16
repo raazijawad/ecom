@@ -30,6 +30,6 @@ class CreateAccountController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('sign-in');
+        return redirect()->route('home');
     }
 }
