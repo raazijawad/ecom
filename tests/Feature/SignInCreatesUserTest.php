@@ -17,7 +17,7 @@ class SignInCreatesUserTest extends TestCase
             'password' => 'password123',
         ]);
 
-        $response->assertRedirect(route('sign-in'));
+        $response->assertRedirect(route('home'));
 
         $user = User::query()->where('email', 'new.customer@example.com')->first();
 

@@ -45,7 +45,7 @@ class SignInController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('sign-in');
+        return redirect()->route('home');
     }
 
     public function destroy(Request $request): RedirectResponse
