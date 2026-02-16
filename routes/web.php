@@ -20,6 +20,9 @@ Route::get('/sign-in', [SignInController::class, 'create'])->name('sign-in');
 Route::post('/sign-in', [SignInController::class, 'store'])->name('sign-in.store');
 Route::post('/sign-out', [SignInController::class, 'destroy'])->name('sign-out');
 
+Route::get('/register', [CreateAccountController::class, 'create'])->name('register');
+Route::post('/register', [CreateAccountController::class, 'store'])->name('register.store');
+
 Route::get('/create-account', [CreateAccountController::class, 'create'])->name('create-account');
 Route::post('/create-account', [CreateAccountController::class, 'store'])->name('create-account.store');
 

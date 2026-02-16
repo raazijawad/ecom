@@ -17,6 +17,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'demo@example.com',
         ]);
 
+        User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@gmail.com',
+            'is_admin' => true,
+        ]);
+
         $catalog = [
             'New Arrivals' => [
                 ['name' => 'FreshDrop Velocity One', 'price' => 119.99, 'stock' => 30, 'featured' => true],

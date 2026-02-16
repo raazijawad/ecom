@@ -26,4 +26,22 @@ class CreateAccountRedirectTest extends TestCase
         $this->assertNotNull($user);
         $this->assertAuthenticatedAs($user);
     }
+
+    public function test_register_route_creates_customer_account(): void
+    {
+        $response = $this->post(route('register.store'), [
+            'name' => 'Public Customer',
+            'email' => 'public.customer@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertRedirect(route('home'));
+
+        $user = User::query()->where('email', 'public.customer@example.com')->first();
+
+        $this->assertNotNull($user);
+        $this->assertFalse((bool) $user->is_admin);
+        $this->assertAuthenticatedAs($user);
+    }
 }
