@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\HeroBanner;
 use App\Models\Product;
 use App\Support\Cart;
 use Illuminate\Http\Request;
@@ -29,6 +30,11 @@ class HomeController extends Controller
                 'category' => $categorySlug,
             ],
             'featuredProducts' => Product::query()->isVisible()->where('is_featured', true)->take(4)->get(),
+            'heroBanners' => HeroBanner::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderByDesc('id')
+                ->get(),
             'products' => $productsQuery->paginate(8)->withQueryString(),
             'categories' => Category::query()->orderBy('name')->get(),
             'cartSummary' => Cart::summary(),

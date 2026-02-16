@@ -30,6 +30,19 @@ export type CartItem = {
     image_url: string | null;
 };
 
+
+export type HeroBanner = {
+    id: number;
+    eyebrow: string | null;
+    title: string;
+    description: string | null;
+    image_url: string;
+    cta_label: string | null;
+    cta_link: string | null;
+    sort_order: number;
+    is_active: boolean;
+};
+
 export type CartSummary = {
     items: CartItem[];
     count: number;
