@@ -165,8 +165,6 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 <p className="absolute right-4 bottom-4 text-[11px] font-semibold tracking-[0.3em] text-slate-500 uppercase">Scroll Down</p>
             </section>
 
-
-
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
                     value={search.data.q}
@@ -382,14 +380,16 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 </form>
             </section>
 
-
-
             <footer className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="grid gap-6 md:grid-cols-4">
                     <div>
                         <h3 className="font-semibold text-slate-900">Quick Links</h3>
                         <ul className="mt-2 space-y-1 text-sm text-slate-600">
-                            <li>All Shoes</li>
+                            <li>
+                                <Link href="/shoes" className="hover:text-slate-900 hover:underline">
+                                    All Shoes
+                                </Link>
+                            </li>
                             <li>Featured Kicks</li>
                             <li>Best Sellers</li>
                             <li>New Arrivals</li>
