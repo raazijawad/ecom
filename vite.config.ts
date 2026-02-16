@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
@@ -21,6 +22,11 @@ export default defineConfig({
             formVariants: true,
         }),
     ],
+    resolve: {
+        alias: {
+            'react-router-dom': path.resolve(__dirname, 'resources/js/lib/react-router-dom.tsx'),
+        },
+    },
     esbuild: {
         jsx: 'automatic',
     },

@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import AppLink from '@/components/app-link';
 
 type Props = {
     productName: string;
@@ -23,9 +23,9 @@ export default function AddToCartToast({ productName, isVisible }: Props) {
                     <span className="font-bold">&quot;{productName}&quot;</span> has been added to your cart.
                 </p>
 
-                <Link href="/cart" className="rounded-full bg-blue-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-400">
+                <AppLink href="/cart" className="rounded-full bg-blue-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-400">
                     View cart
-                </Link>
+                </AppLink>
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import type { PropsWithChildren } from 'react';
 import { useState } from 'react';
+import AppLink from '@/components/app-link';
 import type { Auth } from '@/types/auth';
 import type { CartSummary } from '@/types/shop';
 
@@ -28,14 +29,14 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
             <div className="min-h-screen bg-[#f7f8fa] text-slate-900">
                 <header className="relative z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur">
                     <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-5">
-                        <Link href="/" className="text-xl font-bold tracking-tight text-slate-900">
+                        <AppLink href="/" className="text-xl font-bold tracking-tight text-slate-900">
                             AERO <span className="text-blue-600">Step</span>
-                        </Link>
+                        </AppLink>
 
                         <nav className="hidden items-center gap-7 text-sm font-medium text-slate-700 md:flex">
-                            <Link href="/" className="transition hover:text-slate-900">
+                            <AppLink href="/" className="transition hover:text-slate-900">
                                 Home
-                            </Link>
+                            </AppLink>
                             <div className="group relative">
                                 <button type="button" className="transition hover:text-slate-900">
                                     Collections
@@ -43,28 +44,28 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                 <div className="invisible absolute left-0 top-full z-20 mt-2 w-56 rounded-xl border border-slate-200 bg-white p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:opacity-100">
                                     {collections.length > 0 ? (
                                         collections.map((collection) => (
-                                            <Link
+                                            <AppLink
                                                 key={collection.id}
                                                 href={`/collections/${collection.slug}`}
                                                 className="block rounded-md px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
                                             >
                                                 {collection.name}
-                                            </Link>
+                                            </AppLink>
                                         ))
                                     ) : (
                                         <span className="block px-3 py-2 text-sm text-slate-500">No collections found</span>
                                     )}
                                 </div>
                             </div>
-                            <Link href="/shoes" className="transition hover:text-slate-900">
+                            <AppLink href="/shoes" className="transition hover:text-slate-900">
                                 Shoes
-                            </Link>
-                            <Link href="/" className="transition hover:text-slate-900">
+                            </AppLink>
+                            <AppLink href="/" className="transition hover:text-slate-900">
                                 Quick find
-                            </Link>
-                            <Link href="/" className="transition hover:text-slate-900">
+                            </AppLink>
+                            <AppLink href="/" className="transition hover:text-slate-900">
                                 Pages
-                            </Link>
+                            </AppLink>
                         </nav>
 
                         <div className="flex items-center gap-3">
@@ -88,9 +89,9 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                     Sign out
                                 </button>
                             ) : (
-                                <Link href="/sign-in" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+                                <AppLink href="/sign-in" className="text-sm font-medium text-slate-600 hover:text-slate-900">
                                     Sign in
-                                </Link>
+                                </AppLink>
                             )}
 
                             <button
@@ -99,7 +100,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                             >
                                 Contact Us
                             </button>
-                            <Link
+                            <AppLink
                                 href="/cart"
                                 className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-900 hover:border-slate-400"
                             >
@@ -115,7 +116,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                 <span className="absolute -top-1 -right-1 rounded-full bg-blue-600 px-1.5 text-[10px] font-bold text-white">
                                     {cartSummary?.count ?? 0}
                                 </span>
-                            </Link>
+                            </AppLink>
                         </div>
                     </div>
                 </header>
@@ -144,35 +145,35 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                             </div>
 
                             <nav className="space-y-4 text-sm font-medium text-slate-700">
-                                <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                <AppLink href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
                                     Home
-                                </Link>
+                                </AppLink>
                                 <div className="space-y-2">
                                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Collections</p>
                                     {collections.length > 0 ? (
                                         collections.map((collection) => (
-                                            <Link
+                                            <AppLink
                                                 key={collection.id}
                                                 href={`/collections/${collection.slug}`}
                                                 className="block rounded-md px-2 py-1"
                                                 onClick={() => setIsMobileMenuOpen(false)}
                                             >
                                                 {collection.name}
-                                            </Link>
+                                            </AppLink>
                                         ))
                                     ) : (
                                         <span className="block px-2 py-1 text-slate-500">No collections found</span>
                                     )}
                                 </div>
-                                <Link href="/shoes" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                <AppLink href="/shoes" className="block" onClick={() => setIsMobileMenuOpen(false)}>
                                     Shoes
-                                </Link>
-                                <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                </AppLink>
+                                <AppLink href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
                                     Quick find
-                                </Link>
-                                <Link href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
+                                </AppLink>
+                                <AppLink href="/" className="block" onClick={() => setIsMobileMenuOpen(false)}>
                                     Pages
-                                </Link>
+                                </AppLink>
                             </nav>
                         </aside>
                     </div>

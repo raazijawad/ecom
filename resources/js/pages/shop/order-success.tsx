@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 
 type Props = {
@@ -37,9 +37,9 @@ export default function OrderSuccess({ order }: Props) {
                         ))}
                     </ul>
                 </div>
-                <Link href="/" className="mt-6 inline-block rounded bg-slate-900 px-4 py-2 font-semibold text-white">
+                <AppLink href="/" className="mt-6 inline-block rounded bg-slate-900 px-4 py-2 font-semibold text-white">
                     Continue shopping shoes
-                </Link>
+                </AppLink>
             </div>
         </ShopLayout>
     );
