@@ -23,7 +23,9 @@ class HeroBannerResource extends Resource
 
     protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-photo';
 
-    protected static ?string $navigationLabel = 'Hero Banners';
+    protected static ?string $navigationLabel = 'Hero Banner';
+
+    protected static string|null|\UnitEnum $navigationGroup = 'Advertisement';
 
     public static function form(Schema $schema): Schema
     {
