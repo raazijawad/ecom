@@ -150,8 +150,6 @@ export default function Home({ filters, featuredProducts, products, categories, 
         };
     }, [sliderBanners.length]);
 
-    const currentHeroBanner = sliderBanners[activeHeroBanner] ?? fallbackHeroBanner;
-
     const handleBannerPointerDown = (event: React.PointerEvent<HTMLElement>) => {
         if (sliderBanners.length < 2) {
             return;
@@ -220,62 +218,71 @@ export default function Home({ filters, featuredProducts, products, categories, 
                     </svg>
                 </div>
 
-                <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
-                    <div>
-                        <p className="text-sm font-medium tracking-wide text-slate-500">{currentHeroBanner.eyebrow ?? 'Featured Drop'}</p>
-                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
-                            {currentHeroBanner.title}
-                        </h1>
-                        <p className="mt-4 max-w-lg text-slate-600">
-                            {currentHeroBanner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}
-                        </p>
+                <div className="relative z-10 overflow-hidden">
+                    <div
+                        className="flex transition-transform duration-700 ease-in-out"
+                        style={{ transform: `translateX(-${activeHeroBanner * 100}%)` }}
+                    >
+                        {sliderBanners.map((banner) => (
+                            <article key={banner.id} className="w-full shrink-0">
+                                <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
+                                    <div>
+                                        <p className="text-sm font-medium tracking-wide text-slate-500">{banner.eyebrow ?? 'Featured Drop'}</p>
+                                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{banner.title}</h1>
+                                        <p className="mt-4 max-w-lg text-slate-600">
+                                            {banner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}
+                                        </p>
 
-                        <div className="mt-8 flex flex-wrap items-center gap-3">
-                            {currentHeroBanner.cta_link ? (
-                                <Link
-                                    href={currentHeroBanner.cta_link}
-                                    className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
-                                >
-                                    {currentHeroBanner.cta_label ?? 'Shop Now'}
-                                </Link>
-                            ) : (
-                                <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
-                                    {currentHeroBanner.cta_label ?? 'Shop Now'}
-                                </button>
-                            )}
-                            <button
-                                type="button"
-                                onClick={() => setActiveHeroBanner((current) => (current + 1) % sliderBanners.length)}
-                                className="inline-flex items-center gap-2 rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
-                            >
-                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">
-                                    ▶
-                                </span>
-                                Next Banner
-                            </button>
-                        </div>
+                                        <div className="mt-8 flex flex-wrap items-center gap-3">
+                                            {banner.cta_link ? (
+                                                <Link
+                                                    href={banner.cta_link}
+                                                    className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
+                                                >
+                                                    {banner.cta_label ?? 'Shop Now'}
+                                                </Link>
+                                            ) : (
+                                                <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
+                                                    {banner.cta_label ?? 'Shop Now'}
+                                                </button>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => setActiveHeroBanner((current) => (current + 1) % sliderBanners.length)}
+                                                className="inline-flex items-center gap-2 rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
+                                            >
+                                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">
+                                                    ▶
+                                                </span>
+                                                Next Banner
+                                            </button>
+                                        </div>
 
-                        {sliderBanners.length > 1 && (
-                            <div className="mt-6 flex items-center gap-2">
-                                {sliderBanners.map((banner, index) => (
-                                    <button
-                                        key={banner.id}
-                                        type="button"
-                                        onClick={() => setActiveHeroBanner(index)}
-                                        className={`h-2.5 rounded-full transition ${activeHeroBanner === index ? 'w-8 bg-slate-900' : 'w-2.5 bg-slate-300 hover:bg-slate-500'}`}
-                                        aria-label={`Show banner ${index + 1}`}
-                                    />
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                                        {sliderBanners.length > 1 && (
+                                            <div className="mt-6 flex items-center gap-2">
+                                                {sliderBanners.map((sliderBanner, index) => (
+                                                    <button
+                                                        key={sliderBanner.id}
+                                                        type="button"
+                                                        onClick={() => setActiveHeroBanner(index)}
+                                                        className={`h-2.5 rounded-full transition ${activeHeroBanner === index ? 'w-8 bg-slate-900' : 'w-2.5 bg-slate-300 hover:bg-slate-500'}`}
+                                                        aria-label={`Show banner ${index + 1}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
 
-                    <div className="relative flex min-h-[280px] items-center justify-center lg:min-h-[360px]">
-                        <img
-                            src={currentHeroBanner.image_url}
-                            alt={currentHeroBanner.title}
-                            className="h-[300px] w-full rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-[360px]"
-                        />
+                                    <div className="relative flex min-h-[280px] items-center justify-center lg:min-h-[360px]">
+                                        <img
+                                            src={banner.image_url}
+                                            alt={banner.title}
+                                            className="h-[300px] w-full rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-[360px]"
+                                        />
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
                     </div>
                 </div>
 
