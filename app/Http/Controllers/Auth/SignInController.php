@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,14 @@ class SignInController extends Controller
             'password' => ['required', 'string'],
             'remember' => ['nullable', 'boolean'],
         ]);
+
+        User::query()->firstOrCreate(
+            ['email' => $credentials['email']],
+            [
+                'name' => str($credentials['email'])->before('@')->replace(['.', '_', '-'], ' ')->title()->toString(),
+                'password' => $credentials['password'],
+            ]
+        );
 
         if (! Auth::attempt([
             'email' => $credentials['email'],

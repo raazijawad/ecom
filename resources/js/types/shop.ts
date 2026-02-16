@@ -30,7 +30,6 @@ export type CartItem = {
     image_url: string | null;
 };
 
-
 export type HeroBanner = {
     id: number;
     eyebrow: string | null;
@@ -49,4 +48,15 @@ export type CartSummary = {
     subtotal: number;
     shipping_fee: number;
     total: number;
+};
+
+export type Testimonial = {
+    id: number;
+    comment: string;
+    created_at: string;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+    };
 };

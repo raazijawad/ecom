@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\HeroBanner;
 use App\Models\Product;
+use App\Models\Testimonial;
 use App\Support\Cart;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,6 +38,11 @@ class HomeController extends Controller
                 ->get(),
             'products' => $productsQuery->paginate(8)->withQueryString(),
             'categories' => Category::query()->orderBy('name')->get(),
+            'testimonials' => Testimonial::query()
+                ->with('user:id,name,email')
+                ->latest()
+                ->take(9)
+                ->get(),
             'cartSummary' => Cart::summary(),
         ]);
     }
