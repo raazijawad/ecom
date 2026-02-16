@@ -1,7 +1,8 @@
-import { Link, router, useForm } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ShopLayout from '@/components/shop-layout';
-import type { CartSummary, Category, HeroBanner, Product } from '@/types/shop';
+import type { Auth } from '@/types/auth';
+import type { CartSummary, Category, HeroBanner, Product, Testimonial } from '@/types/shop';
 
 type PaginatedProducts = {
     data: Product[];
@@ -13,12 +14,19 @@ type Props = {
     featuredProducts: Product[];
     products: PaginatedProducts;
     categories: Category[];
+    testimonials: Testimonial[];
     cartSummary: CartSummary;
     heroBanners: HeroBanner[];
 };
 
-export default function Home({ filters, featuredProducts, products, categories, cartSummary, heroBanners }: Props) {
+type SharedProps = {
+    auth: Auth;
+};
+
+export default function Home({ filters, featuredProducts, products, categories, testimonials, cartSummary, heroBanners }: Props) {
+    const { auth } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
+    const testimonialForm = useForm({ comment: '' });
     const searchDebounce = useRef<number | null>(null);
     const bestSellers = products.data.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
@@ -27,24 +35,6 @@ export default function Home({ filters, featuredProducts, products, categories, 
     const viewProductDetails = (productId: number) => {
         router.get(`/products/${productId}`);
     };
-
-    const testimonials = [
-        {
-            name: 'Ava Thompson',
-            role: 'Marathon Runner',
-            quote: 'My training pair arrived fast and fits perfectly. SoleStyle is now my go-to shoe shop.',
-        },
-        {
-            name: 'Marcus Lee',
-            role: 'Sneaker Collector',
-            quote: 'Clean product pages, accurate sizing info, and premium quality shoes every time.',
-        },
-        {
-            name: 'Sofia Patel',
-            role: 'Daily Commuter',
-            quote: 'I needed all-day comfort for city walks, and SoleStyle delivered exactly that.',
-        },
-    ];
 
     const featureCallouts = {
         left: [
@@ -189,6 +179,15 @@ export default function Home({ filters, featuredProducts, products, categories, 
         setIsDraggingBanner(false);
     };
 
+    const submitTestimonial = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        testimonialForm.post('/testimonials', {
+            preserveScroll: true,
+            onSuccess: () => testimonialForm.reset('comment'),
+        });
+    };
+
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
             <section
@@ -228,7 +227,9 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
                                     <div>
                                         <p className="text-sm font-medium tracking-wide text-slate-500">{banner.eyebrow ?? 'Featured Drop'}</p>
-                                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{banner.title}</h1>
+                                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                                            {banner.title}
+                                        </h1>
                                         <p className="mt-4 max-w-lg text-slate-600">
                                             {banner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}
                                         </p>
@@ -498,12 +499,44 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
             <section className="mb-10">
                 <h2 className="mb-4 text-xl font-semibold">What customers say</h2>
+                {auth.user ? (
+                    <form onSubmit={submitTestimonial} className="mb-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <label htmlFor="testimonial-comment" className="mb-2 block text-sm font-medium text-slate-800">
+                            Leave a testimonial as {auth.user.name}
+                        </label>
+                        <textarea
+                            id="testimonial-comment"
+                            value={testimonialForm.data.comment}
+                            onChange={(event) => testimonialForm.setData('comment', event.target.value)}
+                            rows={3}
+                            maxLength={1000}
+                            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                            placeholder="Share your experience with our store..."
+                        />
+                        {testimonialForm.errors.comment ? <p className="mt-2 text-xs text-red-600">{testimonialForm.errors.comment}</p> : null}
+                        <button
+                            type="submit"
+                            disabled={testimonialForm.processing}
+                            className="mt-3 rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                        >
+                            {testimonialForm.processing ? 'Submitting...' : 'Post testimonial'}
+                        </button>
+                    </form>
+                ) : (
+                    <p className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+                        Please{' '}
+                        <Link href="/sign-in" className="font-semibold text-blue-600 hover:underline">
+                            sign in
+                        </Link>{' '}
+                        to comment testimonials.
+                    </p>
+                )}
                 <div className="grid gap-4 md:grid-cols-3">
                     {testimonials.map((testimonial) => (
-                        <article key={testimonial.name} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-                            <p className="text-sm leading-6 text-slate-700">“{testimonial.quote}”</p>
-                            <p className="mt-4 font-semibold text-slate-900">{testimonial.name}</p>
-                            <p className="text-xs text-slate-500">{testimonial.role}</p>
+                        <article key={testimonial.id} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                            <p className="text-sm leading-6 text-slate-700">“{testimonial.comment}”</p>
+                            <p className="mt-4 font-semibold text-slate-900">{testimonial.user.name}</p>
+                            <p className="text-xs text-slate-500">{testimonial.user.email}</p>
                         </article>
                     ))}
                 </div>

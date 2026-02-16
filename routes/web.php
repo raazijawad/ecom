@@ -8,6 +8,7 @@ use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\HomeController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ShoesController;
+use App\Http\Controllers\Shop\TestimonialController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -30,3 +31,7 @@ Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart
 Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+
+Route::post('/testimonials', [TestimonialController::class, 'store'])
+    ->middleware('auth')
+    ->name('testimonials.store');
