@@ -129,6 +129,8 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
     const sliderBanners = heroBanners.length > 0 ? heroBanners : [fallbackHeroBanner];
     const [activeHeroBanner, setActiveHeroBanner] = useState(0);
+    const [isDraggingBanner, setIsDraggingBanner] = useState(false);
+    const bannerDragStartX = useRef<number | null>(null);
 
     useEffect(() => {
         setActiveHeroBanner(0);
@@ -141,7 +143,7 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
         const interval = window.setInterval(() => {
             setActiveHeroBanner((current) => (current + 1) % sliderBanners.length);
-        }, 6000);
+        }, 3000);
 
         return () => {
             window.clearInterval(interval);
@@ -150,9 +152,53 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
     const currentHeroBanner = sliderBanners[activeHeroBanner] ?? fallbackHeroBanner;
 
+    const handleBannerPointerDown = (event: React.PointerEvent<HTMLElement>) => {
+        if (sliderBanners.length < 2) {
+            return;
+        }
+
+        bannerDragStartX.current = event.clientX;
+        setIsDraggingBanner(true);
+        event.currentTarget.setPointerCapture(event.pointerId);
+    };
+
+    const handleBannerPointerUp = (event: React.PointerEvent<HTMLElement>) => {
+        if (bannerDragStartX.current === null) {
+            setIsDraggingBanner(false);
+            return;
+        }
+
+        const dragDistance = event.clientX - bannerDragStartX.current;
+        const dragThreshold = 40;
+
+        if (Math.abs(dragDistance) >= dragThreshold) {
+            setActiveHeroBanner((current) => {
+                if (dragDistance < 0) {
+                    return (current + 1) % sliderBanners.length;
+                }
+
+                return (current - 1 + sliderBanners.length) % sliderBanners.length;
+            });
+        }
+
+        bannerDragStartX.current = null;
+        setIsDraggingBanner(false);
+        event.currentTarget.releasePointerCapture(event.pointerId);
+    };
+
+    const handleBannerPointerCancel = () => {
+        bannerDragStartX.current = null;
+        setIsDraggingBanner(false);
+    };
+
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
-            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-[#f4f5f7] px-6 py-10 lg:px-10 lg:py-14">
+            <section
+                className={`relative mb-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-[#f4f5f7] px-6 py-10 lg:px-10 lg:py-14 ${isDraggingBanner ? 'cursor-grabbing' : 'cursor-grab'}`}
+                onPointerDown={handleBannerPointerDown}
+                onPointerUp={handleBannerPointerUp}
+                onPointerCancel={handleBannerPointerCancel}
+            >
                 <div className="pointer-events-none absolute inset-0 opacity-60">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.1),transparent_38%),radial-gradient(circle_at_80%_75%,rgba(15,23,42,0.1),transparent_36%)]" />
                     <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -177,8 +223,12 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
                     <div>
                         <p className="text-sm font-medium tracking-wide text-slate-500">{currentHeroBanner.eyebrow ?? 'Featured Drop'}</p>
-                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{currentHeroBanner.title}</h1>
-                        <p className="mt-4 max-w-lg text-slate-600">{currentHeroBanner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}</p>
+                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                            {currentHeroBanner.title}
+                        </h1>
+                        <p className="mt-4 max-w-lg text-slate-600">
+                            {currentHeroBanner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}
+                        </p>
 
                         <div className="mt-8 flex flex-wrap items-center gap-3">
                             {currentHeroBanner.cta_link ? (
@@ -198,7 +248,9 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 onClick={() => setActiveHeroBanner((current) => (current + 1) % sliderBanners.length)}
                                 className="inline-flex items-center gap-2 rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
                             >
-                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">▶</span>
+                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">
+                                    ▶
+                                </span>
                                 Next Banner
                             </button>
                         </div>
