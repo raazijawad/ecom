@@ -19,7 +19,9 @@ class CollectionResource extends Resource
 
     protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Collections';
+    protected static ?string $navigationLabel = 'Collection';
+
+    protected static string|null|\UnitEnum $navigationGroup = 'Catelog';
 
     protected static ?string $modelLabel = 'Collection';
 

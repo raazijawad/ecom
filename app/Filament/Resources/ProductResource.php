@@ -26,6 +26,8 @@ class ProductResource extends Resource
 
     protected static ?string $navigationLabel = 'Products';
 
+    protected static string|null|\UnitEnum $navigationGroup = 'Catelog';
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([

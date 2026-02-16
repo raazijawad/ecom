@@ -19,7 +19,9 @@ class ProductDetailsResource extends Resource
 
     protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-adjustments-horizontal';
 
-    protected static ?string $navigationLabel = 'Product Details';
+    protected static ?string $navigationLabel = 'Products Details';
+
+    protected static string|null|\UnitEnum $navigationGroup = 'Catelog';
 
     protected static ?string $modelLabel = 'Product Detail';
 

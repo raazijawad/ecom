@@ -22,6 +22,8 @@ class OrderResource extends Resource
 
     protected static ?string $navigationLabel = 'Orders';
 
+    protected static string|null|\UnitEnum $navigationGroup = 'Sales';
+
     protected static ?string $modelLabel = 'Order';
 
     protected static ?string $pluralModelLabel = 'Orders';
