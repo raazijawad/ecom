@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import AppLink from '@/components/app-link';
 
 type Props = {
@@ -5,14 +6,43 @@ type Props = {
     isVisible: boolean;
 };
 
+const EXIT_DURATION_MS = 500;
+
 export default function AddToCartToast({ productName, isVisible }: Props) {
-    if (!isVisible) {
+    const [shouldRender, setShouldRender] = useState(isVisible);
+    const [isAnimatingIn, setIsAnimatingIn] = useState(false);
+
+    useEffect(() => {
+        if (isVisible) {
+            setShouldRender(true);
+
+            const frame = window.requestAnimationFrame(() => {
+                setIsAnimatingIn(true);
+            });
+
+            return () => window.cancelAnimationFrame(frame);
+        }
+
+        setIsAnimatingIn(false);
+
+        const timeout = window.setTimeout(() => {
+            setShouldRender(false);
+        }, EXIT_DURATION_MS);
+
+        return () => window.clearTimeout(timeout);
+    }, [isVisible]);
+
+    if (!shouldRender) {
         return null;
     }
 
     return (
-        <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
-            <div className="pointer-events-auto flex w-full max-w-2xl items-center gap-3 rounded-full bg-slate-900 px-4 py-3 text-white shadow-[0_20px_45px_rgba(15,23,42,0.45)]">
+        <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-6">
+            <div
+                className={`pointer-events-auto flex w-full max-w-2xl items-center gap-3 rounded-full bg-slate-900 px-4 py-3 text-white shadow-[0_20px_45px_rgba(15,23,42,0.45)] transition-all duration-500 ease-out ${
+                    isAnimatingIn ? 'translate-y-0 opacity-100' : 'translate-y-[160%] opacity-0'
+                }`}
+            >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-500">
                     <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden="true">
                         <path d="M5 10.5l3.2 3.2L15 7" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
