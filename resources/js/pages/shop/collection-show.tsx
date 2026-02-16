@@ -1,6 +1,7 @@
-import { Link, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import AddToCartToast from '@/components/add-to-cart-toast';
+import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { CartSummary, Category, Product } from '@/types/shop';
 
@@ -58,9 +59,9 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
             <section>
                 <div className="mb-4 flex items-center justify-between gap-2">
                     <h2 className="text-xl font-semibold">Products</h2>
-                    <Link href="/" className="rounded border border-slate-300 px-3 py-2 text-sm">
+                    <AppLink href="/" className="rounded border border-slate-300 px-3 py-2 text-sm">
                         Back to home
-                    </Link>
+                    </AppLink>
                 </div>
 
                 {products.data.length === 0 ? (
@@ -78,9 +79,9 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
                                     <div className="mt-4 flex items-center justify-between">
                                         <span className="font-bold">${Number(product.price).toFixed(2)}</span>
                                         <div className="flex gap-2">
-                                            <Link href={`/products/${product.id}`} className="rounded border border-slate-300 px-3 py-2 text-sm">
+                                            <AppLink href={`/products/${product.id}`} className="rounded border border-slate-300 px-3 py-2 text-sm">
                                                 View
-                                            </Link>
+                                            </AppLink>
                                             <button
                                                 onClick={() => addToCart(product.id, product.name)}
                                                 className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
@@ -95,7 +96,7 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
 
                         <div className="mt-6 flex flex-wrap gap-2">
                             {products.links.map((link, idx) => (
-                                <Link
+                                <AppLink
                                     key={idx}
                                     href={link.url ?? '#'}
                                     className={`rounded border px-3 py-2 text-sm ${link.active ? 'bg-slate-900 text-white' : 'bg-white text-slate-700'}`}

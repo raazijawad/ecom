@@ -1,6 +1,7 @@
-import { Link, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
+import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
-import { CartSummary } from '@/types/shop';
+import type { CartSummary } from '@/types/shop';
 
 type Props = { cartSummary: CartSummary };
 
@@ -54,9 +55,9 @@ export default function Cart({ cartSummary }: Props) {
                                 <dd>${cartSummary.total.toFixed(2)}</dd>
                             </div>
                         </dl>
-                        <Link href="/checkout" className="mt-4 block rounded bg-blue-600 px-4 py-2 text-center font-semibold text-white">
+                        <AppLink href="/checkout" className="mt-4 block rounded bg-blue-600 px-4 py-2 text-center font-semibold text-white">
                             Proceed to checkout
-                        </Link>
+                        </AppLink>
                     </aside>
                 </div>
             )}

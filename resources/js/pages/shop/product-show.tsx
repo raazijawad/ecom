@@ -1,6 +1,7 @@
-import { Link, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import AddToCartToast from '@/components/add-to-cart-toast';
+import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { CartSummary, Product } from '@/types/shop';
 
@@ -114,10 +115,10 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                 <h2 className="mb-4 text-xl font-semibold">More shoes you may like</h2>
                 <div className="grid gap-4 md:grid-cols-4">
                     {relatedProducts.map((item) => (
-                        <Link key={item.id} href={`/products/${item.id}`} className="rounded border border-slate-200 bg-white p-3 shadow-sm">
+                        <AppLink key={item.id} href={`/products/${item.id}`} className="rounded border border-slate-200 bg-white p-3 shadow-sm">
                             <img src={item.image_url ?? ''} alt={item.name} className="mb-2 h-28 w-full rounded object-cover" />
                             <p className="font-medium">{item.name}</p>
-                        </Link>
+                        </AppLink>
                     ))}
                 </div>
             </section>

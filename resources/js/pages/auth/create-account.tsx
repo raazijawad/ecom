@@ -1,4 +1,5 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
+import AppLink from '@/components/app-link';
 
 export default function CreateAccount() {
     const form = useForm({
@@ -19,9 +20,9 @@ export default function CreateAccount() {
             <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
                 <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="mb-6">
-                        <Link href="/sign-in" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                        <AppLink href="/sign-in" className="text-sm font-medium text-blue-600 hover:text-blue-500">
                             ← Back to sign in
-                        </Link>
+                        </AppLink>
                         <h1 className="mt-3 text-2xl font-bold text-slate-900">Create your account</h1>
                         <p className="mt-1 text-sm text-slate-600">Fill in the details below to get started.</p>
                     </div>

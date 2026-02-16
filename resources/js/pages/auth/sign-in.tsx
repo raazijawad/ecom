@@ -1,4 +1,5 @@
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import AppLink from '@/components/app-link';
 import type { Auth } from '@/types/auth';
 
 type SharedProps = {
@@ -29,9 +30,9 @@ export default function SignIn() {
             <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
                 <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="mb-6">
-                        <Link href="/" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                        <AppLink href="/" className="text-sm font-medium text-blue-600 hover:text-blue-500">
                             ← Back to shop
-                        </Link>
+                        </AppLink>
                     </div>
 
                     {auth.user ? (
@@ -107,9 +108,9 @@ export default function SignIn() {
 
                             <p className="mt-4 text-sm text-slate-600">
                                 Don&apos;t have an account?{' '}
-                                <Link href="/create-account" className="font-medium text-blue-600 hover:text-blue-500">
+                                <AppLink href="/create-account" className="font-medium text-blue-600 hover:text-blue-500">
                                     Create account
-                                </Link>
+                                </AppLink>
                             </p>
                         </>
                     )}

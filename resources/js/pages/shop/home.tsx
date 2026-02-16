@@ -1,5 +1,6 @@
-import { Link, router, useForm, usePage } from '@inertiajs/react';
+import { router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { Auth } from '@/types/auth';
 import type { CartSummary, Category, HeroBanner, Product, Testimonial } from '@/types/shop';
@@ -236,12 +237,12 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
                                         <div className="mt-8 flex flex-wrap items-center gap-3">
                                             {banner.cta_link ? (
-                                                <Link
+                                                <AppLink
                                                     href={banner.cta_link}
                                                     className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
                                                 >
                                                     {banner.cta_label ?? 'Shop Now'}
-                                                </Link>
+                                                </AppLink>
                                             ) : (
                                                 <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
                                                     {banner.cta_label ?? 'Shop Now'}
@@ -392,12 +393,12 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                 <p className="mt-2 text-sm text-slate-600">
                                     {category.description || `Explore best-selling ${category.name.toLowerCase()} built for every step.`}
                                 </p>
-                                <Link
+                                <AppLink
                                     href={`/collections/${category.slug}`}
                                     className="mt-4 inline-block rounded bg-slate-900 px-3 py-2 text-sm font-semibold text-white"
                                 >
                                     Shop now
-                                </Link>
+                                </AppLink>
                             </article>
                         ))}
                     </div>
@@ -525,9 +526,9 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 ) : (
                     <p className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
                         Please{' '}
-                        <Link href="/sign-in" className="font-semibold text-blue-600 hover:underline">
+                        <AppLink href="/sign-in" className="font-semibold text-blue-600 hover:underline">
                             sign in
-                        </Link>{' '}
+                        </AppLink>{' '}
                         to comment testimonials.
                     </p>
                 )}
@@ -561,9 +562,9 @@ export default function Home({ filters, featuredProducts, products, categories, 
                         <h3 className="font-semibold text-slate-900">Quick Links</h3>
                         <ul className="mt-2 space-y-1 text-sm text-slate-600">
                             <li>
-                                <Link href="/shoes" className="hover:text-slate-900 hover:underline">
+                                <AppLink href="/shoes" className="hover:text-slate-900 hover:underline">
                                     All Shoes
-                                </Link>
+                                </AppLink>
                             </li>
                             <li>Featured Kicks</li>
                             <li>Best Sellers</li>
