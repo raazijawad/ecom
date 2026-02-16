@@ -22,6 +22,10 @@ type SharedProps = {
 export default function ShopLayout({ title, cartSummary, children }: Props) {
     const { auth, collections } = usePage<SharedProps>().props;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const isAdmin =
+        auth.user?.is_admin === true ||
+        auth.user?.isAdmin === true ||
+        auth.user?.role === 'admin';
 
     return (
         <>
@@ -94,12 +98,21 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                 </AppLink>
                             )}
 
-                            <button
-                                type="button"
-                                className="hidden rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 md:inline-flex"
-                            >
-                                Contact Us
-                            </button>
+                            {isAdmin ? (
+                                <AppLink
+                                    href="/admin"
+                                    className="hidden rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 md:inline-flex"
+                                >
+                                    Admin Dashboard
+                                </AppLink>
+                            ) : (
+                                <button
+                                    type="button"
+                                    className="hidden rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 md:inline-flex"
+                                >
+                                    Contact Us
+                                </button>
+                            )}
                             <AppLink
                                 href="/cart"
                                 className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-900 hover:border-slate-400"
