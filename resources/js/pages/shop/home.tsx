@@ -1,7 +1,7 @@
 import { Link, router, useForm } from '@inertiajs/react';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ShopLayout from '@/components/shop-layout';
-import { CartSummary, Category, Product } from '@/types/shop';
+import type { CartSummary, Category, HeroBanner, Product } from '@/types/shop';
 
 type PaginatedProducts = {
     data: Product[];
@@ -14,9 +14,10 @@ type Props = {
     products: PaginatedProducts;
     categories: Category[];
     cartSummary: CartSummary;
+    heroBanners: HeroBanner[];
 };
 
-export default function Home({ filters, featuredProducts, products, categories, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, products, categories, cartSummary, heroBanners }: Props) {
     const search = useForm({ q: filters.q, category: filters.category });
     const searchDebounce = useRef<number | null>(null);
     const bestSellers = products.data.slice(0, 4);
@@ -114,9 +115,40 @@ export default function Home({ filters, featuredProducts, products, categories, 
         return uniqueNames.filter((name) => name.toLowerCase().includes(query)).slice(0, 8);
     }, [featuredProducts, products.data, search.data.q]);
 
-    const addToCart = (productId: number) => {
-        router.post('/cart', { product_id: productId, quantity: 1 }, { preserveScroll: true });
+    const fallbackHeroBanner: HeroBanner = {
+        id: 0,
+        eyebrow: 'Skip the Impossible.',
+        title: 'Extraordinary Performance',
+        description: 'Engineered for speed and comfort, AERO Step performance sneakers blend responsive cushioning with minimalist style.',
+        image_url: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1200&q=80',
+        cta_label: 'Purchase Now',
+        cta_link: '/shoes',
+        sort_order: 0,
+        is_active: true,
     };
+
+    const sliderBanners = heroBanners.length > 0 ? heroBanners : [fallbackHeroBanner];
+    const [activeHeroBanner, setActiveHeroBanner] = useState(0);
+
+    useEffect(() => {
+        setActiveHeroBanner(0);
+    }, [sliderBanners.length]);
+
+    useEffect(() => {
+        if (sliderBanners.length < 2) {
+            return;
+        }
+
+        const interval = window.setInterval(() => {
+            setActiveHeroBanner((current) => (current + 1) % sliderBanners.length);
+        }, 6000);
+
+        return () => {
+            window.clearInterval(interval);
+        };
+    }, [sliderBanners.length]);
+
+    const currentHeroBanner = sliderBanners[activeHeroBanner] ?? fallbackHeroBanner;
 
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
@@ -144,54 +176,58 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
                 <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
                     <div>
-                        <p className="text-sm font-medium tracking-wide text-slate-500">Skip the Impossible.</p>
-                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
-                            Extraordinary Performance
-                        </h1>
-                        <p className="mt-4 max-w-lg text-slate-600">
-                            Engineered for speed and comfort, AERO Step performance sneakers blend responsive cushioning with minimalist style.
-                        </p>
+                        <p className="text-sm font-medium tracking-wide text-slate-500">{currentHeroBanner.eyebrow ?? 'Featured Drop'}</p>
+                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{currentHeroBanner.title}</h1>
+                        <p className="mt-4 max-w-lg text-slate-600">{currentHeroBanner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}</p>
 
                         <div className="mt-8 flex flex-wrap items-center gap-3">
-                            <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
-                                Purchase Now
-                            </button>
-                            <button className="inline-flex items-center gap-2 rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white">
-                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">
-                                    ▶
-                                </span>
-                                Watch Video
+                            {currentHeroBanner.cta_link ? (
+                                <Link
+                                    href={currentHeroBanner.cta_link}
+                                    className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
+                                >
+                                    {currentHeroBanner.cta_label ?? 'Shop Now'}
+                                </Link>
+                            ) : (
+                                <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
+                                    {currentHeroBanner.cta_label ?? 'Shop Now'}
+                                </button>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => setActiveHeroBanner((current) => (current + 1) % sliderBanners.length)}
+                                className="inline-flex items-center gap-2 rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
+                            >
+                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">▶</span>
+                                Next Banner
                             </button>
                         </div>
+
+                        {sliderBanners.length > 1 && (
+                            <div className="mt-6 flex items-center gap-2">
+                                {sliderBanners.map((banner, index) => (
+                                    <button
+                                        key={banner.id}
+                                        type="button"
+                                        onClick={() => setActiveHeroBanner(index)}
+                                        className={`h-2.5 rounded-full transition ${activeHeroBanner === index ? 'w-8 bg-slate-900' : 'w-2.5 bg-slate-300 hover:bg-slate-500'}`}
+                                        aria-label={`Show banner ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="relative flex min-h-[280px] items-center justify-center lg:min-h-[360px]">
                         <img
-                            src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1200&q=80"
-                            alt="AERO Step performance sneaker side profile"
-                            className="absolute right-0 bottom-0 h-52 w-[88%] max-w-lg rotate-[-9deg] rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-64"
-                        />
-                        <img
-                            src="https://images.unsplash.com/photo-1597248881519-db089d3744a5?auto=format&fit=crop&w=900&q=80"
-                            alt="AERO Step performance sneaker heel and mesh texture"
-                            className="absolute top-0 left-6 h-44 w-[70%] max-w-sm rotate-[8deg] rounded-2xl border border-slate-100 object-cover shadow-xl shadow-slate-500/20 saturate-50 lg:h-52"
+                            src={currentHeroBanner.image_url}
+                            alt={currentHeroBanner.title}
+                            className="h-[300px] w-full rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-[360px]"
                         />
                     </div>
                 </div>
 
-                <aside className="absolute top-1/2 right-3 hidden -translate-y-1/2 flex-col items-center gap-3 lg:flex">
-                    <a href="#" className="rounded-full border border-slate-300 bg-white p-2 text-xs font-semibold text-slate-500">
-                        in
-                    </a>
-                    <a href="#" className="rounded-full border border-slate-300 bg-white p-2 text-xs font-semibold text-slate-500">
-                        ig
-                    </a>
-                    <a href="#" className="rounded-full border border-slate-300 bg-white p-2 text-xs font-semibold text-slate-500">
-                        yt
-                    </a>
-                </aside>
-
-                <p className="absolute right-4 bottom-4 text-[11px] font-semibold tracking-[0.3em] text-slate-500 uppercase">Scroll Down</p>
+                <p className="absolute right-4 bottom-4 text-[11px] font-semibold tracking-[0.3em] text-slate-500 uppercase">Slide Banner</p>
             </section>
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
