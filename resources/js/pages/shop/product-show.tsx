@@ -17,6 +17,7 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
     const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0] ?? null);
     const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0] ?? null);
     const [showCartMessage, setShowCartMessage] = useState(false);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
 
     useEffect(() => {
         if (!showCartMessage) {
@@ -85,7 +86,9 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                     )}
 
                     <button
-                        onClick={() =>
+                        onClick={() => {
+                            setShowCartMessage(true);
+
                             router.post(
                                 '/cart',
                                 {
@@ -95,15 +98,18 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                                     color: selectedColor,
                                 },
                                 {
-                                    onSuccess: () => {
-                                        setShowCartMessage(true);
-                                    },
+                                    preserveScroll: true,
+                                    preserveState: true,
+                                    onStart: () => setIsAddingToCart(true),
+                                    onError: () => setShowCartMessage(false),
+                                    onFinish: () => setIsAddingToCart(false),
                                 },
-                            )
-                        }
+                            );
+                        }}
+                        disabled={isAddingToCart}
                         className="mt-6 cursor-pointer rounded bg-blue-600 px-4 py-3 font-semibold text-white"
                     >
-                        Add to shoe bag
+                        {isAddingToCart ? 'Adding...' : 'Add to shoe bag'}
                     </button>
                 </div>
             </div>
