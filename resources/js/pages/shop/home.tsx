@@ -1,4 +1,5 @@
 import { Link, router, useForm } from '@inertiajs/react';
+import { useMemo, useRef } from 'react';
 import ShopLayout from '@/components/shop-layout';
 import { CartSummary, Category, Product } from '@/types/shop';
 
@@ -17,6 +18,7 @@ type Props = {
 
 export default function Home({ filters, featuredProducts, products, categories, cartSummary }: Props) {
     const search = useForm({ q: filters.q, category: filters.category });
+    const searchDebounce = useRef<number | null>(null);
     const bestSellers = products.data.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
@@ -84,6 +86,33 @@ export default function Home({ filters, featuredProducts, products, categories, 
         e.preventDefault();
         router.get('/', search.data, { preserveState: true, replace: true });
     };
+
+    const applyFilters = (nextFilters: { q: string; category: string }) => {
+        router.get('/', nextFilters, { preserveState: true, replace: true });
+    };
+
+    const queueSearch = (nextFilters: { q: string; category: string }) => {
+        if (searchDebounce.current !== null) {
+            window.clearTimeout(searchDebounce.current);
+        }
+
+        searchDebounce.current = window.setTimeout(() => {
+            applyFilters(nextFilters);
+        }, 250);
+    };
+
+    const suggestions = useMemo(() => {
+        const allNames = [...featuredProducts, ...products.data].map((product) => product.name.trim()).filter(Boolean);
+        const uniqueNames = [...new Set(allNames)];
+
+        if (!search.data.q.trim()) {
+            return uniqueNames.slice(0, 8);
+        }
+
+        const query = search.data.q.toLowerCase();
+
+        return uniqueNames.filter((name) => name.toLowerCase().includes(query)).slice(0, 8);
+    }, [featuredProducts, products.data, search.data.q]);
 
     const addToCart = (productId: number) => {
         router.post('/cart', { product_id: productId, quantity: 1 }, { preserveScroll: true });
@@ -168,13 +197,31 @@ export default function Home({ filters, featuredProducts, products, categories, 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
                     value={search.data.q}
-                    onChange={(e) => search.setData('q', e.target.value)}
+                    onChange={(e) => {
+                        const q = e.target.value;
+                        const nextFilters = { ...search.data, q };
+
+                        search.setData('q', q);
+                        queueSearch(nextFilters);
+                    }}
                     placeholder="Search shoes..."
+                    list="shoe-suggestions"
                     className="col-span-2 rounded border border-slate-300 px-3 py-2"
                 />
+                <datalist id="shoe-suggestions">
+                    {suggestions.map((name) => (
+                        <option key={name} value={name} />
+                    ))}
+                </datalist>
                 <select
                     value={search.data.category}
-                    onChange={(e) => search.setData('category', e.target.value)}
+                    onChange={(e) => {
+                        const category = e.target.value;
+                        const nextFilters = { ...search.data, category };
+
+                        search.setData('category', category);
+                        applyFilters(nextFilters);
+                    }}
                     className="rounded border border-slate-300 px-3 py-2"
                 >
                     <option value="">All collections</option>
