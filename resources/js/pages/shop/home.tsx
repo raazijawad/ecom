@@ -129,6 +129,8 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
     const sliderBanners = heroBanners.length > 0 ? heroBanners : [fallbackHeroBanner];
     const [activeHeroBanner, setActiveHeroBanner] = useState(0);
+    const [isDraggingBanner, setIsDraggingBanner] = useState(false);
+    const bannerDragStartX = useRef<number | null>(null);
 
     useEffect(() => {
         setActiveHeroBanner(0);
@@ -141,93 +143,153 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
         const interval = window.setInterval(() => {
             setActiveHeroBanner((current) => (current + 1) % sliderBanners.length);
-        }, 6000);
+        }, 3000);
 
         return () => {
             window.clearInterval(interval);
         };
     }, [sliderBanners.length]);
 
-    const currentHeroBanner = sliderBanners[activeHeroBanner] ?? fallbackHeroBanner;
+    const handleBannerPointerDown = (event: React.PointerEvent<HTMLElement>) => {
+        if (sliderBanners.length < 2) {
+            return;
+        }
+
+        bannerDragStartX.current = event.clientX;
+        setIsDraggingBanner(true);
+        event.currentTarget.setPointerCapture(event.pointerId);
+    };
+
+    const handleBannerPointerUp = (event: React.PointerEvent<HTMLElement>) => {
+        if (bannerDragStartX.current === null) {
+            setIsDraggingBanner(false);
+            return;
+        }
+
+        const dragDistance = event.clientX - bannerDragStartX.current;
+        const dragThreshold = 40;
+
+        if (Math.abs(dragDistance) >= dragThreshold) {
+            setActiveHeroBanner((current) => {
+                if (dragDistance < 0) {
+                    return (current + 1) % sliderBanners.length;
+                }
+
+                return (current - 1 + sliderBanners.length) % sliderBanners.length;
+            });
+        }
+
+        bannerDragStartX.current = null;
+        setIsDraggingBanner(false);
+        event.currentTarget.releasePointerCapture(event.pointerId);
+    };
+
+    const handleBannerPointerCancel = () => {
+        bannerDragStartX.current = null;
+        setIsDraggingBanner(false);
+    };
 
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
-            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-[#f4f5f7] px-6 py-10 lg:px-10 lg:py-14">
-                <div className="pointer-events-none absolute inset-0 opacity-60">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.1),transparent_38%),radial-gradient(circle_at_80%_75%,rgba(15,23,42,0.1),transparent_36%)]" />
-                    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M-20 150C150 80 260 220 430 150C600 80 710 220 880 150C1020 95 1110 120 1220 170"
-                            stroke="#cfd8e3"
-                            strokeWidth="1.2"
-                        />
-                        <path
-                            d="M-10 240C160 170 270 310 440 240C610 170 720 310 890 240C1030 185 1120 210 1230 260"
-                            stroke="#d6dee8"
-                            strokeWidth="1.2"
-                        />
-                        <path
-                            d="M0 330C170 260 280 400 450 330C620 260 730 400 900 330C1040 275 1130 300 1240 350"
-                            stroke="#dce3ec"
-                            strokeWidth="1.2"
-                        />
-                    </svg>
-                </div>
-
-                <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
-                    <div>
-                        <p className="text-sm font-medium tracking-wide text-slate-500">{currentHeroBanner.eyebrow ?? 'Featured Drop'}</p>
-                        <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">{currentHeroBanner.title}</h1>
-                        <p className="mt-4 max-w-lg text-slate-600">{currentHeroBanner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}</p>
-
-                        <div className="mt-8 flex flex-wrap items-center gap-3">
-                            {currentHeroBanner.cta_link ? (
-                                <Link
-                                    href={currentHeroBanner.cta_link}
-                                    className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
-                                >
-                                    {currentHeroBanner.cta_label ?? 'Shop Now'}
-                                </Link>
-                            ) : (
-                                <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
-                                    {currentHeroBanner.cta_label ?? 'Shop Now'}
-                                </button>
-                            )}
-                            <button
-                                type="button"
-                                onClick={() => setActiveHeroBanner((current) => (current + 1) % sliderBanners.length)}
-                                className="inline-flex items-center gap-2 rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
-                            >
-                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">▶</span>
-                                Next Banner
-                            </button>
-                        </div>
-
-                        {sliderBanners.length > 1 && (
-                            <div className="mt-6 flex items-center gap-2">
-                                {sliderBanners.map((banner, index) => (
-                                    <button
-                                        key={banner.id}
-                                        type="button"
-                                        onClick={() => setActiveHeroBanner(index)}
-                                        className={`h-2.5 rounded-full transition ${activeHeroBanner === index ? 'w-8 bg-slate-900' : 'w-2.5 bg-slate-300 hover:bg-slate-500'}`}
-                                        aria-label={`Show banner ${index + 1}`}
+            <section
+                className={`relative mb-10 touch-pan-y overflow-hidden rounded-3xl border border-slate-200/80 bg-[#f4f5f7] ${isDraggingBanner ? 'cursor-grabbing' : 'cursor-grab'}`}
+                onPointerDown={handleBannerPointerDown}
+                onPointerUp={handleBannerPointerUp}
+                onPointerCancel={handleBannerPointerCancel}
+            >
+                <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${activeHeroBanner * 100}%)` }}>
+                    {sliderBanners.map((banner, index) => (
+                        <div key={banner.id} className="relative w-full shrink-0 px-6 py-10 lg:px-10 lg:py-14">
+                            <div className="pointer-events-none absolute inset-0 opacity-60">
+                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.1),transparent_38%),radial-gradient(circle_at_80%_75%,rgba(15,23,42,0.1),transparent_36%)]" />
+                                <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M-20 150C150 80 260 220 430 150C600 80 710 220 880 150C1020 95 1110 120 1220 170"
+                                        stroke="#cfd8e3"
+                                        strokeWidth="1.2"
                                     />
-                                ))}
+                                    <path
+                                        d="M-10 240C160 170 270 310 440 240C610 170 720 310 890 240C1030 185 1120 210 1230 260"
+                                        stroke="#d6dee8"
+                                        strokeWidth="1.2"
+                                    />
+                                    <path
+                                        d="M0 330C170 260 280 400 450 330C620 260 730 400 900 330C1040 275 1130 300 1240 350"
+                                        stroke="#dce3ec"
+                                        strokeWidth="1.2"
+                                    />
+                                </svg>
                             </div>
-                        )}
-                    </div>
 
-                    <div className="relative flex min-h-[280px] items-center justify-center lg:min-h-[360px]">
-                        <img
-                            src={currentHeroBanner.image_url}
-                            alt={currentHeroBanner.title}
-                            className="h-[300px] w-full rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-[360px]"
-                        />
-                    </div>
+                            <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
+                                <div>
+                                    <p className="text-sm font-medium tracking-wide text-slate-500">{banner.eyebrow ?? 'Featured Drop'}</p>
+                                    <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                                        {banner.title}
+                                    </h1>
+                                    <p className="mt-4 max-w-lg text-slate-600">
+                                        {banner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}
+                                    </p>
+
+                                    <div className="mt-8 flex flex-wrap items-center gap-3">
+                                        {banner.cta_link ? (
+                                            <Link
+                                                href={banner.cta_link}
+                                                className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
+                                            >
+                                                {banner.cta_label ?? 'Shop Now'}
+                                            </Link>
+                                        ) : (
+                                            <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
+                                                {banner.cta_label ?? 'Shop Now'}
+                                            </button>
+                                        )}
+                                        {index === activeHeroBanner && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setActiveHeroBanner((current) => (current + 1) % sliderBanners.length)}
+                                                className="inline-flex items-center gap-2 rounded-full border border-slate-900 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
+                                            >
+                                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-current text-[10px]">
+                                                    ▶
+                                                </span>
+                                                Next Banner
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="relative flex min-h-[280px] items-center justify-center lg:min-h-[360px]">
+                                    <img
+                                        src={banner.image_url}
+                                        alt={banner.title}
+                                        className="h-[300px] w-full rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-[360px]"
+                                    />
+                                </div>
+                            </div>
+
+                            <p className="absolute right-4 bottom-4 text-[11px] font-semibold tracking-[0.3em] text-slate-500 uppercase">
+                                Slide Banner
+                            </p>
+                        </div>
+                    ))}
                 </div>
 
-                <p className="absolute right-4 bottom-4 text-[11px] font-semibold tracking-[0.3em] text-slate-500 uppercase">Slide Banner</p>
+                {sliderBanners.length > 1 && (
+                    <div className="pointer-events-none absolute inset-x-0 bottom-7 z-20 flex justify-center">
+                        <div className="pointer-events-auto flex items-center gap-2 rounded-full bg-white/80 px-3 py-2 backdrop-blur-sm">
+                            {sliderBanners.map((banner, index) => (
+                                <button
+                                    key={banner.id}
+                                    type="button"
+                                    onClick={() => setActiveHeroBanner(index)}
+                                    className={`h-2.5 rounded-full transition ${activeHeroBanner === index ? 'w-8 bg-slate-900' : 'w-2.5 bg-slate-300 hover:bg-slate-500'}`}
+                                    aria-label={`Show banner ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </section>
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
