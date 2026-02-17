@@ -17,6 +17,7 @@ class HeroBanner extends Model
         'image_url',
         'cta_label',
         'product_id',
+        'off_percentage',
         'cta_link',
         'sort_order',
         'is_active',
@@ -26,6 +27,7 @@ class HeroBanner extends Model
     {
         return [
             'is_active' => 'boolean',
+            'off_percentage' => 'integer',
         ];
     }
 

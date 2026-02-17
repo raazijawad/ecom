@@ -115,6 +115,9 @@ export default function Home({ filters, featuredProducts, products, categories, 
         cta_label: 'Purchase Now',
         product_id: null,
         cta_link: '/shoes',
+        off_percentage: null,
+        product_price: null,
+        discount_price: null,
         sort_order: 0,
         is_active: true,
     };
@@ -235,6 +238,26 @@ export default function Home({ filters, featuredProducts, products, categories, 
                                         <p className="mt-4 max-w-lg text-slate-600">
                                             {banner.description ?? 'Explore our latest footwear collection curated for comfort and style.'}
                                         </p>
+
+                                        {banner.product_price !== null && banner.product_price !== undefined && (
+                                            <div className="mt-5 flex flex-wrap items-end gap-3">
+                                                {banner.discount_price !== null && banner.discount_price !== undefined ? (
+                                                    <>
+                                                        <p className="text-3xl font-black text-slate-950">${Number(banner.discount_price).toFixed(2)}</p>
+                                                        <p className="text-base font-semibold text-slate-400 line-through">
+                                                            ${Number(banner.product_price).toFixed(2)}
+                                                        </p>
+                                                        {banner.off_percentage ? (
+                                                            <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold tracking-wide text-red-600 uppercase">
+                                                                {banner.off_percentage}% OFF
+                                                            </span>
+                                                        ) : null}
+                                                    </>
+                                                ) : (
+                                                    <p className="text-3xl font-black text-slate-950">${Number(banner.product_price).toFixed(2)}</p>
+                                                )}
+                                            </div>
+                                        )}
 
                                         <div className="mt-8 flex flex-wrap items-center gap-3">
                                             {banner.cta_link ? (

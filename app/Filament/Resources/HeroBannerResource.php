@@ -53,6 +53,19 @@ class HeroBannerResource extends Resource
                 ->relationship('product', 'name')
                 ->searchable()
                 ->preload(),
+            Select::make('off_percentage')
+                ->label('Off Percentage')
+                ->options([
+                    5 => '5% Off',
+                    10 => '10% Off',
+                    15 => '15% Off',
+                    20 => '20% Off',
+                    25 => '25% Off',
+                    30 => '30% Off',
+                    40 => '40% Off',
+                    50 => '50% Off',
+                ])
+                ->nullable(),
             TextInput::make('sort_order')
                 ->numeric()
                 ->required()
@@ -79,6 +92,10 @@ class HeroBannerResource extends Resource
                     ->label('Button Product')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('off_percentage')
+                    ->label('Discount')
+                    ->formatStateUsing(fn (?int $state): string => $state ? "{$state}% Off" : '—')
+                    ->sortable(),
                 TextColumn::make('sort_order')
                     ->sortable(),
                 ToggleColumn::make('is_active')

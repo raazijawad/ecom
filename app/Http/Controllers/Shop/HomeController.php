@@ -35,11 +35,19 @@ class HomeController extends Controller
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderByDesc('id')
-                ->with('product:id,name,image_url')
+                ->with('product:id,name,image_url,price')
                 ->get()
                 ->map(function (HeroBanner $banner) {
                     $banner->cta_link = $banner->product_id ? "/products/{$banner->product_id}" : $banner->cta_link;
                     $banner->image_url = $banner->image_url ?: $banner->product?->image_url;
+
+                    $productPrice = $banner->product ? (float) $banner->product->price : null;
+                    $offPercentage = $banner->off_percentage;
+
+                    $banner->product_price = $productPrice;
+                    $banner->discount_price = $productPrice !== null && $offPercentage
+                        ? round($productPrice * ((100 - $offPercentage) / 100), 2)
+                        : null;
 
                     return $banner;
                 }),
