@@ -278,7 +278,7 @@ export default function Home({ filters, featuredProducts, products, categories, 
 
                                     <div className="relative flex min-h-[280px] items-center justify-center lg:min-h-[360px]">
                                         <img
-                                            src={banner.image_url}
+                                            src={banner.image_url ?? ''}
                                             alt={banner.title}
                                             className="h-[300px] w-full rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-[360px]"
                                         />

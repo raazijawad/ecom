@@ -39,7 +39,7 @@ export type HeroBanner = {
     eyebrow: string | null;
     title: string;
     description: string | null;
-    image_url: string;
+    image_url: string | null;
     cta_label: string | null;
     product_id: number | null;
     cta_link: string | null;
