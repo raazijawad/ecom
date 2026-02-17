@@ -24,7 +24,7 @@ class BestSellingShoeResource extends Resource
 
     protected static ?string $navigationLabel = 'Best-selling shoes';
 
-    protected static string|null|\UnitEnum $navigationGroup = 'Catelog';
+    protected static string|null|\UnitEnum $navigationGroup = 'Dashboard';
 
     protected static ?int $navigationSort = 4;
 

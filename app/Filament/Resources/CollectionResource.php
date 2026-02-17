@@ -21,7 +21,7 @@ class CollectionResource extends Resource
 
     protected static ?string $navigationLabel = 'Collection';
 
-    protected static string|null|\UnitEnum $navigationGroup = 'Catelog';
+    protected static string|null|\UnitEnum $navigationGroup = 'Dashboard';
 
     protected static ?int $navigationSort = 1;
 

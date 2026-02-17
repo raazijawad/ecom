@@ -22,7 +22,7 @@ class ProductDetailsResource extends Resource
 
     protected static ?string $navigationLabel = 'Products Details';
 
-    protected static string|null|\UnitEnum $navigationGroup = 'Catelog';
+    protected static string|null|\UnitEnum $navigationGroup = 'Dashboard';
 
     protected static ?int $navigationSort = 3;
 
