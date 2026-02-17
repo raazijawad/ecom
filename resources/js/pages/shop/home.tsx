@@ -14,6 +14,7 @@ type Props = {
     filters: { q: string; category: string };
     featuredProducts: Product[];
     products: PaginatedProducts;
+    bestSellingShoes: Product[];
     categories: Category[];
     testimonials: Testimonial[];
     cartSummary: CartSummary;
@@ -24,12 +25,12 @@ type SharedProps = {
     auth: Auth;
 };
 
-export default function Home({ filters, featuredProducts, products, categories, testimonials, cartSummary, heroBanners }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary, heroBanners }: Props) {
     const { auth } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
     const searchDebounce = useRef<number | null>(null);
-    const bestSellers = products.data.slice(0, 4);
+    const bestSellers = bestSellingShoes.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
 
