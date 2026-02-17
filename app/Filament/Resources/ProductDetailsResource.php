@@ -24,6 +24,8 @@ class ProductDetailsResource extends Resource
 
     protected static string|null|\UnitEnum $navigationGroup = 'Catelog';
 
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $modelLabel = 'Product Detail';
 
     protected static ?string $pluralModelLabel = 'Product Details';
