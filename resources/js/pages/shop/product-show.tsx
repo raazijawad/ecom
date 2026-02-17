@@ -1,5 +1,5 @@
 import { router } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import AddToCartToast from '@/components/add-to-cart-toast';
 import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
@@ -19,6 +19,14 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
     const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0] ?? null);
     const [showCartMessage, setShowCartMessage] = useState(false);
 
+    const colorImageUrls = useMemo(() => {
+        const entries = Object.entries(product.color_image_urls ?? {}).filter(([, imageUrl]) => Boolean(imageUrl));
+
+        return Object.fromEntries(entries.map(([color, imageUrl]) => [color.toLowerCase().trim(), imageUrl]));
+    }, [product.color_image_urls]);
+
+    const productImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
+
     useEffect(() => {
         if (!showCartMessage) {
             return;
@@ -34,7 +42,7 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
-                <img src={product.image_url ?? ''} alt={product.name} className="w-full rounded-xl object-cover" />
+                <img src={productImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
                 <div>
                     <p className="text-sm text-slate-500">{product.category?.name}</p>
                     <h1 className="mt-2 text-3xl font-bold">{product.name}</h1>

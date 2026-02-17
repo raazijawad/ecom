@@ -20,6 +20,7 @@ class Product extends Model
         'stock',
         'sizes',
         'colors',
+        'color_image_urls',
         'image_url',
         'is_featured',
         'is_visible',
@@ -33,6 +34,7 @@ class Product extends Model
             'price' => 'decimal:2',
             'sizes' => 'array',
             'colors' => 'array',
+            'color_image_urls' => 'array',
         ];
     }
 

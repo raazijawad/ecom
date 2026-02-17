@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductDetailsResource\Pages\ManageProductDetails;
 use App\Models\Product;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -46,6 +47,12 @@ class ProductDetailsResource extends Resource
                 ->label('Colours')
                 ->placeholder('Add a colour and press Enter')
                 ->helperText('Add or remove colours shown on product page.'),
+            KeyValue::make('color_image_urls')
+                ->label('Colour Image URLs')
+                ->keyLabel('Colour')
+                ->valueLabel('Image URL')
+                ->helperText('Use the exact colour name as key (e.g. Red) and paste the corresponding image URL.')
+                ->columnSpanFull(),
             Textarea::make('description')
                 ->required()
                 ->rows(5)
@@ -69,6 +76,9 @@ class ProductDetailsResource extends Resource
                 TextColumn::make('colors')
                     ->badge()
                     ->separator(','),
+                TextColumn::make('color_image_urls')
+                    ->label('Colour image URLs')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->since()
                     ->sortable(),
