@@ -42,9 +42,9 @@ class HeroBannerResource extends Resource
                 ->columnSpanFull(),
             TextInput::make('image_url')
                 ->label('Image URL')
-                ->required()
                 ->url()
-                ->maxLength(2048),
+                ->maxLength(2048)
+                ->helperText('Optional. If left empty, the selected product image will be used.'),
             TextInput::make('cta_label')
                 ->label('Button Label')
                 ->maxLength(255),

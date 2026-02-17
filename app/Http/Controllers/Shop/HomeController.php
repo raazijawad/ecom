@@ -35,10 +35,11 @@ class HomeController extends Controller
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderByDesc('id')
-                ->with('product:id,name')
+                ->with('product:id,name,image_url')
                 ->get()
                 ->map(function (HeroBanner $banner) {
                     $banner->cta_link = $banner->product_id ? "/products/{$banner->product_id}" : $banner->cta_link;
+                    $banner->image_url = $banner->image_url ?: $banner->product?->image_url;
 
                     return $banner;
                 }),
