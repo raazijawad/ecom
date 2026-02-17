@@ -26,6 +26,8 @@ class BestSellingShoeResource extends Resource
 
     protected static string|null|\UnitEnum $navigationGroup = 'Catelog';
 
+    protected static ?int $navigationSort = 4;
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
