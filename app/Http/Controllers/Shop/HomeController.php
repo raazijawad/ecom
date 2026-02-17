@@ -35,7 +35,13 @@ class HomeController extends Controller
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderByDesc('id')
-                ->get(),
+                ->with('product:id,name')
+                ->get()
+                ->map(function (HeroBanner $banner) {
+                    $banner->cta_link = $banner->product_id ? "/products/{$banner->product_id}" : $banner->cta_link;
+
+                    return $banner;
+                }),
             'products' => $productsQuery->paginate(8)->withQueryString(),
             'categories' => Category::query()->orderBy('name')->get(),
             'testimonials' => Testimonial::query()

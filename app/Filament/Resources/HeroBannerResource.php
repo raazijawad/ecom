@@ -7,6 +7,7 @@ use App\Models\HeroBanner;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -47,10 +48,11 @@ class HeroBannerResource extends Resource
             TextInput::make('cta_label')
                 ->label('Button Label')
                 ->maxLength(255),
-            TextInput::make('cta_link')
-                ->label('Button Link')
-                ->url()
-                ->maxLength(2048),
+            Select::make('product_id')
+                ->label('Button Product')
+                ->relationship('product', 'name')
+                ->searchable()
+                ->preload(),
             TextInput::make('sort_order')
                 ->numeric()
                 ->required()
@@ -73,6 +75,10 @@ class HeroBannerResource extends Resource
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('product.name')
+                    ->label('Button Product')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('sort_order')
                     ->sortable(),
                 ToggleColumn::make('is_active')
