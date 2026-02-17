@@ -140,6 +140,11 @@ export default function Home({ filters, featuredProducts, products, categories, 
     const bannerDragStartX = useRef<number | null>(null);
 
     useEffect(() => {
+        search.setData('q', filters.q);
+        search.setData('category', filters.category);
+    }, [filters.q, filters.category]);
+
+    useEffect(() => {
         setActiveHeroBanner(0);
     }, [sliderBanners.length]);
 
@@ -156,6 +161,14 @@ export default function Home({ filters, featuredProducts, products, categories, 
             window.clearInterval(interval);
         };
     }, [sliderBanners.length]);
+
+    useEffect(() => {
+        return () => {
+            if (searchDebounce.current !== null) {
+                window.clearTimeout(searchDebounce.current);
+            }
+        };
+    }, []);
 
     const handleBannerPointerDown = (event: React.PointerEvent<HTMLElement>) => {
         if (sliderBanners.length < 2) {
