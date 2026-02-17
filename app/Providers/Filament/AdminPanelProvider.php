@@ -41,8 +41,6 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 NavigationGroup::make('Catelog'),
                 NavigationGroup::make('Advertisement'),
-                NavigationGroup::make('Sales'),
-                NavigationGroup::make('Customers'),
             ])
             ->widgets([
                 AccountWidget::class,
