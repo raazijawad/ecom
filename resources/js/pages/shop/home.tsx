@@ -106,6 +106,18 @@ export default function Home({ filters, featuredProducts, products, categories, 
         return uniqueNames.filter((name) => name.toLowerCase().includes(query)).slice(0, 8);
     }, [featuredProducts, products.data, search.data.q]);
 
+    const searchedProducts = useMemo(() => {
+        const query = search.data.q.trim().toLowerCase();
+
+        if (!query) {
+            return [];
+        }
+
+        const uniqueProducts = [...new Map([...featuredProducts, ...products.data].map((product) => [product.id, product])).values()];
+
+        return uniqueProducts.filter((product) => product.name.toLowerCase().includes(query)).slice(0, 8);
+    }, [featuredProducts, products.data, search.data.q]);
+
     const fallbackHeroBanner: HeroBanner = {
         id: 0,
         eyebrow: 'Skip the Impossible.',
@@ -354,6 +366,30 @@ export default function Home({ filters, featuredProducts, products, categories, 
                 </select>
                 <button className="rounded bg-slate-900 px-4 py-2 font-semibold text-white">Apply</button>
             </form>
+
+            {searchedProducts.length > 0 && (
+                <section className="mb-8">
+                    <h2 className="mb-4 text-xl font-semibold">Search results</h2>
+                    <div className="grid gap-4 md:grid-cols-4">
+                        {searchedProducts.map((product) => (
+                            <article key={product.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                                <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
+                                <h3 className="font-semibold">{product.name}</h3>
+                                <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
+                                <div className="mt-4 flex items-center justify-between">
+                                    <span className="font-bold">${Number(product.price).toFixed(2)}</span>
+                                    <button
+                                        onClick={() => viewProductDetails(product.id)}
+                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                    >
+                                        Buy Now
+                                    </button>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-10 lg:px-10">
                 <div className="pointer-events-none absolute inset-0 opacity-70">
