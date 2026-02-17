@@ -23,10 +23,17 @@ class CartController extends Controller
         $validated = $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'quantity' => ['nullable', 'integer', 'min:1'],
+            'size' => ['nullable', 'string', 'max:50'],
+            'color' => ['nullable', 'string', 'max:50'],
         ]);
 
         $product = Product::query()->isVisible()->findOrFail($validated['product_id']);
-        Cart::add($product, $validated['quantity'] ?? 1);
+        Cart::add(
+            $product,
+            $validated['quantity'] ?? 1,
+            $validated['size'] ?? null,
+            $validated['color'] ?? null,
+        );
 
         return back()->with('success', 'Product added to cart.');
     }
@@ -35,16 +42,17 @@ class CartController extends Controller
     {
         $validated = $request->validate([
             'quantity' => ['required', 'integer', 'min:0', 'max:'.$product->stock],
+            'item_key' => ['nullable', 'string'],
         ]);
 
-        Cart::update($product->id, $validated['quantity']);
+        Cart::update($product->id, $validated['quantity'], $validated['item_key'] ?? null);
 
         return back();
     }
 
-    public function destroy(Product $product): RedirectResponse
+    public function destroy(Request $request, Product $product): RedirectResponse
     {
-        Cart::remove($product->id);
+        Cart::remove($product->id, $request->input('item_key'));
 
         return back();
     }
