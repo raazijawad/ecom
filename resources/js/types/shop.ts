@@ -15,6 +15,7 @@ export type Product = {
     stock: number;
     sizes: string[] | null;
     colors: string[] | null;
+    color_image_urls?: Record<string, string> | null;
     image_url: string | null;
     is_featured: boolean;
     category?: Category;
