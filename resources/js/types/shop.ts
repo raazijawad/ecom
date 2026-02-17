@@ -22,6 +22,7 @@ export type Product = {
 };
 
 export type CartItem = {
+    item_key: string;
     product_id: number;
     name: string;
     slug: string;
@@ -29,6 +30,8 @@ export type CartItem = {
     quantity: number;
     line_total: number;
     image_url: string | null;
+    size: string | null;
+    color: string | null;
 };
 
 export type HeroBanner = {

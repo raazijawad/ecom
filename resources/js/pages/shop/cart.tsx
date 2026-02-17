@@ -15,23 +15,39 @@ export default function Cart({ cartSummary }: Props) {
                 <div className="grid gap-6 lg:grid-cols-3">
                     <div className="space-y-3 lg:col-span-2">
                         {cartSummary.items.map((item) => (
-                            <div key={item.product_id} className="flex items-center gap-4 rounded bg-white p-4 shadow">
+                            <div key={item.item_key} className="flex items-center gap-4 rounded bg-white p-4 shadow">
                                 <img src={item.image_url ?? ''} alt={item.name} className="h-20 w-20 rounded object-cover" />
                                 <div className="flex-1">
                                     <p className="font-semibold">{item.name}</p>
                                     <p className="text-sm text-slate-600">${item.price.toFixed(2)}</p>
+                                    {(item.size || item.color) && (
+                                        <p className="text-sm text-slate-500">
+                                            {item.size ? `Size: ${item.size}` : null}
+                                            {item.size && item.color ? ' · ' : null}
+                                            {item.color ? `Colour: ${item.color}` : null}
+                                        </p>
+                                    )}
                                 </div>
                                 <input
                                     type="number"
                                     min={0}
                                     value={item.quantity}
                                     onChange={(e) =>
-                                        router.patch(`/cart/${item.product_id}`, { quantity: Number(e.target.value) }, { preserveScroll: true })
+                                        router.patch(
+                                            `/cart/${item.product_id}`,
+                                            { quantity: Number(e.target.value), item_key: item.item_key },
+                                            { preserveScroll: true },
+                                        )
                                     }
                                     className="w-16 rounded border border-slate-300 px-2 py-1"
                                 />
                                 <button
-                                    onClick={() => router.delete(`/cart/${item.product_id}`, { preserveScroll: true })}
+                                    onClick={() =>
+                                        router.delete(`/cart/${item.product_id}`, {
+                                            data: { item_key: item.item_key },
+                                            preserveScroll: true,
+                                        })
+                                    }
                                     className="rounded border border-red-300 px-2 py-1 text-red-600"
                                 >
                                     Remove
