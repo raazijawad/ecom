@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
+use App\Models\BestSellingShoe;
 use App\Models\Category;
 use App\Models\HeroBanner;
 use App\Models\Product;
@@ -31,6 +32,14 @@ class HomeController extends Controller
                 'category' => $categorySlug,
             ],
             'featuredProducts' => Product::query()->isVisible()->where('is_featured', true)->take(4)->get(),
+            'bestSellingShoes' => BestSellingShoe::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->with(['product' => fn ($query) => $query->isVisible()->with('category')])
+                ->get()
+                ->pluck('product')
+                ->filter()
+                ->values(),
             'heroBanners' => HeroBanner::query()
                 ->where('is_active', true)
                 ->orderBy('sort_order')
