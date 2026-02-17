@@ -42,6 +42,9 @@ export type HeroBanner = {
     image_url: string | null;
     cta_label: string | null;
     product_id: number | null;
+    off_percentage: number | null;
+    product_price?: number | null;
+    discount_price?: number | null;
     cta_link: string | null;
     sort_order: number;
     is_active: boolean;

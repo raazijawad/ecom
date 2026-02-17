@@ -7,11 +7,15 @@ import type { CartSummary, Product } from '@/types/shop';
 
 type Props = {
     product: Product;
+    discount: {
+        off_percentage: number;
+        discount_price: number;
+    } | null;
     relatedProducts: Product[];
     cartSummary: CartSummary;
 };
 
-export default function ProductShow({ product, relatedProducts, cartSummary }: Props) {
+export default function ProductShow({ product, discount, relatedProducts, cartSummary }: Props) {
     const sizeOptions = product.sizes ?? [];
     const colorOptions = product.colors ?? [];
 
@@ -47,7 +51,19 @@ export default function ProductShow({ product, relatedProducts, cartSummary }: P
                     <p className="text-sm text-slate-500">{product.category?.name}</p>
                     <h1 className="mt-2 text-3xl font-bold">{product.name}</h1>
                     <p className="mt-4 text-slate-700">{product.description}</p>
-                    <p className="mt-5 text-2xl font-bold">${Number(product.price).toFixed(2)}</p>
+                    <div className="mt-5 flex flex-wrap items-end gap-3">
+                        {discount ? (
+                            <>
+                                <p className="text-2xl font-bold text-slate-950">${Number(discount.discount_price).toFixed(2)}</p>
+                                <p className="text-base font-semibold text-slate-400 line-through">${Number(product.price).toFixed(2)}</p>
+                                <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold tracking-wide text-red-600 uppercase">
+                                    {discount.off_percentage}% OFF
+                                </span>
+                            </>
+                        ) : (
+                            <p className="text-2xl font-bold">${Number(product.price).toFixed(2)}</p>
+                        )}
+                    </div>
 
                     {sizeOptions.length > 0 && (
                         <div className="mt-6">
