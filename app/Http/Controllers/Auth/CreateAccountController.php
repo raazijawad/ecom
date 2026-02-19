@@ -33,6 +33,7 @@ class CreateAccountController extends Controller
             'email' => $validated['email'],
             'phone' => $validated['phone'],
             'password' => Hash::make($validated['password']),
+            'role' => 'customer',
         ]);
 
         Auth::login($user);

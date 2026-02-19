@@ -28,6 +28,7 @@ class CreateAccountRedirectTest extends TestCase
 
         $this->assertNotNull($user);
         $this->assertSame('+123456789', $user->phone);
+        $this->assertSame('customer', $user->role);
         $this->assertTrue(Hash::check('password123', $user->password));
         $this->assertAuthenticatedAs($user);
     }
