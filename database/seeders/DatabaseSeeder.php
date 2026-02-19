@@ -12,10 +12,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Demo User',
-            'email' => 'demo@example.com',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin User',
+                'password' => 'admin123',
+                'role' => 'admin',
+            ]
+        );
 
         $catalog = [
             'New Arrivals' => [
