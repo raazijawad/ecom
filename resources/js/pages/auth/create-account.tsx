@@ -5,8 +5,10 @@ export default function CreateAccount() {
     const form = useForm({
         name: '',
         email: '',
+        phone: '',
         password: '',
         password_confirmation: '',
+        agreement: false,
     });
 
     const submit = (e: React.FormEvent) => {
@@ -60,6 +62,23 @@ export default function CreateAccount() {
                             {form.errors.email ? <p className="mt-1 text-xs text-red-600">{form.errors.email}</p> : null}
                         </div>
 
+
+                        <div>
+                            <label htmlFor="phone" className="mb-1 block text-sm font-medium text-slate-700">
+                                Phone
+                            </label>
+                            <input
+                                id="phone"
+                                type="tel"
+                                value={form.data.phone}
+                                onChange={(e) => form.setData('phone', e.target.value)}
+                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none"
+                                placeholder="+1 234 567 890"
+                                required
+                            />
+                            {form.errors.phone ? <p className="mt-1 text-xs text-red-600">{form.errors.phone}</p> : null}
+                        </div>
+
                         <div>
                             <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-700">
                                 Password
@@ -90,6 +109,19 @@ export default function CreateAccount() {
                                 required
                             />
                         </div>
+
+
+                        <label className="flex items-start gap-2 text-sm text-slate-700">
+                            <input
+                                type="checkbox"
+                                checked={form.data.agreement}
+                                onChange={(e) => form.setData('agreement', e.target.checked)}
+                                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                                required
+                            />
+                            <span>I agree to the terms and conditions.</span>
+                        </label>
+                        {form.errors.agreement ? <p className="-mt-2 text-xs text-red-600">{form.errors.agreement}</p> : null}
 
                         <button
                             type="submit"

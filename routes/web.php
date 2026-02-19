@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\SignInController;
+use App\Http\Controllers\CustomerDashboardController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CollectionController;
 use App\Http\Controllers\Shop\CheckoutController;
@@ -22,6 +23,10 @@ Route::post('/sign-out', [SignInController::class, 'destroy'])->name('sign-out')
 
 Route::get('/create-account', [CreateAccountController::class, 'create'])->name('create-account');
 Route::post('/create-account', [CreateAccountController::class, 'store'])->name('create-account.store');
+
+Route::get('/customer/dashboard', CustomerDashboardController::class)
+    ->middleware('auth')
+    ->name('customer.dashboard');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
