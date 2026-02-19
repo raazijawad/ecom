@@ -81,13 +81,18 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                             </button>
 
                             {auth.user ? (
-                                <button
-                                    type="button"
-                                    onClick={() => router.post('/sign-out')}
-                                    className="text-sm font-medium text-slate-600 hover:text-slate-900"
-                                >
-                                    Sign out
-                                </button>
+                                <>
+                                    <button
+                                        type="button"
+                                        onClick={() => router.post('/sign-out')}
+                                        className="text-sm font-medium text-slate-600 hover:text-slate-900"
+                                    >
+                                        Sign out
+                                    </button>
+                                    <AppLink href="/customer/dashboard" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+                                        Customer Dashboard
+                                    </AppLink>
+                                </>
                             ) : (
                                 <AppLink href="/sign-in" className="text-sm font-medium text-slate-600 hover:text-slate-900">
                                     Sign in
