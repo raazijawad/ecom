@@ -25,7 +25,10 @@ class CreateAccountController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $user = User::create($validated);
+        $user = User::create([
+            ...$validated,
+            'is_admin' => false,
+        ]);
 
         Auth::login($user);
         $request->session()->regenerate();

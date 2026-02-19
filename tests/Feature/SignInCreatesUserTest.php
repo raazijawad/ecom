@@ -23,6 +23,7 @@ class SignInCreatesUserTest extends TestCase
 
         $this->assertNotNull($user);
         $this->assertSame('New Customer', $user->name);
+        $this->assertFalse($user->is_admin);
         $this->assertAuthenticatedAs($user);
     }
 }

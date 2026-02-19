@@ -24,6 +24,7 @@ class CreateAccountRedirectTest extends TestCase
         $user = User::query()->where('email', 'jane.customer@example.com')->first();
 
         $this->assertNotNull($user);
+        $this->assertFalse($user->is_admin);
         $this->assertAuthenticatedAs($user);
     }
 }
