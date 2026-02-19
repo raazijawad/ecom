@@ -10,17 +10,23 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::table('products', function (Blueprint $table) {
-        $table->boolean('is_visible')->default(1);
-    });
-}
+    {
+        Schema::table('products', function (Blueprint $table) {
+            if (!Schema::hasColumn('products', 'is_visible')) {
+                $table->boolean('is_visible')->default(1);
+            }
+        });
+    }
 
-public function down(): void
-{
-    Schema::table('products', function (Blueprint $table) {
-        $table->dropColumn('is_visible');
-    });
-}
-
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('products', function (Blueprint $table) {
+            if (Schema::hasColumn('products', 'is_visible')) {
+                $table->dropColumn('is_visible');
+            }
+        });
+    }
 };
