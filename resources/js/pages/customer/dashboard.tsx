@@ -111,6 +111,7 @@ export default function CustomerDashboard() {
     const [editingAddressId, setEditingAddressId] = useState<number | null>(null);
     const [wishlist, setWishlist] = useState(starterWishlist);
     const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+    const [isProfileSectionOpen, setIsProfileSectionOpen] = useState(false);
 
     const latestOrder = recentOrders[0];
     const cartTotal = useMemo(
@@ -248,16 +249,36 @@ export default function CustomerDashboard() {
 
                 <div className="grid gap-6 lg:grid-cols-2">
                     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 className="text-xl font-semibold text-slate-900">Profile / Account Information</h2>
-                        <form className="mt-4 space-y-3" onSubmit={handleProfileSubmit}>
-                            <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Name" value={profile.name} onChange={(event) => setProfile({ ...profile, name: event.target.value })} />
-                            <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Email" type="email" value={profile.email} onChange={(event) => setProfile({ ...profile, email: event.target.value })} />
-                            <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Phone" value={profile.phone} onChange={(event) => setProfile({ ...profile, phone: event.target.value })} />
-                            <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Save Profile</button>
-                            {profileMessage ? (
-                                <p className={profileMessage.type === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-rose-600'}>{profileMessage.text}</p>
-                            ) : null}
-                        </form>
+                        <div className="flex items-center justify-between gap-3">
+                            <h2 className="text-xl font-semibold text-slate-900">Profile / Account Information</h2>
+                            <button
+                                type="button"
+                                onClick={() => setIsProfileSectionOpen((current) => !current)}
+                                aria-expanded={isProfileSectionOpen}
+                                aria-controls="profile-account-information"
+                                className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+                            >
+                                <svg
+                                    className={`h-4 w-4 transition-transform ${isProfileSectionOpen ? 'rotate-180' : ''}`}
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        {isProfileSectionOpen ? (
+                            <form id="profile-account-information" className="mt-4 space-y-3" onSubmit={handleProfileSubmit}>
+                                <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Name" value={profile.name} onChange={(event) => setProfile({ ...profile, name: event.target.value })} />
+                                <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Email" type="email" value={profile.email} onChange={(event) => setProfile({ ...profile, email: event.target.value })} />
+                                <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Phone" value={profile.phone} onChange={(event) => setProfile({ ...profile, phone: event.target.value })} />
+                                <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Save Profile</button>
+                                {profileMessage ? (
+                                    <p className={profileMessage.type === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-rose-600'}>{profileMessage.text}</p>
+                                ) : null}
+                            </form>
+                        ) : null}
                     </section>
 
                     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
