@@ -43,6 +43,7 @@ class UserResource extends Resource
                 ->required(fn (string $operation): bool => $operation === 'create'),
             Select::make('role')
                 ->options([
+                    'customer' => 'Customer',
                     'employee' => 'Employee',
                     'admin' => 'Admin',
                 ])
