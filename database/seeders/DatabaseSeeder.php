@@ -13,8 +13,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'name' => 'Demo User',
-            'email' => 'demo@example.com',
+            'name' => 'Demo Admin',
+            'email' => 'admin@example.com',
+            'role' => 'admin',
         ]);
 
         $catalog = [

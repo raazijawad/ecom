@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages\ManageUsers;
 use App\Models\User;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -40,6 +41,13 @@ class UserResource extends Resource
                 ->maxLength(255)
                 ->dehydrated(fn ($state): bool => filled($state))
                 ->required(fn (string $operation): bool => $operation === 'create'),
+            Select::make('role')
+                ->options([
+                    'admin' => 'Admin',
+                    'employee' => 'Employee',
+                ])
+                ->default('employee')
+                ->required(),
         ]);
     }
 
@@ -52,6 +60,9 @@ class UserResource extends Resource
                     ->sortable(),
                 TextColumn::make('email')
                     ->searchable()
+                    ->sortable(),
+                TextColumn::make('role')
+                    ->badge()
                     ->sortable(),
                 TextColumn::make('testimonials_count')
                     ->counts('testimonials')
