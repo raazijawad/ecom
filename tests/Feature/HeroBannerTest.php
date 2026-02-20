@@ -52,6 +52,56 @@ class HeroBannerTest extends TestCase
                 ->where('heroBanners.0.off_percentage', 15));
     }
 
+
+    public function test_home_banner_checkout_cta_points_to_product_detail_page(): void
+    {
+        $category = Category::create([
+            'name' => 'Lifestyle',
+            'slug' => 'lifestyle',
+            'description' => 'Lifestyle shoes',
+        ]);
+
+        $product = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Urban Step',
+            'slug' => 'urban-step',
+            'description' => 'Street-ready comfort',
+            'price' => 120,
+            'stock' => 15,
+            'is_featured' => false,
+            'is_visible' => true,
+        ]);
+
+        HeroBanner::create([
+            'title' => 'Checkout this pair',
+            'cta_link' => '/checkout',
+            'product_id' => $product->id,
+            'sort_order' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('shop/home')
+                ->where('heroBanners.0.cta_link', "/products/{$product->id}"));
+    }
+
+    public function test_home_banner_without_product_has_no_cta_link(): void
+    {
+        HeroBanner::create([
+            'title' => 'No linked product',
+            'cta_link' => '/checkout',
+            'sort_order' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('shop/home')
+                ->where('heroBanners.0.cta_link', null));
+    }
     public function test_home_receives_only_active_hero_banners_in_sort_order(): void
     {
         $firstBanner = HeroBanner::create([
