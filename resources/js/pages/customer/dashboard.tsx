@@ -112,6 +112,7 @@ export default function CustomerDashboard() {
     const [wishlist, setWishlist] = useState(starterWishlist);
     const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [isProfileSectionOpen, setIsProfileSectionOpen] = useState(false);
+    const [isPasswordSectionOpen, setIsPasswordSectionOpen] = useState(false);
 
     const latestOrder = recentOrders[0];
     const cartTotal = useMemo(
@@ -282,16 +283,27 @@ export default function CustomerDashboard() {
                     </section>
 
                     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 className="text-xl font-semibold text-slate-900">Change Password</h2>
-                        <form className="mt-4 space-y-3" onSubmit={handlePasswordSubmit}>
-                            <input name="currentPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Current password" />
-                            <input name="newPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="New password" />
-                            <input name="confirmPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Confirm new password" />
-                            <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Update Password</button>
-                            {passwordMessage ? (
-                                <p className={passwordMessage.type === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-rose-600'}>{passwordMessage.text}</p>
-                            ) : null}
-                        </form>
+                        <div className="flex items-center justify-between gap-3">
+                            <h2 className="text-xl font-semibold text-slate-900">Change Password</h2>
+                            <button
+                                type="button"
+                                onClick={() => setIsPasswordSectionOpen((current) => !current)}
+                                className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+                            >
+                                Update Password
+                            </button>
+                        </div>
+                        {isPasswordSectionOpen ? (
+                            <form className="mt-4 space-y-3" onSubmit={handlePasswordSubmit}>
+                                <input name="currentPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Current password" />
+                                <input name="newPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="New password" />
+                                <input name="confirmPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Confirm new password" />
+                                <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Save Password</button>
+                                {passwordMessage ? (
+                                    <p className={passwordMessage.type === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-rose-600'}>{passwordMessage.text}</p>
+                                ) : null}
+                            </form>
+                        ) : null}
                     </section>
                 </div>
 
