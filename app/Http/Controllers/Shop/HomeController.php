@@ -44,10 +44,13 @@ class HomeController extends Controller
                 ->where('is_active', true)
                 ->orderBy('sort_order')
                 ->orderByDesc('id')
-                ->with('product:id,name,image_url,price')
+                ->with(['product' => fn ($query) => $query->isVisible()->select('id', 'name', 'image_url', 'price')])
                 ->get()
                 ->map(function (HeroBanner $banner) {
-                    $banner->cta_link = $banner->product_id ? "/products/{$banner->product_id}" : $banner->cta_link;
+                    if ($banner->product) {
+                        $banner->cta_link = route('products.show', $banner->product);
+                    }
+
                     $banner->image_url = $banner->image_url ?: $banner->product?->image_url;
 
                     $productPrice = $banner->product ? (float) $banner->product->price : null;
