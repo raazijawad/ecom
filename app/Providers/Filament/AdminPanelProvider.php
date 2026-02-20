@@ -8,6 +8,7 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -44,6 +45,11 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Advertisement'),
                 NavigationGroup::make('Sales'),
                 NavigationGroup::make('Customers'),
+            ])
+            ->navigationItems([
+                NavigationItem::make('Website')
+                    ->icon('heroicon-o-globe-alt')
+                    ->url(fn (): string => route('home')),
             ])
             ->widgets([
                 AccountWidget::class,
