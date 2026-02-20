@@ -22,6 +22,7 @@ type SharedProps = {
 export default function ShopLayout({ title, cartSummary, children }: Props) {
     const { auth, collections } = usePage<SharedProps>().props;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const dashboardHref = auth.user?.role === 'admin' ? '/admin' : '/customer/dashboard';
 
     return (
         <>
@@ -89,7 +90,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                     >
                                         Sign out
                                     </button>
-                                    <AppLink href="/customer/dashboard" className="text-sm font-medium text-slate-600 hover:text-slate-900">
+                                    <AppLink href={dashboardHref} className="text-sm font-medium text-slate-600 hover:text-slate-900">
                                         Dashboard
                                     </AppLink>
                                 </>
