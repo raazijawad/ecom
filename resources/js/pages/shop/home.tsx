@@ -253,9 +253,12 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                         className="flex transition-transform duration-700 ease-in-out"
                         style={{ transform: `translateX(-${activeHeroBanner * 100}%)` }}
                     >
-                        {sliderBanners.map((banner) => (
-                            <article key={banner.id} className="w-full shrink-0">
-                                <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
+                        {sliderBanners.map((banner) => {
+                            const bannerCtaLink = banner.product_id ? `/products/${banner.product_id}` : banner.cta_link;
+
+                            return (
+                                <article key={banner.id} className="w-full shrink-0">
+                                    <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
                                     <div>
                                         <p className="text-sm font-medium tracking-wide text-slate-500">{banner.eyebrow ?? 'Featured Drop'}</p>
                                         <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
@@ -286,9 +289,9 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                         )}
 
                                         <div className="mt-8 flex flex-wrap items-center gap-3">
-                                            {banner.cta_link ? (
+                                            {bannerCtaLink ? (
                                                 <AppLink
-                                                    href={banner.cta_link}
+                                                    href={bannerCtaLink}
                                                     className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
                                                 >
                                                     {banner.cta_label ?? 'Shop Now'}
@@ -332,9 +335,10 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                             className="h-[300px] w-full rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-[360px]"
                                         />
                                     </div>
-                                </div>
-                            </article>
-                        ))}
+                                    </div>
+                                </article>
+                            );
+                        })}
                     </div>
                 </div>
 
