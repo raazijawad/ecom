@@ -113,12 +113,12 @@ export default function CustomerDashboard() {
     const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [isProfileSectionOpen, setIsProfileSectionOpen] = useState(false);
     const [isPasswordSectionOpen, setIsPasswordSectionOpen] = useState(false);
-    const [isAddressBookOpen, setIsAddressBookOpen] = useState(true);
-    const [isWishlistOpen, setIsWishlistOpen] = useState(true);
-    const [isCartPreviewOpen, setIsCartPreviewOpen] = useState(true);
-    const [isNotificationsOpen, setIsNotificationsOpen] = useState(true);
-    const [isCouponsOpen, setIsCouponsOpen] = useState(true);
-    const [isSupportOpen, setIsSupportOpen] = useState(true);
+    const [isAddressBookOpen, setIsAddressBookOpen] = useState(false);
+    const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+    const [isCartPreviewOpen, setIsCartPreviewOpen] = useState(false);
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const [isCouponsOpen, setIsCouponsOpen] = useState(false);
+    const [isSupportOpen, setIsSupportOpen] = useState(false);
 
     const latestOrder = recentOrders[0];
     const cartTotal = useMemo(
@@ -294,13 +294,22 @@ export default function CustomerDashboard() {
                             <button
                                 type="button"
                                 onClick={() => setIsPasswordSectionOpen((current) => !current)}
-                                className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+                                aria-expanded={isPasswordSectionOpen}
+                                aria-controls="change-password-section"
+                                className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
                             >
-                                Update Password
+                                <svg
+                                    className={`h-4 w-4 transition-transform ${isPasswordSectionOpen ? 'rotate-180' : ''}`}
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
                             </button>
                         </div>
                         {isPasswordSectionOpen ? (
-                            <form className="mt-4 space-y-3" onSubmit={handlePasswordSubmit}>
+                            <form id="change-password-section" className="mt-4 space-y-3" onSubmit={handlePasswordSubmit}>
                                 <input name="currentPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Current password" />
                                 <input name="newPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="New password" />
                                 <input name="confirmPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Confirm new password" />
