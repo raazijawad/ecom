@@ -286,18 +286,22 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                         )}
 
                                         <div className="mt-8 flex flex-wrap items-center gap-3">
-                                            {banner.cta_link ? (
-                                                <AppLink
-                                                    href={banner.cta_link}
-                                                    className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
-                                                >
-                                                    {banner.cta_label ?? 'Shop Now'}
-                                                </AppLink>
-                                            ) : (
-                                                <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
-                                                    {banner.cta_label ?? 'Shop Now'}
-                                                </button>
-                                            )}
+                                            {(() => {
+                                                const bannerHref = banner.product_id ? `/products/${banner.product_id}` : banner.cta_link;
+
+                                                return bannerHref ? (
+                                                    <AppLink
+                                                        href={bannerHref}
+                                                        className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500"
+                                                    >
+                                                        {banner.cta_label ?? 'Shop Now'}
+                                                    </AppLink>
+                                                ) : (
+                                                    <button className="rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition hover:bg-blue-500">
+                                                        {banner.cta_label ?? 'Shop Now'}
+                                                    </button>
+                                                );
+                                            })()}
                                             <button
                                                 type="button"
                                                 onClick={() => setActiveHeroBanner((current) => (current + 1) % sliderBanners.length)}
