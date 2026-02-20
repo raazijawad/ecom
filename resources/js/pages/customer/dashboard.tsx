@@ -138,6 +138,30 @@ export default function CustomerDashboard() {
         setProfileMessage({ type: 'success', text: 'Your account information has been updated successfully.' });
     };
 
+    const toggleProfileSection = () => {
+        setIsProfileSectionOpen((current) => {
+            const nextState = !current;
+
+            if (nextState) {
+                setIsPasswordSectionOpen(false);
+            }
+
+            return nextState;
+        });
+    };
+
+    const togglePasswordSection = () => {
+        setIsPasswordSectionOpen((current) => {
+            const nextState = !current;
+
+            if (nextState) {
+                setIsProfileSectionOpen(false);
+            }
+
+            return nextState;
+        });
+    };
+
     const resetAddressDraft = () => {
         setAddressDraft({ id: 0, type: 'Shipping', label: '', line1: '', city: '', state: '', zip: '', country: '' });
         setEditingAddressId(null);
@@ -260,7 +284,7 @@ export default function CustomerDashboard() {
                             <h2 className="text-xl font-semibold text-slate-900">Profile / Account Information</h2>
                             <button
                                 type="button"
-                                onClick={() => setIsProfileSectionOpen((current) => !current)}
+                                onClick={toggleProfileSection}
                                 aria-expanded={isProfileSectionOpen}
                                 aria-controls="profile-account-information"
                                 className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
@@ -293,7 +317,7 @@ export default function CustomerDashboard() {
                             <h2 className="text-xl font-semibold text-slate-900">Change Password</h2>
                             <button
                                 type="button"
-                                onClick={() => setIsPasswordSectionOpen((current) => !current)}
+                                onClick={togglePasswordSection}
                                 aria-expanded={isPasswordSectionOpen}
                                 aria-controls="change-password-section"
                                 className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
