@@ -278,7 +278,7 @@ export default function CustomerDashboard() {
                     </div>
                 </section>
 
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6">
                     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <div className="flex items-center justify-between gap-3">
                             <h2 className="text-xl font-semibold text-slate-900">Profile / Account Information</h2>
@@ -300,48 +300,50 @@ export default function CustomerDashboard() {
                             </button>
                         </div>
                         {isProfileSectionOpen ? (
-                            <form id="profile-account-information" className="mt-4 space-y-3" onSubmit={handleProfileSubmit}>
-                                <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Name" value={profile.name} onChange={(event) => setProfile({ ...profile, name: event.target.value })} />
-                                <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Email" type="email" value={profile.email} onChange={(event) => setProfile({ ...profile, email: event.target.value })} />
-                                <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Phone" value={profile.phone} onChange={(event) => setProfile({ ...profile, phone: event.target.value })} />
-                                <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Save Profile</button>
-                                {profileMessage ? (
-                                    <p className={profileMessage.type === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-rose-600'}>{profileMessage.text}</p>
-                                ) : null}
-                            </form>
-                        ) : null}
-                    </section>
+                            <>
+                                <form id="profile-account-information" className="mt-4 space-y-3" onSubmit={handleProfileSubmit}>
+                                    <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Name" value={profile.name} onChange={(event) => setProfile({ ...profile, name: event.target.value })} />
+                                    <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Email" type="email" value={profile.email} onChange={(event) => setProfile({ ...profile, email: event.target.value })} />
+                                    <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Phone" value={profile.phone} onChange={(event) => setProfile({ ...profile, phone: event.target.value })} />
+                                    <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Save Profile</button>
+                                    {profileMessage ? (
+                                        <p className={profileMessage.type === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-rose-600'}>{profileMessage.text}</p>
+                                    ) : null}
+                                </form>
 
-                    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <div className="flex items-center justify-between gap-3">
-                            <h2 className="text-xl font-semibold text-slate-900">Change Password</h2>
-                            <button
-                                type="button"
-                                onClick={togglePasswordSection}
-                                aria-expanded={isPasswordSectionOpen}
-                                aria-controls="change-password-section"
-                                className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
-                            >
-                                <svg
-                                    className={`h-4 w-4 transition-transform ${isPasswordSectionOpen ? 'rotate-180' : ''}`}
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </button>
-                        </div>
-                        {isPasswordSectionOpen ? (
-                            <form id="change-password-section" className="mt-4 space-y-3" onSubmit={handlePasswordSubmit}>
-                                <input name="currentPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Current password" />
-                                <input name="newPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="New password" />
-                                <input name="confirmPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Confirm new password" />
-                                <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Save Password</button>
-                                {passwordMessage ? (
-                                    <p className={passwordMessage.type === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-rose-600'}>{passwordMessage.text}</p>
-                                ) : null}
-                            </form>
+                                <div className="mt-6 border-t border-slate-200 pt-6">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <h3 className="text-lg font-semibold text-slate-900">Change Password</h3>
+                                        <button
+                                            type="button"
+                                            onClick={togglePasswordSection}
+                                            aria-expanded={isPasswordSectionOpen}
+                                            aria-controls="change-password-section"
+                                            className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+                                        >
+                                            <svg
+                                                className={`h-4 w-4 transition-transform ${isPasswordSectionOpen ? 'rotate-180' : ''}`}
+                                                viewBox="0 0 20 20"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    {isPasswordSectionOpen ? (
+                                        <form id="change-password-section" className="mt-4 space-y-3" onSubmit={handlePasswordSubmit}>
+                                            <input name="currentPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Current password" />
+                                            <input name="newPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="New password" />
+                                            <input name="confirmPassword" type="password" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Confirm new password" />
+                                            <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Save Password</button>
+                                            {passwordMessage ? (
+                                                <p className={passwordMessage.type === 'success' ? 'text-sm text-emerald-600' : 'text-sm text-rose-600'}>{passwordMessage.text}</p>
+                                            ) : null}
+                                        </form>
+                                    ) : null}
+                                </div>
+                            </>
                         ) : null}
                     </section>
                 </div>
