@@ -113,6 +113,12 @@ export default function CustomerDashboard() {
     const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [isProfileSectionOpen, setIsProfileSectionOpen] = useState(false);
     const [isPasswordSectionOpen, setIsPasswordSectionOpen] = useState(false);
+    const [isAddressBookOpen, setIsAddressBookOpen] = useState(true);
+    const [isWishlistOpen, setIsWishlistOpen] = useState(true);
+    const [isCartPreviewOpen, setIsCartPreviewOpen] = useState(true);
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(true);
+    const [isCouponsOpen, setIsCouponsOpen] = useState(true);
+    const [isSupportOpen, setIsSupportOpen] = useState(true);
 
     const latestOrder = recentOrders[0];
     const cartTotal = useMemo(
@@ -308,112 +314,200 @@ export default function CustomerDashboard() {
                 </div>
 
                 <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h2 className="text-xl font-semibold text-slate-900">Address Book</h2>
-                    <div className="mt-4 grid gap-4 md:grid-cols-2">
-                        {addresses.map((address) => (
-                            <article key={address.id} className="rounded-xl border border-slate-200 p-4">
-                                <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">{address.type}</p>
-                                <p className="mt-2 font-semibold text-slate-900">{address.label}</p>
-                                <p className="text-sm text-slate-600">{address.line1}</p>
-                                <p className="text-sm text-slate-600">
-                                    {address.city}, {address.state} {address.zip}
-                                </p>
-                                <p className="text-sm text-slate-600">{address.country}</p>
-                                <div className="mt-3 flex gap-2">
-                                    <button type="button" onClick={() => startAddressEdit(address)} className="rounded-md border border-slate-300 px-3 py-1 text-xs font-semibold">Edit Address</button>
-                                    <button type="button" onClick={() => setAddresses((current) => current.filter((item) => item.id !== address.id))} className="rounded-md border border-rose-300 px-3 py-1 text-xs font-semibold text-rose-600">Delete Address</button>
-                                </div>
-                            </article>
-                        ))}
+                    <div className="flex items-center justify-between gap-3">
+                        <h2 className="text-xl font-semibold text-slate-900">Address Book</h2>
+                        <button
+                            type="button"
+                            onClick={() => setIsAddressBookOpen((current) => !current)}
+                            aria-expanded={isAddressBookOpen}
+                            className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+                        >
+                            <svg className={`h-4 w-4 transition-transform ${isAddressBookOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
                     </div>
-                    <form className="mt-5 grid gap-3 md:grid-cols-2" onSubmit={handleAddressSave}>
-                        <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Label (Home, Office)" value={addressDraft.label} onChange={(event) => setAddressDraft({ ...addressDraft, label: event.target.value })} />
-                        <select className="rounded-lg border border-slate-300 px-3 py-2 text-sm" value={addressDraft.type} onChange={(event) => setAddressDraft({ ...addressDraft, type: event.target.value as Address['type'] })}>
-                            <option value="Shipping">Shipping</option>
-                            <option value="Billing">Billing</option>
-                        </select>
-                        <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm md:col-span-2" placeholder="Street address" value={addressDraft.line1} onChange={(event) => setAddressDraft({ ...addressDraft, line1: event.target.value })} />
-                        <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="City" value={addressDraft.city} onChange={(event) => setAddressDraft({ ...addressDraft, city: event.target.value })} />
-                        <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="State" value={addressDraft.state} onChange={(event) => setAddressDraft({ ...addressDraft, state: event.target.value })} />
-                        <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="ZIP" value={addressDraft.zip} onChange={(event) => setAddressDraft({ ...addressDraft, zip: event.target.value })} />
-                        <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Country" value={addressDraft.country} onChange={(event) => setAddressDraft({ ...addressDraft, country: event.target.value })} />
-                        <div className="md:col-span-2 flex flex-wrap gap-2">
-                            <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">{editingAddressId ? 'Update Address' : 'Add New Address'}</button>
-                            {editingAddressId ? (
-                                <button type="button" onClick={resetAddressDraft} className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700">Cancel</button>
-                            ) : null}
-                        </div>
-                    </form>
+                    {isAddressBookOpen ? (
+                        <>
+                            <div className="mt-4 grid gap-4 md:grid-cols-2">
+                                {addresses.map((address) => (
+                                    <article key={address.id} className="rounded-xl border border-slate-200 p-4">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">{address.type}</p>
+                                        <p className="mt-2 font-semibold text-slate-900">{address.label}</p>
+                                        <p className="text-sm text-slate-600">{address.line1}</p>
+                                        <p className="text-sm text-slate-600">
+                                            {address.city}, {address.state} {address.zip}
+                                        </p>
+                                        <p className="text-sm text-slate-600">{address.country}</p>
+                                        <div className="mt-3 flex gap-2">
+                                            <button type="button" onClick={() => startAddressEdit(address)} className="rounded-md border border-slate-300 px-3 py-1 text-xs font-semibold">Edit Address</button>
+                                            <button type="button" onClick={() => setAddresses((current) => current.filter((item) => item.id !== address.id))} className="rounded-md border border-rose-300 px-3 py-1 text-xs font-semibold text-rose-600">Delete Address</button>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                            <form className="mt-5 grid gap-3 md:grid-cols-2" onSubmit={handleAddressSave}>
+                                <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Label (Home, Office)" value={addressDraft.label} onChange={(event) => setAddressDraft({ ...addressDraft, label: event.target.value })} />
+                                <select className="rounded-lg border border-slate-300 px-3 py-2 text-sm" value={addressDraft.type} onChange={(event) => setAddressDraft({ ...addressDraft, type: event.target.value as Address['type'] })}>
+                                    <option value="Shipping">Shipping</option>
+                                    <option value="Billing">Billing</option>
+                                </select>
+                                <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm md:col-span-2" placeholder="Street address" value={addressDraft.line1} onChange={(event) => setAddressDraft({ ...addressDraft, line1: event.target.value })} />
+                                <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="City" value={addressDraft.city} onChange={(event) => setAddressDraft({ ...addressDraft, city: event.target.value })} />
+                                <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="State" value={addressDraft.state} onChange={(event) => setAddressDraft({ ...addressDraft, state: event.target.value })} />
+                                <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="ZIP" value={addressDraft.zip} onChange={(event) => setAddressDraft({ ...addressDraft, zip: event.target.value })} />
+                                <input className="rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Country" value={addressDraft.country} onChange={(event) => setAddressDraft({ ...addressDraft, country: event.target.value })} />
+                                <div className="md:col-span-2 flex flex-wrap gap-2">
+                                    <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">{editingAddressId ? 'Update Address' : 'Add New Address'}</button>
+                                    {editingAddressId ? (
+                                        <button type="button" onClick={resetAddressDraft} className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700">Cancel</button>
+                                    ) : null}
+                                </div>
+                            </form>
+                        </>
+                    ) : null}
                 </section>
 
                 <div className="grid gap-6 lg:grid-cols-2">
                     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 className="text-xl font-semibold text-slate-900">Wishlist</h2>
-                        <ul className="mt-4 space-y-3">
-                            {wishlist.map((item) => (
-                                <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">
-                                    <div>
-                                        <p className="font-semibold text-slate-900">{item.name}</p>
-                                        <p className="text-sm text-slate-500">{item.price}</p>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <button type="button" className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white">Add to Cart</button>
-                                        <button type="button" onClick={() => setWishlist((current) => current.filter((product) => product.id !== item.id))} className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700">Remove</button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="flex items-center justify-between gap-3">
+                            <h2 className="text-xl font-semibold text-slate-900">Wishlist</h2>
+                            <button
+                                type="button"
+                                onClick={() => setIsWishlistOpen((current) => !current)}
+                                aria-expanded={isWishlistOpen}
+                                className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+                            >
+                                <svg className={`h-4 w-4 transition-transform ${isWishlistOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        {isWishlistOpen ? (
+                            <ul className="mt-4 space-y-3">
+                                {wishlist.map((item) => (
+                                    <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 p-3">
+                                        <div>
+                                            <p className="font-semibold text-slate-900">{item.name}</p>
+                                            <p className="text-sm text-slate-500">{item.price}</p>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button type="button" className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white">Add to Cart</button>
+                                            <button type="button" onClick={() => setWishlist((current) => current.filter((product) => product.id !== item.id))} className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700">Remove</button>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : null}
                     </section>
 
                     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 className="text-xl font-semibold text-slate-900">Cart Preview</h2>
-                        <ul className="mt-4 space-y-3 text-sm">
-                            {starterCartItems.map((item) => (
-                                <li key={item.id} className="flex items-center justify-between rounded-xl border border-slate-200 p-3">
-                                    <span>
-                                        {item.name} <span className="text-slate-500">x{item.qty}</span>
-                                    </span>
-                                    <span className="font-semibold text-slate-900">{item.total}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        <p className="mt-4 text-sm font-semibold text-slate-800">Total: ${cartTotal}</p>
-                        <button type="button" onClick={() => router.get('/checkout')} className="mt-3 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">Go to Checkout</button>
+                        <div className="flex items-center justify-between gap-3">
+                            <h2 className="text-xl font-semibold text-slate-900">Cart Preview</h2>
+                            <button
+                                type="button"
+                                onClick={() => setIsCartPreviewOpen((current) => !current)}
+                                aria-expanded={isCartPreviewOpen}
+                                className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+                            >
+                                <svg className={`h-4 w-4 transition-transform ${isCartPreviewOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        {isCartPreviewOpen ? (
+                            <>
+                                <ul className="mt-4 space-y-3 text-sm">
+                                    {starterCartItems.map((item) => (
+                                        <li key={item.id} className="flex items-center justify-between rounded-xl border border-slate-200 p-3">
+                                            <span>
+                                                {item.name} <span className="text-slate-500">x{item.qty}</span>
+                                            </span>
+                                            <span className="font-semibold text-slate-900">{item.total}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <p className="mt-4 text-sm font-semibold text-slate-800">Total: ${cartTotal}</p>
+                                <button type="button" onClick={() => router.get('/checkout')} className="mt-3 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white">Go to Checkout</button>
+                            </>
+                        ) : null}
                     </section>
                 </div>
 
                 <div className="grid gap-6 lg:grid-cols-3">
                     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 className="text-lg font-semibold text-slate-900">Notifications / Alerts</h2>
-                        <ul className="mt-4 space-y-3 text-sm">
-                            {starterNotifications.map((notification) => (
-                                <li key={notification.id} className="rounded-xl border border-slate-200 p-3">
-                                    <p className="font-semibold text-slate-900">{notification.title}</p>
-                                    <p className="mt-1 text-slate-600">{notification.message}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
-
-                    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 className="text-lg font-semibold text-slate-900">Coupons / Rewards</h2>
-                        <div className="mt-4 space-y-3 text-sm text-slate-700">
-                            <p className="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-700">ACTIVE COUPON: SAVE15 (expires in 3 days)</p>
-                            <p>Reward points: <span className="font-semibold">240 points</span></p>
-                            <p>Points expiration: 31 Mar 2026</p>
+                        <div className="flex items-center justify-between gap-3">
+                            <h2 className="text-lg font-semibold text-slate-900">Notifications / Alerts</h2>
+                            <button
+                                type="button"
+                                onClick={() => setIsNotificationsOpen((current) => !current)}
+                                aria-expanded={isNotificationsOpen}
+                                className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+                            >
+                                <svg className={`h-4 w-4 transition-transform ${isNotificationsOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
                         </div>
+                        {isNotificationsOpen ? (
+                            <ul className="mt-4 space-y-3 text-sm">
+                                {starterNotifications.map((notification) => (
+                                    <li key={notification.id} className="rounded-xl border border-slate-200 p-3">
+                                        <p className="font-semibold text-slate-900">{notification.title}</p>
+                                        <p className="mt-1 text-slate-600">{notification.message}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : null}
                     </section>
 
                     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 className="text-lg font-semibold text-slate-900">Support / Help Center</h2>
-                        <form className="mt-4 space-y-3">
-                            <textarea className="h-24 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Describe your issue"></textarea>
-                            <div className="flex flex-wrap gap-2">
-                                <button type="button" className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white">Contact Support</button>
-                                <button type="button" className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700">FAQ</button>
-                                <button type="button" className="rounded-md border border-blue-300 px-3 py-1.5 text-xs font-semibold text-blue-700">Open Ticket</button>
+                        <div className="flex items-center justify-between gap-3">
+                            <h2 className="text-lg font-semibold text-slate-900">Coupons / Rewards</h2>
+                            <button
+                                type="button"
+                                onClick={() => setIsCouponsOpen((current) => !current)}
+                                aria-expanded={isCouponsOpen}
+                                className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+                            >
+                                <svg className={`h-4 w-4 transition-transform ${isCouponsOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        {isCouponsOpen ? (
+                            <div className="mt-4 space-y-3 text-sm text-slate-700">
+                                <p className="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-700">ACTIVE COUPON: SAVE15 (expires in 3 days)</p>
+                                <p>Reward points: <span className="font-semibold">240 points</span></p>
+                                <p>Points expiration: 31 Mar 2026</p>
                             </div>
-                        </form>
+                        ) : null}
+                    </section>
+
+                    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div className="flex items-center justify-between gap-3">
+                            <h2 className="text-lg font-semibold text-slate-900">Support / Help Center</h2>
+                            <button
+                                type="button"
+                                onClick={() => setIsSupportOpen((current) => !current)}
+                                aria-expanded={isSupportOpen}
+                                className="rounded-full border border-slate-300 p-2 text-slate-700 transition hover:border-slate-400 hover:text-slate-900"
+                            >
+                                <svg className={`h-4 w-4 transition-transform ${isSupportOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        {isSupportOpen ? (
+                            <form className="mt-4 space-y-3">
+                                <textarea className="h-24 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Describe your issue"></textarea>
+                                <div className="flex flex-wrap gap-2">
+                                    <button type="button" className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white">Contact Support</button>
+                                    <button type="button" className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700">FAQ</button>
+                                    <button type="button" className="rounded-md border border-blue-300 px-3 py-1.5 text-xs font-semibold text-blue-700">Open Ticket</button>
+                                </div>
+                            </form>
+                        ) : null}
                     </section>
                 </div>
 
