@@ -90,7 +90,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                                         Sign out
                                     </button>
                                     <AppLink href="/customer/dashboard" className="text-sm font-medium text-slate-600 hover:text-slate-900">
-                                        Customer Dashboard
+                                        Dashboard
                                     </AppLink>
                                 </>
                             ) : (
