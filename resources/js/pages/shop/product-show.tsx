@@ -32,10 +32,14 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
     const baseProductImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
 
     const galleryImages = useMemo(() => {
-        const uniqueUrls = new Set<string>([baseProductImageUrl, ...(product.gallery_image_urls ?? [])].filter(Boolean));
+        const normalizedColor = selectedColor?.toLowerCase().trim() ?? null;
+        const colorSpecificGallery = normalizedColor ? product.color_gallery_image_urls?.[normalizedColor] ?? [] : [];
+        const fallbackGallery = product.gallery_image_urls ?? [];
+
+        const uniqueUrls = new Set<string>([baseProductImageUrl, ...(colorSpecificGallery.length > 0 ? colorSpecificGallery : fallbackGallery)].filter(Boolean));
 
         return Array.from(uniqueUrls);
-    }, [baseProductImageUrl, product.gallery_image_urls]);
+    }, [baseProductImageUrl, product.color_gallery_image_urls, product.gallery_image_urls, selectedColor]);
 
     const [selectedImageUrl, setSelectedImageUrl] = useState(baseProductImageUrl);
 
