@@ -30,6 +30,19 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
     }, [product.color_image_urls]);
 
     const productImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
+    const imageAngles = useMemo(() => {
+        const imageSources = [product.image_url, ...Object.values(product.color_image_urls ?? {})].filter(Boolean) as string[];
+        const uniqueImageSources = Array.from(new Set(imageSources));
+        const fallbackImage = product.image_url ?? '';
+
+        return Array.from({ length: 5 }, (_, index) => uniqueImageSources[index] ?? fallbackImage);
+    }, [product.color_image_urls, product.image_url]);
+
+    const [selectedImage, setSelectedImage] = useState(productImageUrl);
+
+    useEffect(() => {
+        setSelectedImage(productImageUrl);
+    }, [productImageUrl]);
 
     useEffect(() => {
         if (!showCartMessage) {
@@ -46,7 +59,27 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
-                <img src={productImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
+                <div className="flex gap-4">
+                    <div className="flex w-20 flex-col gap-3">
+                        {imageAngles.map((imageUrl, index) => (
+                            <button
+                                key={`${imageUrl}-${index}`}
+                                type="button"
+                                onClick={() => setSelectedImage(imageUrl)}
+                                className={`overflow-hidden rounded-lg border transition ${
+                                    selectedImage === imageUrl ? 'border-blue-600' : 'border-slate-300 hover:border-slate-400'
+                                }`}
+                            >
+                                <img src={imageUrl} alt={`${product.name} angle ${index + 1}`} className="h-16 w-20 object-cover" />
+                            </button>
+                        ))}
+                    </div>
+                    <img
+                        src={selectedImage}
+                        alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name}
+                        className="max-h-[540px] w-full rounded-xl object-cover"
+                    />
+                </div>
                 <div>
                     <p className="text-sm text-slate-500">{product.category?.name}</p>
                     <h1 className="mt-2 text-3xl font-bold">{product.name}</h1>
