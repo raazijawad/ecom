@@ -32,4 +32,23 @@ class ProductColorGalleryTest extends TestCase
             $product->color_gallery_image_urls,
         );
     }
+
+    #[Test]
+    public function it_builds_color_image_urls_from_uploaded_file_paths(): void
+    {
+        $product = new Product([
+            'color_image_urls' => [
+                'Blue' => 'products/colors/blue-thumb.jpg',
+                'Red' => 'https://cdn.example.com/red-thumb.jpg',
+            ],
+        ]);
+
+        $this->assertSame(
+            [
+                'blue' => asset('storage/products/colors/blue-thumb.jpg'),
+                'red' => 'https://cdn.example.com/red-thumb.jpg',
+            ],
+            $product->color_image_urls,
+        );
+    }
 }

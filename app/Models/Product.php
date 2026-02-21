@@ -79,6 +79,28 @@ class Product extends Model
             ->all();
     }
 
+    public function getColorImageUrlsAttribute($value): array
+    {
+        $colorImages = is_array($value) ? $value : [];
+
+        return collect($colorImages)
+            ->mapWithKeys(function ($path, $color): array {
+                $normalizedColor = strtolower(trim((string) $color));
+                $normalizedPath = trim((string) $path);
+
+                if ($normalizedColor === '' || $normalizedPath === '') {
+                    return [];
+                }
+
+                if (str_starts_with($normalizedPath, 'http://') || str_starts_with($normalizedPath, 'https://')) {
+                    return [$normalizedColor => $normalizedPath];
+                }
+
+                return [$normalizedColor => asset('storage/'.$normalizedPath)];
+            })
+            ->all();
+    }
+
 
     public function getColorGalleryImageUrlsAttribute(): array
     {
