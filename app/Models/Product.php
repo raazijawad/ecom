@@ -22,12 +22,14 @@ class Product extends Model
         'colors',
         'color_image_urls',
         'image',
+        'gallery_images',
         'is_featured',
         'is_visible',
     ];
 
     protected $appends = [
         'image_url',
+        'gallery_image_urls',
     ];
 
     protected function casts(): array
@@ -39,6 +41,7 @@ class Product extends Model
             'sizes' => 'array',
             'colors' => 'array',
             'color_image_urls' => 'array',
+            'gallery_images' => 'array',
         ];
     }
 
@@ -54,6 +57,23 @@ class Product extends Model
         }
 
         return asset('storage/'.$this->image);
+    }
+
+    public function getGalleryImageUrlsAttribute(): array
+    {
+        $galleryImages = is_array($this->gallery_images) ? $this->gallery_images : [];
+
+        return collect($galleryImages)
+            ->filter(fn ($path) => is_string($path) && trim($path) !== '')
+            ->map(function (string $path): string {
+                if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+                    return $path;
+                }
+
+                return asset('storage/'.$path);
+            })
+            ->values()
+            ->all();
     }
 
     public function scopeIsVisible(Builder $query): Builder

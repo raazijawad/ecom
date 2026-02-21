@@ -70,6 +70,15 @@ class ProductResource extends Resource
                 ->disk('public')
                 ->directory('products')
                 ->imageEditor(),
+            FileUpload::make('gallery_images')
+                ->label('Shoe Gallery Images')
+                ->image()
+                ->disk('public')
+                ->directory('products/gallery')
+                ->multiple()
+                ->reorderable()
+                ->imageEditor()
+                ->columnSpanFull(),
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),

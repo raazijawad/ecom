@@ -29,7 +29,25 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
         return Object.fromEntries(entries.map(([color, imageUrl]) => [color.toLowerCase().trim(), imageUrl]));
     }, [product.color_image_urls]);
 
-    const productImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
+    const baseProductImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
+
+    const galleryImages = useMemo(() => {
+        const uniqueUrls = new Set<string>([baseProductImageUrl, ...(product.gallery_image_urls ?? [])].filter(Boolean));
+
+        return Array.from(uniqueUrls);
+    }, [baseProductImageUrl, product.gallery_image_urls]);
+
+    const [selectedImageUrl, setSelectedImageUrl] = useState(baseProductImageUrl);
+
+    useEffect(() => {
+        if (galleryImages.length === 0) {
+            setSelectedImageUrl('');
+
+            return;
+        }
+
+        setSelectedImageUrl((currentImageUrl) => (currentImageUrl && galleryImages.includes(currentImageUrl) ? currentImageUrl : galleryImages[0]));
+    }, [galleryImages]);
 
     useEffect(() => {
         if (!showCartMessage) {
@@ -46,11 +64,29 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
-                <img
-                    src={productImageUrl}
-                    alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name}
-                    className="h-[420px] w-[700px] max-w-full rounded-xl object-cover"
-                />
+                <div>
+                    <img
+                        src={selectedImageUrl}
+                        alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name}
+                        className="h-[420px] w-[700px] max-w-full rounded-xl object-cover"
+                    />
+                    {galleryImages.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            {galleryImages.map((imageUrl, index) => (
+                                <button
+                                    key={`${imageUrl}-${index}`}
+                                    type="button"
+                                    onClick={() => setSelectedImageUrl(imageUrl)}
+                                    className={`h-16 w-16 overflow-hidden rounded-md border-2 transition ${
+                                        selectedImageUrl === imageUrl ? 'border-blue-600' : 'border-slate-200 hover:border-slate-400'
+                                    }`}
+                                >
+                                    <img src={imageUrl} alt={`${product.name} gallery ${index + 1}`} className="h-full w-full object-cover" />
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
                 <div>
                     <p className="text-sm text-slate-500">{product.category?.name}</p>
                     <h1 className="mt-2 text-3xl font-bold">{product.name}</h1>
