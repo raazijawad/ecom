@@ -54,6 +54,10 @@ class ProductController extends Controller
     private function normalizeProductMedia(Product $product): void
     {
         $product->image_url = $this->resolvePublicImageUrl($product->image_url);
+        $product->color_image_urls = collect($product->color_image_urls ?? [])
+            ->map(fn ($imagePath) => $this->resolvePublicImageUrl($imagePath))
+            ->filter()
+            ->all();
         $product->angle_image_urls = collect($product->angle_image_urls ?? [])
             ->map(fn ($imagePath) => $this->resolvePublicImageUrl($imagePath))
             ->filter()
