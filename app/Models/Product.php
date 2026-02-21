@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -52,5 +54,18 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getImageUrlAttribute(?string $value): ?string
+    {
+        if (! is_string($value) || $value === '') {
+            return null;
+        }
+
+        if (Str::startsWith($value, ['http://', 'https://', '//', 'data:'])) {
+            return $value;
+        }
+
+        return Storage::disk('public')->url(ltrim($value, '/'));
     }
 }
