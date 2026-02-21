@@ -76,6 +76,8 @@ class ProductResource extends Resource
                 ->disk('public')
                 ->directory('products/gallery')
                 ->multiple()
+                ->panelLayout('grid')
+                ->imagePreviewHeight('100')
                 ->reorderable()
                 ->imageEditor()
                 ->columnSpanFull(),
