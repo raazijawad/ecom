@@ -16,6 +16,7 @@ export type Product = {
     sizes: string[] | null;
     colors: string[] | null;
     color_image_urls?: Record<string, string> | null;
+    angle_image_urls?: string[] | null;
     image_url: string | null;
     is_featured: boolean;
     category?: Category;
