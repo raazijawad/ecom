@@ -46,7 +46,11 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
-                <img src={productImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
+                <img
+                    src={productImageUrl}
+                    alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name}
+                    className="h-[420px] w-[700px] max-w-full rounded-xl object-cover"
+                />
                 <div>
                     <p className="text-sm text-slate-500">{product.category?.name}</p>
                     <h1 className="mt-2 text-3xl font-bold">{product.name}</h1>
