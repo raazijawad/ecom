@@ -21,9 +21,13 @@ class Product extends Model
         'sizes',
         'colors',
         'color_image_urls',
-        'image_url',
+        'image',
         'is_featured',
         'is_visible',
+    ];
+
+    protected $appends = [
+        'image_url',
     ];
 
     protected function casts(): array
@@ -36,6 +40,20 @@ class Product extends Model
             'colors' => 'array',
             'color_image_urls' => 'array',
         ];
+    }
+
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! is_string($this->image) || trim($this->image) === '') {
+            return null;
+        }
+
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        return asset('storage/'.$this->image);
     }
 
     public function scopeIsVisible(Builder $query): Builder
