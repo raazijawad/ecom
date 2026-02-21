@@ -255,8 +255,8 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                     >
                         {sliderBanners.map((banner) => (
                             <article key={banner.id} className="w-full shrink-0">
-                                <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr]">
-                                    <div>
+                                <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-12">
+                                    <div className="pr-2 sm:pr-4 lg:pl-8 lg:pr-0 xl:pl-12">
                                         <p className="text-sm font-medium tracking-wide text-slate-500">{banner.eyebrow ?? 'Featured Drop'}</p>
                                         <h1 className="mt-3 max-w-xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
                                             {banner.title}
