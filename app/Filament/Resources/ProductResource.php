@@ -7,6 +7,7 @@ use App\Models\Product;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -63,10 +64,12 @@ class ProductResource extends Resource
                 ->numeric()
                 ->required()
                 ->minValue(0),
-            TextInput::make('image_url')
-                ->label('Image URL')
-                ->url()
-                ->maxLength(2048),
+            FileUpload::make('image_url')
+                ->label('Image')
+                ->image()
+                ->disk('public')
+                ->directory('products')
+                ->visibility('public'),
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),
