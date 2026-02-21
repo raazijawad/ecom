@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductDetailsResource\Pages\ManageProductDetails;
 use App\Models\Product;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
@@ -41,6 +42,21 @@ class ProductDetailsResource extends Resource
                 ->required()
                 ->prefix('$')
                 ->minValue(0),
+            FileUpload::make('image')
+                ->label('Product Image')
+                ->image()
+                ->disk('public')
+                ->directory('products')
+                ->imageEditor(),
+            FileUpload::make('gallery_images')
+                ->label('Shoe Gallery Images')
+                ->image()
+                ->disk('public')
+                ->directory('products/gallery')
+                ->multiple()
+                ->reorderable()
+                ->imageEditor()
+                ->columnSpanFull(),
             TagsInput::make('sizes')
                 ->label('Sizes')
                 ->placeholder('Add a size and press Enter')
@@ -72,6 +88,12 @@ class ProductDetailsResource extends Resource
                 TextColumn::make('price')
                     ->money('USD')
                     ->sortable(),
+                TextColumn::make('image')
+                    ->label('Product image')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('gallery_images')
+                    ->label('Gallery images')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sizes')
                     ->badge()
                     ->separator(','),

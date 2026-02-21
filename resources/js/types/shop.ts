@@ -17,6 +17,7 @@ export type Product = {
     colors: string[] | null;
     color_image_urls?: Record<string, string> | null;
     image_url: string | null;
+    gallery_image_urls?: string[];
     is_featured: boolean;
     category?: Category;
 };
