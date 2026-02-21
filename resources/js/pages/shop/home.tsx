@@ -222,7 +222,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
             <section
-                className={`relative mb-10 overflow-hidden rounded-3xl border border-slate-200/80 bg-[#f4f5f7] px-6 py-10 lg:px-10 lg:py-14 ${isDraggingBanner ? 'cursor-grabbing' : 'cursor-grab'}`}
+                className={`relative left-1/2 right-1/2 mb-10 w-screen -translate-x-1/2 overflow-hidden bg-[#f4f5f7] px-6 py-10 lg:px-10 lg:py-14 ${isDraggingBanner ? 'cursor-grabbing' : 'cursor-grab'}`}
                 onPointerDown={handleBannerPointerDown}
                 onPointerUp={handleBannerPointerUp}
                 onPointerCancel={handleBannerPointerCancel}
