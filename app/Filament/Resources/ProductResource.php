@@ -8,9 +8,10 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -66,109 +67,93 @@ class ProductResource extends Resource
                 ->numeric()
                 ->required()
                 ->minValue(0),
-            TagsInput::make('colors')
-                ->label('Colours')
-                ->placeholder('Add a colour and press Enter')
-                ->helperText('Add or remove colours for this product.'),
-            FileUpload::make('image')
-                ->label('Product Image')
-                ->image()
-                ->disk('public')
-                ->directory('products')
-                ->imageEditor(),
-            FileUpload::make('gallery_images')
-                ->label('Shoe Gallery Images')
-                ->image()
-                ->disk('public')
-                ->directory('products/gallery')
-                ->multiple()
-                ->panelLayout('grid')
-                ->imagePreviewHeight('100')
-                ->reorderable()
-                ->imageEditor()
-                ->columnSpanFull(),
-            Repeater::make('color_gallery_images')
-                ->label('Colour Gallery Images')
-                ->helperText('Pick a colour, upload that colour\'s gallery images, then add another row for the next colour.')
-                ->schema([
-                    Select::make('color')
-                        ->label('Colour')
-                        ->required()
-                        ->searchable()
-                        ->options(fn (callable $get): array => collect($get('../../colors') ?? [])
-                            ->filter(fn ($color) => is_string($color) && trim($color) !== '')
-                            ->mapWithKeys(fn (string $color): array => [trim($color) => trim($color)])
-                            ->all()),
-                    FileUpload::make('images')
-                        ->label('Gallery Images')
-                        ->image()
-                        ->disk('public')
-                        ->directory('products/gallery')
-                        ->multiple()
-                        ->panelLayout('grid')
-                        ->imagePreviewHeight('100')
-                        ->reorderable()
-                        ->imageEditor()
-                        ->required(),
-                ])
-                ->addActionLabel('Add colour gallery')
-                ->reorderable(false)
-                ->default([])
-                ->afterStateHydrated(function (Repeater $component, $state): void {
-                    if (! is_array($state)) {
-                        $component->state([]);
+            Tabs::make('Product images')
+                ->columnSpanFull()
+                ->tabs([
+                    Tab::make('Colour')
+                        ->schema([
+                            TextInput::make('single_color')
+                                ->label('Colour')
+                                ->placeholder('Enter a colour')
+                                ->required()
+                                ->dehydrated(false)
+                                ->afterStateHydrated(function (TextInput $component, mixed $state, ?Product $record): void {
+                                    if (filled($state) || ! $record) {
+                                        return;
+                                    }
 
-                        return;
-                    }
+                                    $component->state((string) data_get($record->colors, '0', ''));
+                                }),
+                            FileUpload::make('single_color_image')
+                                ->label('Product Image')
+                                ->image()
+                                ->required()
+                                ->disk('public')
+                                ->directory('products')
+                                ->imageEditor()
+                                ->dehydrated(false)
+                                ->afterStateHydrated(function (FileUpload $component, mixed $state, ?Product $record): void {
+                                    if (filled($state) || ! $record) {
+                                        return;
+                                    }
 
-                    $stateIsMappedByColor = array_keys($state) !== range(0, count($state) - 1);
+                                    $color = (string) data_get($record->colors, '0', '');
+                                    $colorImage = is_string($color) ? data_get($record->getRawOriginal('color_image_urls'), $color) : null;
 
-                    if (! $stateIsMappedByColor) {
-                        return;
-                    }
+                                    $component->state($colorImage ?: $record->image);
+                                }),
+                            FileUpload::make('single_color_gallery')
+                                ->label('Shoe Gallery Images')
+                                ->image()
+                                ->required()
+                                ->disk('public')
+                                ->directory('products/gallery')
+                                ->multiple()
+                                ->panelLayout('grid')
+                                ->imagePreviewHeight('100')
+                                ->reorderable()
+                                ->imageEditor()
+                                ->dehydrated(false)
+                                ->afterStateHydrated(function (FileUpload $component, mixed $state, ?Product $record): void {
+                                    if (filled($state) || ! $record) {
+                                        return;
+                                    }
 
-                    $rows = collect($state)
-                        ->map(function ($images, $color): array {
-                            $imagePaths = is_array($images)
-                                ? $images
-                                : (preg_split('/[\r\n,]+/', (string) $images) ?: []);
+                                    $color = (string) data_get($record->colors, '0', '');
+                                    $mappedGallery = is_string($color) ? data_get($record->getRawOriginal('color_gallery_images'), $color) : null;
+                                    $gallery = is_array($mappedGallery) ? $mappedGallery : $record->gallery_images;
 
-                            return [
-                                'color' => (string) $color,
-                                'images' => collect($imagePaths)
+                                    $component->state(is_array($gallery) ? $gallery : []);
+                                }),
+                            Hidden::make('colors')
+                                ->dehydrateStateUsing(fn (callable $get): array => [trim((string) $get('single_color'))])
+                                ->hidden(),
+                            Hidden::make('image')
+                                ->dehydrateStateUsing(fn (callable $get): ?string => ($path = trim((string) $get('single_color_image'))) !== '' ? $path : null)
+                                ->hidden(),
+                            Hidden::make('gallery_images')
+                                ->dehydrateStateUsing(fn (callable $get): array => collect($get('single_color_gallery') ?? [])
                                     ->filter(fn ($path) => is_string($path) && trim($path) !== '')
                                     ->map(fn (string $path): string => trim($path))
                                     ->values()
-                                    ->all(),
-                            ];
-                        })
-                        ->values()
-                        ->all();
-
-                    $component->state($rows);
-                })
-                ->dehydrateStateUsing(fn (?array $state): array => collect($state ?? [])
-                    ->mapWithKeys(function ($row): array {
-                        $color = trim((string) data_get($row, 'color'));
-
-                        if ($color === '') {
-                            return [];
-                        }
-
-                        $images = collect(data_get($row, 'images', []))
-                            ->filter(fn ($path) => is_string($path) && trim($path) !== '')
-                            ->map(fn (string $path): string => trim($path))
-                            ->values()
-                            ->all();
-
-                        if ($images === []) {
-                            return [];
-                        }
-
-                        return [$color => $images];
-                    })
-                    ->all())
-                ->columnSpanFull(),
+                                    ->all())
+                                ->hidden(),
+                            Hidden::make('color_image_urls')
+                                ->dehydrateStateUsing(fn (callable $get): array => ($color = trim((string) $get('single_color'))) !== ''
+                                    ? [$color => trim((string) $get('single_color_image'))]
+                                    : [])
+                                ->hidden(),
+                            Hidden::make('color_gallery_images')
+                                ->dehydrateStateUsing(fn (callable $get): array => ($color = trim((string) $get('single_color'))) !== ''
+                                    ? [$color => collect($get('single_color_gallery') ?? [])
+                                        ->filter(fn ($path) => is_string($path) && trim($path) !== '')
+                                        ->map(fn (string $path): string => trim($path))
+                                        ->values()
+                                        ->all()]
+                                    : [])
+                                ->hidden(),
+                        ]),
+                ]),
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),
