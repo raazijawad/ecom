@@ -6,10 +6,12 @@ use App\Filament\Resources\CollectionResource\Pages\ManageCollections;
 use App\Models\Category;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -51,6 +53,13 @@ class CollectionResource extends Resource
                 ->rows(4)
                 ->maxLength(1000)
                 ->columnSpanFull(),
+            FileUpload::make('image_url')
+                ->label('Collection image')
+                ->image()
+                ->disk('public')
+                ->directory('collections')
+                ->imageEditor()
+                ->columnSpanFull(),
         ]);
     }
 
@@ -61,6 +70,10 @@ class CollectionResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                ImageColumn::make('image_url')
+                    ->label('Image')
+                    ->disk('public')
+                    ->square(),
                 TextColumn::make('slug')
                     ->searchable()
                     ->copyable(),
