@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -80,6 +81,12 @@ class ProductResource extends Resource
                 ->imagePreviewHeight('100')
                 ->reorderable()
                 ->imageEditor()
+                ->columnSpanFull(),
+            KeyValue::make('color_gallery_images')
+                ->label('Colour Gallery Images')
+                ->keyLabel('Colour')
+                ->valueLabel('Gallery image URLs')
+                ->helperText('Use the exact colour name as key and add multiple URLs separated by commas.')
                 ->columnSpanFull(),
             Toggle::make('is_featured')
                 ->label('Featured')

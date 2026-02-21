@@ -73,6 +73,12 @@ class ProductDetailsResource extends Resource
                 ->valueLabel('Image URL')
                 ->helperText('Use the exact colour name as key (e.g. Red) and paste the corresponding image URL.')
                 ->columnSpanFull(),
+            KeyValue::make('color_gallery_images')
+                ->label('Colour Gallery Images')
+                ->keyLabel('Colour')
+                ->valueLabel('Gallery image URLs')
+                ->helperText('Use the exact colour name as key (e.g. Blue). Add multiple URLs separated by commas.')
+                ->columnSpanFull(),
             Textarea::make('description')
                 ->required()
                 ->rows(5)
@@ -104,6 +110,9 @@ class ProductDetailsResource extends Resource
                     ->separator(','),
                 TextColumn::make('color_image_urls')
                     ->label('Colour image URLs')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('color_gallery_images')
+                    ->label('Colour gallery images')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->since()
