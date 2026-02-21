@@ -21,6 +21,7 @@ class Product extends Model
         'sizes',
         'colors',
         'color_image_urls',
+        'thumbnail_image_urls',
         'image_url',
         'is_featured',
         'is_visible',
@@ -35,6 +36,7 @@ class Product extends Model
             'sizes' => 'array',
             'colors' => 'array',
             'color_image_urls' => 'array',
+            'thumbnail_image_urls' => 'array',
         ];
     }
 

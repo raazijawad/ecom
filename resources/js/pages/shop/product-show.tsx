@@ -31,6 +31,12 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
 
     const productImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
     const imageAngles = useMemo(() => {
+        const configuredThumbnails = (product.thumbnail_image_urls ?? []).filter(Boolean);
+
+        if (configuredThumbnails.length > 0) {
+            return configuredThumbnails;
+        }
+
         const imageSources = [product.image_url, ...Object.values(product.color_image_urls ?? {})].filter(Boolean) as string[];
         const uniqueImageSources = Array.from(new Set(imageSources));
         const fallbackImage = product.image_url ?? '';

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductDetailsResource\Pages\ManageProductDetails;
 use App\Models\Product;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
@@ -54,6 +55,16 @@ class ProductDetailsResource extends Resource
                 ->keyLabel('Colour')
                 ->valueLabel('Image URL')
                 ->helperText('Use the exact colour name as key (e.g. Red) and paste the corresponding image URL.')
+                ->columnSpanFull(),
+            FileUpload::make('thumbnail_image_urls')
+                ->label('Thumbnail rail images')
+                ->helperText('Upload images in the order they should appear on the product page thumbnail rail.')
+                ->multiple()
+                ->reorderable()
+                ->image()
+                ->disk('public')
+                ->directory('products/thumbnails')
+                ->imageEditor()
                 ->columnSpanFull(),
             Textarea::make('description')
                 ->required()
