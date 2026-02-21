@@ -10,6 +10,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -65,6 +66,10 @@ class ProductResource extends Resource
                 ->numeric()
                 ->required()
                 ->minValue(0),
+            TagsInput::make('colors')
+                ->label('Colours')
+                ->placeholder('Add a colour and press Enter')
+                ->helperText('Add or remove colours for this product.'),
             FileUpload::make('image')
                 ->label('Main Image')
                 ->image()
