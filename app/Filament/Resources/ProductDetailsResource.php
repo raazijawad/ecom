@@ -69,7 +69,7 @@ class ProductDetailsResource extends Resource
                 ->placeholder('Add a colour and press Enter')
                 ->helperText('Add or remove colours shown on product page.'),
             Repeater::make('color_image_urls')
-                ->label('Colour Images')
+                ->label('Colour Main Images')
                 ->helperText('Pick a colour, upload a small thumbnail image, then add another row for the next colour.')
                 ->schema([
                     Select::make('color')

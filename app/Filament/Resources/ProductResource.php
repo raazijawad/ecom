@@ -66,7 +66,7 @@ class ProductResource extends Resource
                 ->required()
                 ->minValue(0),
             FileUpload::make('image')
-                ->label('Product Image')
+                ->label('Main Image')
                 ->image()
                 ->disk('public')
                 ->directory('products')
