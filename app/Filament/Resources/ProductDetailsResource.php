@@ -49,17 +49,6 @@ class ProductDetailsResource extends Resource
                 ->disk('public')
                 ->directory('products')
                 ->imageEditor(),
-            FileUpload::make('gallery_images')
-                ->label('Shoe Gallery Images')
-                ->image()
-                ->disk('public')
-                ->directory('products/gallery')
-                ->multiple()
-                ->panelLayout('grid')
-                ->imagePreviewHeight('100')
-                ->reorderable()
-                ->imageEditor()
-                ->columnSpanFull(),
             TagsInput::make('sizes')
                 ->label('Sizes')
                 ->placeholder('Add a size and press Enter')
@@ -232,9 +221,6 @@ class ProductDetailsResource extends Resource
                     ->sortable(),
                 TextColumn::make('image')
                     ->label('Product image')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('gallery_images')
-                    ->label('Gallery images')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sizes')
                     ->badge()

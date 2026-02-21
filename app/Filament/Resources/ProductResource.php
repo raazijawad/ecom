@@ -10,6 +10,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -71,16 +72,72 @@ class ProductResource extends Resource
                 ->disk('public')
                 ->directory('products')
                 ->imageEditor(),
-            FileUpload::make('gallery_images')
-                ->label('Shoe Gallery Images')
-                ->image()
-                ->disk('public')
-                ->directory('products/gallery')
-                ->multiple()
-                ->panelLayout('grid')
-                ->imagePreviewHeight('100')
-                ->reorderable()
-                ->imageEditor()
+            TagsInput::make('colors')
+                ->label('Colours')
+                ->placeholder('Add a colour and press Enter')
+                ->helperText('Add or remove colours shown on product page.'),
+            Repeater::make('color_image_urls')
+                ->label('Colour Images')
+                ->helperText('Pick a colour, then upload that colour image.')
+                ->schema([
+                    Select::make('color')
+                        ->label('Colour')
+                        ->required()
+                        ->searchable()
+                        ->options(fn (callable $get): array => collect($get('../../colors') ?? [])
+                            ->filter(fn ($color) => is_string($color) && trim($color) !== '')
+                            ->mapWithKeys(fn (string $color): array => [trim($color) => trim($color)])
+                            ->all()),
+                    FileUpload::make('image')
+                        ->label('Image')
+                        ->image()
+                        ->disk('public')
+                        ->directory('products/colors')
+                        ->imagePreviewHeight('40')
+                        ->imageEditor()
+                        ->required(),
+                ])
+                ->addActionLabel('Add colour image')
+                ->reorderable(false)
+                ->default([])
+                ->afterStateHydrated(function (Repeater $component, $state): void {
+                    if (! is_array($state)) {
+                        $component->state([]);
+
+                        return;
+                    }
+
+                    $stateIsMappedByColor = array_keys($state) !== range(0, count($state) - 1);
+
+                    if (! $stateIsMappedByColor) {
+                        return;
+                    }
+
+                    $rows = collect($state)
+                        ->map(function ($image, $color): array {
+                            return [
+                                'color' => (string) $color,
+                                'image' => is_string($image) ? trim($image) : '',
+                            ];
+                        })
+                        ->filter(fn (array $row): bool => $row['color'] !== '' && $row['image'] !== '')
+                        ->values()
+                        ->all();
+
+                    $component->state($rows);
+                })
+                ->dehydrateStateUsing(fn (?array $state): array => collect($state ?? [])
+                    ->mapWithKeys(function ($row): array {
+                        $color = trim((string) data_get($row, 'color'));
+                        $image = trim((string) data_get($row, 'image'));
+
+                        if ($color === '' || $image === '') {
+                            return [];
+                        }
+
+                        return [$color => $image];
+                    })
+                    ->all())
                 ->columnSpanFull(),
             Repeater::make('color_gallery_images')
                 ->label('Colour Gallery Images')

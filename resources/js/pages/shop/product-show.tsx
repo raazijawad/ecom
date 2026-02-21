@@ -17,7 +17,13 @@ type Props = {
 
 export default function ProductShow({ product, discount, relatedProducts, cartSummary }: Props) {
     const sizeOptions = product.sizes ?? [];
-    const colorOptions = product.colors ?? [];
+
+    const colorOptions = useMemo(() => {
+        const configuredColors = product.colors ?? [];
+        const colorsFromImages = Object.keys(product.color_image_urls ?? {});
+
+        return Array.from(new Set([...configuredColors, ...colorsFromImages].map((color) => color.trim()).filter(Boolean)));
+    }, [product.colors, product.color_image_urls]);
 
     const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0] ?? null);
     const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0] ?? null);
@@ -52,6 +58,15 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
 
         setSelectedImageUrl((currentImageUrl) => (currentImageUrl && galleryImages.includes(currentImageUrl) ? currentImageUrl : galleryImages[0]));
     }, [galleryImages]);
+
+
+    useEffect(() => {
+        if (selectedColor && colorOptions.includes(selectedColor)) {
+            return;
+        }
+
+        setSelectedColor(colorOptions[0] ?? null);
+    }, [colorOptions, selectedColor]);
 
     useEffect(() => {
         if (!showCartMessage) {
