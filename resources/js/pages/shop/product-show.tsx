@@ -33,13 +33,10 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
     const productImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
 
     const angleImages = useMemo(() => {
-        const uploadedAngles = (product.angle_image_urls ?? []).filter((imageUrl) => Boolean(imageUrl));
-        const fallbackImage = productImageUrl || product.image_url || '';
+        return (product.angle_image_urls ?? []).filter((imageUrl) => Boolean(imageUrl));
+    }, [product.angle_image_urls]);
 
-        return Array.from({ length: 5 }, (_, index) => uploadedAngles[index] ?? fallbackImage).filter((imageUrl) => Boolean(imageUrl));
-    }, [product.angle_image_urls, product.image_url, productImageUrl]);
-
-    const mainImageUrl = selectedAngleImage ?? productImageUrl;
+    const mainImageUrl = selectedAngleImage ?? angleImages[0] ?? productImageUrl;
 
     useEffect(() => {
         setSelectedAngleImage(null);
@@ -62,18 +59,20 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
             <div className="grid gap-8 md:grid-cols-2">
                 <div>
                     <img src={mainImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
-                    <div className="mt-4 grid grid-cols-5 gap-3">
-                        {angleImages.map((imageUrl, index) => (
-                            <button
-                                key={`${imageUrl}-${index}`}
-                                type="button"
-                                onClick={() => setSelectedAngleImage(imageUrl)}
-                                className={`overflow-hidden rounded-lg border ${mainImageUrl === imageUrl ? 'border-blue-600 ring-1 ring-blue-600' : 'border-slate-200'}`}
-                            >
-                                <img src={imageUrl} alt={`${product.name} angle ${index + 1}`} className="h-16 w-full object-cover" />
-                            </button>
-                        ))}
-                    </div>
+                    {angleImages.length > 0 && (
+                        <div className="mt-4 grid grid-cols-5 gap-3">
+                            {angleImages.map((imageUrl, index) => (
+                                <button
+                                    key={`${imageUrl}-${index}`}
+                                    type="button"
+                                    onClick={() => setSelectedAngleImage(imageUrl)}
+                                    className={`overflow-hidden rounded-lg border ${mainImageUrl === imageUrl ? 'border-blue-600 ring-1 ring-blue-600' : 'border-slate-200'}`}
+                                >
+                                    <img src={imageUrl} alt={`${product.name} angle ${index + 1}`} className="h-16 w-full object-cover" />
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
                 <div>
                     <p className="text-sm text-slate-500">{product.category?.name}</p>
