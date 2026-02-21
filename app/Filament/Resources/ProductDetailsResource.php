@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProductDetailsResource\Pages\ManageProductDetails;
 use App\Models\Product;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
@@ -54,6 +55,17 @@ class ProductDetailsResource extends Resource
                 ->keyLabel('Colour')
                 ->valueLabel('Image URL')
                 ->helperText('Use the exact colour name as key (e.g. Red) and paste the corresponding image URL.')
+                ->columnSpanFull(),
+            FileUpload::make('angle_image_urls')
+                ->label('Angle pictures (5)')
+                ->image()
+                ->multiple()
+                ->minFiles(0)
+                ->maxFiles(5)
+                ->disk('public')
+                ->directory('products/angles')
+                ->reorderable()
+                ->helperText('Upload up to 5 images that will appear under the main product image.')
                 ->columnSpanFull(),
             Textarea::make('description')
                 ->required()
