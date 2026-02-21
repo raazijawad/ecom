@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
                         'price' => $entry['price'],
                         'stock' => $entry['stock'],
                         'is_featured' => $entry['featured'],
-                        'image_url' => 'https://picsum.photos/seed/'.urlencode($entry['name']).'/640/420',
+                        'image' => 'https://picsum.photos/seed/'.urlencode($entry['name']).'/640/420',
                     ]
                 );
             }
