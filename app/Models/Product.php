@@ -21,6 +21,7 @@ class Product extends Model
         'sizes',
         'colors',
         'color_image_urls',
+        'color_gallery_images',
         'image',
         'gallery_images',
         'is_featured',
@@ -30,6 +31,7 @@ class Product extends Model
     protected $appends = [
         'image_url',
         'gallery_image_urls',
+        'color_gallery_image_urls',
     ];
 
     protected function casts(): array
@@ -41,6 +43,7 @@ class Product extends Model
             'sizes' => 'array',
             'colors' => 'array',
             'color_image_urls' => 'array',
+            'color_gallery_images' => 'array',
             'gallery_images' => 'array',
         ];
     }
@@ -73,6 +76,44 @@ class Product extends Model
                 return asset('storage/'.$path);
             })
             ->values()
+            ->all();
+    }
+
+
+    public function getColorGalleryImageUrlsAttribute(): array
+    {
+        $colorGalleryImages = is_array($this->color_gallery_images) ? $this->color_gallery_images : [];
+
+        return collect($colorGalleryImages)
+            ->mapWithKeys(function ($images, $color): array {
+                $normalizedColor = strtolower(trim((string) $color));
+
+                if ($normalizedColor === '') {
+                    return [];
+                }
+
+                $rawImages = is_array($images)
+                    ? $images
+                    : (preg_split('/[\r\n,]+/', (string) $images) ?: []);
+
+                $imageUrls = collect($rawImages)
+                    ->filter(fn ($path) => is_string($path) && trim($path) !== '')
+                    ->map(function (string $path): string {
+                        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+                            return $path;
+                        }
+
+                        return asset('storage/'.$path);
+                    })
+                    ->values()
+                    ->all();
+
+                if ($imageUrls === []) {
+                    return [];
+                }
+
+                return [$normalizedColor => $imageUrls];
+            })
             ->all();
     }
 
