@@ -65,11 +65,7 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
                 <div>
-                    <img
-                        src={selectedImageUrl}
-                        alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name}
-                        className="h-[420px] w-[700px] max-w-full rounded-xl object-cover"
-                    />
+                    <img src={selectedImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
                     {galleryImages.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2">
                             {galleryImages.map((imageUrl, index) => (
