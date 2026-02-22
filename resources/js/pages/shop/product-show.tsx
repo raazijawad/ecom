@@ -24,9 +24,11 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
     const [showCartMessage, setShowCartMessage] = useState(false);
 
     const colorImageUrls = useMemo(() => {
-        const entries = Object.entries(product.color_image_urls ?? {}).filter(([, imageUrl]) => Boolean(imageUrl));
+        const entries = (product.color_image_urls ?? [])
+            .filter((entry) => Boolean(entry.color) && Boolean(entry.product_image))
+            .map((entry) => [entry.color.toLowerCase().trim(), entry.product_image as string]);
 
-        return Object.fromEntries(entries.map(([color, imageUrl]) => [color.toLowerCase().trim(), imageUrl]));
+        return Object.fromEntries(entries);
     }, [product.color_image_urls]);
 
     const productImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
