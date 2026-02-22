@@ -68,25 +68,6 @@ class ProductResource extends Resource
                 ->required()
                 ->minValue(0),
 
-            FileUpload::make('image')
-                ->label('Product Image')
-                ->image()
-                ->disk('public')
-                ->directory('products')
-                ->imageEditor(),
-
-            FileUpload::make('gallery_images')
-                ->label('Shoe Gallery Images')
-                ->image()
-                ->disk('public')
-                ->directory('products/gallery')
-                ->multiple()
-                ->panelLayout('grid')
-                ->imagePreviewHeight('100')
-                ->reorderable()
-                ->imageEditor()
-                ->columnSpanFull(),
-
             Repeater::make('colors')
                 ->relationship('productColors')
                 ->label('Colors')
