@@ -92,7 +92,8 @@ class ProductResource extends Resource
                         ->directory('products/colors/gallery')
                         ->image()
                         ->multiple()
-                        ->reorderable(),
+                        ->reorderable()
+                        ->helperText('You can upload multiple gallery images for this colour.'),
                 ])
                 ->addActionLabel('Add another colour')
                 ->helperText('Add each colour with its product image and optional image gallery.')

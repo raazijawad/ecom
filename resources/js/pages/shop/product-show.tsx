@@ -21,6 +21,7 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
 
     const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0] ?? null);
     const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0] ?? null);
+    const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
     const [showCartMessage, setShowCartMessage] = useState(false);
 
     const colorImageUrls = useMemo(() => {
@@ -51,6 +52,18 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
         return gallery.filter((url): url is string => Boolean(url));
     }, [product.color_image_urls, selectedColor]);
 
+    const productImageThumbnails = useMemo(() => {
+        const allImages = [productImageUrl, ...selectedColorGallery].filter((url): url is string => Boolean(url));
+
+        return [...new Set(allImages)];
+    }, [productImageUrl, selectedColorGallery]);
+
+    useEffect(() => {
+        setSelectedGalleryImage(null);
+    }, [selectedColor]);
+
+    const displayedImageUrl = selectedGalleryImage ?? productImageUrl;
+
     useEffect(() => {
         if (!showCartMessage) {
             return;
@@ -67,20 +80,30 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
                 <div>
-                    <img src={productImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
+                    <img src={displayedImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
 
-                    {selectedColorGallery.length > 0 && (
+                    {productImageThumbnails.length > 1 && (
                         <div className="mt-4">
                             <p className="mb-2 text-sm font-semibold text-slate-700">Image gallery</p>
-                            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                                {selectedColorGallery.map((imageUrl) => (
-                                    <img
-                                        key={imageUrl}
-                                        src={imageUrl}
-                                        alt={`${product.name} gallery image`}
-                                        className="h-24 w-full rounded-lg border border-slate-200 object-cover"
-                                    />
-                                ))}
+                            <div className="flex flex-wrap gap-2">
+                                {productImageThumbnails.map((imageUrl) => {
+                                    const isActive = imageUrl === displayedImageUrl;
+
+                                    return (
+                                        <button
+                                            key={imageUrl}
+                                            type="button"
+                                            onClick={() => setSelectedGalleryImage(imageUrl)}
+                                            className={`h-16 w-16 overflow-hidden rounded-md border transition ${
+                                                isActive
+                                                    ? 'border-blue-600 ring-2 ring-blue-200'
+                                                    : 'border-slate-200 hover:border-slate-400'
+                                            }`}
+                                        >
+                                            <img src={imageUrl} alt={`${product.name} gallery image`} className="h-full w-full object-cover" />
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
