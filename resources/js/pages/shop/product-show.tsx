@@ -33,6 +33,24 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
 
     const productImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
 
+    const selectedColorGallery = useMemo(() => {
+        if (!selectedColor) {
+            return [] as string[];
+        }
+
+        const selectedEntry = (product.color_image_urls ?? []).find(
+            (entry) => entry.color?.toLowerCase().trim() === selectedColor.toLowerCase().trim(),
+        );
+
+        if (!selectedEntry) {
+            return [] as string[];
+        }
+
+        const gallery = Array.isArray(selectedEntry.image_gallery) ? selectedEntry.image_gallery : [];
+
+        return gallery.filter((url): url is string => Boolean(url));
+    }, [product.color_image_urls, selectedColor]);
+
     useEffect(() => {
         if (!showCartMessage) {
             return;
@@ -48,7 +66,25 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
-                <img src={productImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
+                <div>
+                    <img src={productImageUrl} alt={selectedColor ? `${product.name} in ${selectedColor}` : product.name} className="w-full rounded-xl object-cover" />
+
+                    {selectedColorGallery.length > 0 && (
+                        <div className="mt-4">
+                            <p className="mb-2 text-sm font-semibold text-slate-700">Image gallery</p>
+                            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                                {selectedColorGallery.map((imageUrl) => (
+                                    <img
+                                        key={imageUrl}
+                                        src={imageUrl}
+                                        alt={`${product.name} gallery image`}
+                                        className="h-24 w-full rounded-lg border border-slate-200 object-cover"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
                 <div>
                     <p className="text-sm text-slate-500">{product.category?.name}</p>
                     <h1 className="mt-2 text-3xl font-bold">{product.name}</h1>
