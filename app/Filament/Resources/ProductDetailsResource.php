@@ -52,6 +52,7 @@ class ProductDetailsResource extends Resource
                 ->helperText('Add or remove colours shown on product page.'),
             Repeater::make('color_image_urls')
                 ->label('Colour Images')
+                ->itemLabel(fn (array $state): ?string => $state['color'] ?? null)
                 ->schema([
                     TextInput::make('color')
                         ->label('Colour')

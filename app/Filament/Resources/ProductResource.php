@@ -68,6 +68,7 @@ class ProductResource extends Resource
                 ->minValue(0),
             Repeater::make('color_image_urls')
                 ->label('Colours')
+                ->itemLabel(fn (array $state): ?string => $state['color'] ?? null)
                 ->schema([
                     TextInput::make('color')
                         ->label('Colour')
