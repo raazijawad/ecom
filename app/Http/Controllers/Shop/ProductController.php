@@ -31,7 +31,7 @@ class ProductController extends Controller
         }
 
         return Inertia::render('shop/product-show', [
-            'product' => $product->load('category'),
+            'product' => $product->load(['category', 'productColors.mainImage', 'productColors.galleryImages']),
             'discount' => $discount,
             'relatedProducts' => Product::query()
                 ->isVisible()
