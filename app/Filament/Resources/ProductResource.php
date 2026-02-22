@@ -68,13 +68,6 @@ class ProductResource extends Resource
                 ->required()
                 ->minValue(0),
 
-            FileUpload::make('image')
-                ->label('Product Image')
-                ->image()
-                ->disk('public')
-                ->directory('products')
-                ->imageEditor(),
-
             FileUpload::make('gallery_images')
                 ->label('Shoe Gallery Images')
                 ->image()
@@ -98,10 +91,11 @@ class ProductResource extends Resource
 
                     // Main Image directly inside Repeater
                     FileUpload::make('image_path')
-                        ->label('Main Image')
+                        ->label('Product Image')
                         ->image()
                         ->disk('public')
-                        ->directory('products/colors/main')
+                        ->directory('products')
+                        ->imageEditor()
                         ->required(),
 
                     Hidden::make('is_main')
