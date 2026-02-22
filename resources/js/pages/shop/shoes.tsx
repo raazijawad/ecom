@@ -161,6 +161,16 @@ export default function Shoes({ products, cartSummary }: Props) {
         router.get(`/products/${productId}`);
     };
 
+    const getProductCardImage = (product: Product) => {
+        const firstAddedProductImage = (product.color_image_urls ?? []).flatMap((entry) => {
+            const gallery = Array.isArray(entry.image_gallery) ? entry.image_gallery : [];
+
+            return [entry.product_image, ...gallery].filter((image): image is string => Boolean(image));
+        })[0];
+
+        return firstAddedProductImage ?? product.image_url ?? '';
+    };
+
     return (
         <ShopLayout title="All Shoes" cartSummary={cartSummary}>
             <section className="space-y-12">
@@ -176,7 +186,7 @@ export default function Shoes({ products, cartSummary }: Props) {
                                     {categoryProducts.map((product) => (
                                         <article key={product.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                                             <div className="flex h-44 items-center justify-center rounded-xl bg-slate-50 p-3">
-                                                <img src={product.image_url ?? ''} alt={product.name} className="h-full w-full object-contain" />
+                                                <img src={getProductCardImage(product)} alt={product.name} className="h-full w-full object-contain" />
                                             </div>
                                             <h4 className="mt-4 text-base font-bold text-black">{product.name}</h4>
                                             <p className="mt-1 text-sm text-slate-400">{categoryName}</p>
