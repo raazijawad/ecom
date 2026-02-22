@@ -4,8 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductDetailsResource\Pages\ManageProductDetails;
 use App\Models\Product;
+use Filament\Forms\Components\FileUpload;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -49,11 +50,32 @@ class ProductDetailsResource extends Resource
                 ->label('Colours')
                 ->placeholder('Add a colour and press Enter')
                 ->helperText('Add or remove colours shown on product page.'),
-            KeyValue::make('color_image_urls')
-                ->label('Colour Image URLs')
-                ->keyLabel('Colour')
-                ->valueLabel('Image URL')
-                ->helperText('Use the exact colour name as key (e.g. Red) and paste the corresponding image URL.')
+            Repeater::make('color_image_urls')
+                ->label('Colour Images')
+                ->schema([
+                    TextInput::make('color')
+                        ->label('Colour')
+                        ->required()
+                        ->maxLength(255),
+                    FileUpload::make('product_image')
+                        ->label('Product Image')
+                        ->disk('public')
+                        ->directory('products/colors')
+                        ->image()
+                        ->imageEditor()
+                        ->required(),
+                    FileUpload::make('image_gallery')
+                        ->label('Image Gallery')
+                        ->disk('public')
+                        ->directory('products/colors/gallery')
+                        ->image()
+                        ->multiple()
+                        ->reorderable(),
+                ])
+                ->addActionLabel('Add another colour')
+                ->collapsible()
+                ->columnSpanFull()
+                ->helperText('Add one row per colour with its product image and optional gallery images.')
                 ->columnSpanFull(),
             Textarea::make('description')
                 ->required()

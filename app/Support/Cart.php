@@ -171,16 +171,7 @@ class Cart
 
     private static function resolveImageUrl(Product $product, ?string $color): ?string
     {
-        if (! is_string($color) || trim($color) === '') {
-            return $product->image_url;
-        }
-
-        $lookup = mb_strtolower(trim($color));
-        $colorImage = collect($product->color_image_urls ?? [])
-            ->mapWithKeys(fn ($url, $name) => [mb_strtolower(trim((string) $name)) => $url])
-            ->get($lookup);
-
-        return is_string($colorImage) && $colorImage !== '' ? $colorImage : $product->image_url;
+        return $product->resolveColorImageUrl($color);
     }
 
     public static function summary(): array
