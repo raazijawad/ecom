@@ -10,7 +10,6 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -43,36 +42,39 @@ class ProductResource extends Resource
                 ->required()
                 ->searchable()
                 ->preload(),
+
             TextInput::make('name')
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
                 ->afterStateUpdated(function (string $operation, $state, callable $set): void {
-                    if ($operation !== 'create') {
-                        return;
-                    }
-
+                    if ($operation !== 'create') return;
                     $set('slug', str($state)->slug()->toString());
                 }),
+
             TextInput::make('slug')
                 ->required()
                 ->maxLength(255)
                 ->unique(ignoreRecord: true),
+
             TextInput::make('price')
                 ->numeric()
                 ->required()
                 ->prefix('$')
                 ->minValue(0),
+
             TextInput::make('stock')
                 ->numeric()
                 ->required()
                 ->minValue(0),
+
             FileUpload::make('image')
                 ->label('Product Image')
                 ->image()
                 ->disk('public')
                 ->directory('products')
                 ->imageEditor(),
+
             FileUpload::make('gallery_images')
                 ->label('Shoe Gallery Images')
                 ->image()
@@ -84,6 +86,7 @@ class ProductResource extends Resource
                 ->reorderable()
                 ->imageEditor()
                 ->columnSpanFull(),
+
             Repeater::make('colors')
                 ->relationship('productColors')
                 ->label('Colors')
@@ -92,19 +95,20 @@ class ProductResource extends Resource
                         ->label('Color Name')
                         ->required()
                         ->maxLength(255),
-                    Section::make('Main Image')
-                        ->relationship('mainImage')
-                        ->schema([
-                            FileUpload::make('image_path')
-                                ->label('Main Image')
-                                ->image()
-                                ->disk('public')
-                                ->directory('products/colors/main')
-                                ->required(),
-                            Hidden::make('is_main')
-                                ->default(true)
-                                ->dehydrated(),
-                        ]),
+
+                    // Main Image directly inside Repeater
+                    FileUpload::make('image_path')
+                        ->label('Main Image')
+                        ->image()
+                        ->disk('public')
+                        ->directory('products/colors/main')
+                        ->required(),
+
+                    Hidden::make('is_main')
+                        ->default(true)
+                        ->dehydrated(),
+
+                    // Gallery Images
                     Repeater::make('galleryImages')
                         ->relationship('galleryImages')
                         ->label('Gallery Images')
@@ -115,6 +119,7 @@ class ProductResource extends Resource
                                 ->disk('public')
                                 ->directory('products/colors/gallery')
                                 ->required(),
+
                             Hidden::make('is_main')
                                 ->default(false)
                                 ->dehydrated(),
@@ -126,12 +131,15 @@ class ProductResource extends Resource
                 ])
                 ->addActionLabel('Add color')
                 ->columnSpanFull(),
+
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),
+
             Toggle::make('is_visible')
                 ->label('Visible')
                 ->default(true),
+
             Textarea::make('description')
                 ->required()
                 ->rows(4)
@@ -146,20 +154,26 @@ class ProductResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+
                 TextColumn::make('category.name')
                     ->label('Collection')
                     ->searchable()
                     ->sortable(),
+
                 TextColumn::make('price')
                     ->money('USD')
                     ->sortable(),
+
                 TextColumn::make('stock')
                     ->sortable(),
+
                 IconColumn::make('is_featured')
                     ->label('Featured')
                     ->boolean(),
+
                 ToggleColumn::make('is_visible')
                     ->label('Visible'),
+
                 TextColumn::make('updated_at')
                     ->since()
                     ->sortable(),
