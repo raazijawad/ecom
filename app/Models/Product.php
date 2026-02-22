@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -31,7 +32,9 @@ class Product extends Model
     protected $appends = [
         'image_url',
         'gallery_image_urls',
+        'color_image_urls',
         'color_gallery_image_urls',
+        'color_variants',
     ];
 
     protected function casts(): array
@@ -46,6 +49,16 @@ class Product extends Model
             'color_gallery_images' => 'array',
             'gallery_images' => 'array',
         ];
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function productColors(): HasMany
+    {
+        return $this->hasMany(ProductColor::class);
     }
 
 
@@ -64,78 +77,64 @@ class Product extends Model
 
     public function getGalleryImageUrlsAttribute(): array
     {
-        $galleryImages = is_array($this->gallery_images) ? $this->gallery_images : [];
-
-        return collect($galleryImages)
+        return collect($this->gallery_images ?? [])
             ->filter(fn ($path) => is_string($path) && trim($path) !== '')
-            ->map(function (string $path): string {
-                if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
-                    return $path;
-                }
-
-                return asset('storage/'.$path);
-            })
+            ->map(fn (string $path): string => str_starts_with($path, 'http') ? $path : asset('storage/'.$path))
             ->values()
             ->all();
     }
 
-    public function getColorImageUrlsAttribute($value): array
+    public function getColorImageUrlsAttribute(): array
     {
-        $colorImages = is_array($value) ? $value : [];
+        return $this->productColors
+            ->mapWithKeys(function (ProductColor $color): array {
+                $path = trim((string) $color->main_image_path);
 
-        return collect($colorImages)
-            ->mapWithKeys(function ($path, $color): array {
-                $normalizedColor = strtolower(trim((string) $color));
-                $normalizedPath = trim((string) $path);
-
-                if ($normalizedColor === '' || $normalizedPath === '') {
+                if ($path === '') {
                     return [];
                 }
 
-                if (str_starts_with($normalizedPath, 'http://') || str_starts_with($normalizedPath, 'https://')) {
-                    return [$normalizedColor => $normalizedPath];
-                }
-
-                return [$normalizedColor => asset('storage/'.$normalizedPath)];
+                return [strtolower($color->name) => str_starts_with($path, 'http') ? $path : asset('storage/'.$path)];
             })
             ->all();
     }
 
-
     public function getColorGalleryImageUrlsAttribute(): array
     {
-        $colorGalleryImages = is_array($this->color_gallery_images) ? $this->color_gallery_images : [];
-
-        return collect($colorGalleryImages)
-            ->mapWithKeys(function ($images, $color): array {
-                $normalizedColor = strtolower(trim((string) $color));
-
-                if ($normalizedColor === '') {
-                    return [];
-                }
-
-                $rawImages = is_array($images)
-                    ? $images
-                    : (preg_split('/[\r\n,]+/', (string) $images) ?: []);
-
-                $imageUrls = collect($rawImages)
+        return $this->productColors
+            ->mapWithKeys(function (ProductColor $color): array {
+                $images = collect($color->gallery_image_paths)
                     ->filter(fn ($path) => is_string($path) && trim($path) !== '')
-                    ->map(function (string $path): string {
-                        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
-                            return $path;
-                        }
-
-                        return asset('storage/'.$path);
-                    })
+                    ->map(fn (string $path): string => str_starts_with($path, 'http') ? $path : asset('storage/'.$path))
                     ->values()
                     ->all();
 
-                if ($imageUrls === []) {
+                if ($images === []) {
                     return [];
                 }
 
-                return [$normalizedColor => $imageUrls];
+                return [strtolower($color->name) => $images];
             })
+            ->all();
+    }
+
+    public function getColorVariantsAttribute(): array
+    {
+        return $this->productColors
+            ->map(function (ProductColor $color): array {
+                $mainImage = trim((string) $color->main_image_path);
+
+                return [
+                    'id' => $color->id,
+                    'name' => $color->name,
+                    'main_image' => $mainImage === '' ? null : (str_starts_with($mainImage, 'http') ? $mainImage : asset('storage/'.$mainImage)),
+                    'gallery_images' => collect($color->gallery_image_paths)
+                        ->map(fn (string $path): string => str_starts_with($path, 'http') ? $path : asset('storage/'.$path))
+                        ->values()
+                        ->all(),
+                ];
+            })
+            ->values()
             ->all();
     }
 
@@ -144,14 +143,8 @@ class Product extends Model
         return $query->where('is_visible', true);
     }
 
-
     public function resolveRouteBindingQuery($query, $value, $field = null): Builder
     {
         return $query->isVisible()->where($field ?? $this->getRouteKeyName(), $value);
-    }
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
     }
 }

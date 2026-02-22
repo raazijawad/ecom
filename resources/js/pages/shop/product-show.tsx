@@ -17,29 +17,27 @@ type Props = {
 
 export default function ProductShow({ product, discount, relatedProducts, cartSummary }: Props) {
     const sizeOptions = product.sizes ?? [];
-    const colorOptions = product.colors ?? [];
+    const colorOptions = (product.color_variants ?? []).map((variant) => variant.name);
 
     const [selectedSize, setSelectedSize] = useState<string | null>(sizeOptions[0] ?? null);
     const [selectedColor, setSelectedColor] = useState<string | null>(colorOptions[0] ?? null);
     const [showCartMessage, setShowCartMessage] = useState(false);
 
-    const colorImageUrls = useMemo(() => {
-        const entries = Object.entries(product.color_image_urls ?? {}).filter(([, imageUrl]) => Boolean(imageUrl));
+    const colorVariants = useMemo(() => {
+        return Object.fromEntries((product.color_variants ?? []).map((variant) => [variant.name.toLowerCase().trim(), variant]));
+    }, [product.color_variants]);
 
-        return Object.fromEntries(entries.map(([color, imageUrl]) => [color.toLowerCase().trim(), imageUrl]));
-    }, [product.color_image_urls]);
-
-    const baseProductImageUrl = selectedColor ? colorImageUrls[selectedColor.toLowerCase().trim()] ?? product.image_url ?? '' : product.image_url ?? '';
+    const selectedVariant = selectedColor ? colorVariants[selectedColor.toLowerCase().trim()] : undefined;
+    const baseProductImageUrl = selectedVariant?.main_image ?? product.image_url ?? '';
 
     const galleryImages = useMemo(() => {
-        const normalizedColor = selectedColor?.toLowerCase().trim() ?? null;
-        const colorSpecificGallery = normalizedColor ? product.color_gallery_image_urls?.[normalizedColor] ?? [] : [];
+        const variantGallery = selectedVariant?.gallery_images ?? [];
         const fallbackGallery = product.gallery_image_urls ?? [];
 
-        const uniqueUrls = new Set<string>([baseProductImageUrl, ...(colorSpecificGallery.length > 0 ? colorSpecificGallery : fallbackGallery)].filter(Boolean));
+        const uniqueUrls = new Set<string>([baseProductImageUrl, ...(variantGallery.length > 0 ? variantGallery : fallbackGallery)].filter(Boolean));
 
         return Array.from(uniqueUrls);
-    }, [baseProductImageUrl, product.color_gallery_image_urls, product.gallery_image_urls, selectedColor]);
+    }, [baseProductImageUrl, selectedVariant, product.gallery_image_urls]);
 
     const [selectedImageUrl, setSelectedImageUrl] = useState(baseProductImageUrl);
 

@@ -5,6 +5,14 @@ export type Category = {
     description: string | null;
 };
 
+
+export type ProductColorVariant = {
+    id: number;
+    name: string;
+    main_image: string | null;
+    gallery_images: string[];
+};
+
 export type Product = {
     id: number;
     category_id: number;
@@ -17,6 +25,7 @@ export type Product = {
     colors: string[] | null;
     color_image_urls?: Record<string, string> | null;
     color_gallery_image_urls?: Record<string, string[]> | null;
+    color_variants?: ProductColorVariant[];
     image_url: string | null;
     gallery_image_urls?: string[];
     is_featured: boolean;
