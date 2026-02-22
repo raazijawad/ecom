@@ -7,6 +7,9 @@ use App\Models\Product;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -63,10 +66,45 @@ class ProductResource extends Resource
                 ->numeric()
                 ->required()
                 ->minValue(0),
-            TextInput::make('image_url')
-                ->label('Image URL')
-                ->url()
-                ->maxLength(2048),
+            FileUpload::make('image_url')
+                ->label('Product Image')
+                ->disk('public')
+                ->directory('products')
+                ->image()
+                ->imageEditor(),
+            Repeater::make('color_image_urls')
+                ->label('Colours')
+                ->schema([
+                    TextInput::make('color')
+                        ->label('Colour')
+                        ->required()
+                        ->maxLength(255),
+                    FileUpload::make('product_image')
+                        ->label('Product Image')
+                        ->disk('public')
+                        ->directory('products/colors')
+                        ->image()
+                        ->imageEditor()
+                        ->required(),
+                    FileUpload::make('image_gallery')
+                        ->label('Image Gallery')
+                        ->disk('public')
+                        ->directory('products/colors/gallery')
+                        ->image()
+                        ->multiple()
+                        ->reorderable(),
+                ])
+                ->addActionLabel('Add another colour')
+                ->helperText('Add each colour with its product image and optional image gallery.')
+                ->collapsible()
+                ->live()
+                ->afterStateUpdated(fn (callable $set, ?array $state) => $set(
+                    'colors',
+                    collect($state ?? [])->pluck('color')->filter()->values()->all()
+                ))
+                ->columnSpanFull(),
+            Hidden::make('colors')
+                ->dehydrateStateUsing(fn (?array $state): array => array_values(array_filter($state ?? []))),
             Toggle::make('is_featured')
                 ->label('Featured')
                 ->default(false),
