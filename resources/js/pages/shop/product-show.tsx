@@ -84,7 +84,7 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
 
                     {productImageThumbnails.length > 1 && (
                         <div className="mt-4">
-                            <p className="mb-2 text-sm font-semibold text-slate-700">Image gallery</p>
+
                             <div className="flex flex-wrap gap-2">
                                 {productImageThumbnails.map((imageUrl) => {
                                     const isActive = imageUrl === displayedImageUrl;
