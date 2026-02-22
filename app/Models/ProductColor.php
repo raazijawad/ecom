@@ -37,6 +37,11 @@ class ProductColor extends Model
         return $this->hasOne(ProductColorImage::class)->where('is_main', true);
     }
 
+    public function mainImages(): HasMany
+    {
+        return $this->hasMany(ProductColorImage::class)->where('is_main', true);
+    }
+
     public function galleryImages(): HasMany
     {
         return $this->hasMany(ProductColorImage::class)->where('is_main', false);
