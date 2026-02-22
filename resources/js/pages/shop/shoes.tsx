@@ -146,6 +146,24 @@ function FeatureCard({ feature, side }: { feature: FeaturePoint; side: 'left' | 
 }
 
 export default function Shoes({ products, cartSummary }: Props) {
+    const resolveImageUrl = (path: string | null | undefined): string | null => {
+        if (!path) {
+            return null;
+        }
+
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+            return path;
+        }
+
+        return `/storage/${path}`;
+    };
+
+    const resolveCardImage = (product: Product): string => {
+        const colorImage = product.color_image_urls?.find((entry) => Boolean(entry?.product_image))?.product_image;
+
+        return resolveImageUrl(colorImage) ?? resolveImageUrl(product.image_url) ?? '';
+    };
+
     const categorizedProducts = products.data.reduce<Record<string, Product[]>>((groups, product) => {
         const categoryName = product.category?.name ?? 'Training Shoes';
 
@@ -176,7 +194,7 @@ export default function Shoes({ products, cartSummary }: Props) {
                                     {categoryProducts.map((product) => (
                                         <article key={product.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                                             <div className="flex h-44 items-center justify-center rounded-xl bg-slate-50 p-3">
-                                                <img src={product.image_url ?? ''} alt={product.name} className="h-full w-full object-contain" />
+                                                <img src={resolveCardImage(product)} alt={product.name} className="h-full w-full object-contain" />
                                             </div>
                                             <h4 className="mt-4 text-base font-bold text-black">{product.name}</h4>
                                             <p className="mt-1 text-sm text-slate-400">{categoryName}</p>
