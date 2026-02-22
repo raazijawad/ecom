@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -77,17 +78,19 @@ class ProductResource extends Resource
                         ->required()
                         ->maxLength(255),
 
-                    // Main Image directly inside Repeater
-                    FileUpload::make('image_path')
-                        ->label('Main Image')
-                        ->image()
-                        ->disk('public')
-                        ->directory('products/colors/main')
-                        ->required(),
+                    Group::make([
+                        FileUpload::make('image_path')
+                            ->label('Main Image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('products/colors/main')
+                            ->required(),
 
-                    Hidden::make('is_main')
-                        ->default(true)
-                        ->dehydrated(),
+                        Hidden::make('is_main')
+                            ->default(true)
+                            ->dehydrated(),
+                    ])
+                        ->relationship('mainImage'),
 
                     // Gallery Images
                     Repeater::make('galleryImages')
