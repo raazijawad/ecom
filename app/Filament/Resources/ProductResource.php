@@ -89,18 +89,28 @@ class ProductResource extends Resource
                         ->required()
                         ->maxLength(255),
 
-                    // Main Image directly inside Repeater
-                    FileUpload::make('image_path')
+                    Repeater::make('mainImage')
+                        ->relationship('mainImage')
                         ->label('Product Image')
-                        ->image()
-                        ->disk('public')
-                        ->directory('products')
-                        ->imageEditor()
-                        ->required(),
+                        ->schema([
+                            FileUpload::make('image_path')
+                                ->label('Product Image')
+                                ->image()
+                                ->disk('public')
+                                ->directory('products')
+                                ->imageEditor()
+                                ->required(),
 
-                    Hidden::make('is_main')
-                        ->default(true)
-                        ->dehydrated(),
+                            Hidden::make('is_main')
+                                ->default(true)
+                                ->dehydrated(),
+                        ])
+                        ->defaultItems(1)
+                        ->minItems(1)
+                        ->maxItems(1)
+                        ->addActionLabel('Add product image')
+                        ->reorderable(false)
+                        ->columnSpanFull(),
 
                     // Gallery Images
                     Repeater::make('galleryImages')
