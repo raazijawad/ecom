@@ -66,12 +66,6 @@ class ProductResource extends Resource
                 ->numeric()
                 ->required()
                 ->minValue(0),
-            FileUpload::make('image_url')
-                ->label('Product Image')
-                ->disk('public')
-                ->directory('products')
-                ->image()
-                ->imageEditor(),
             Repeater::make('color_image_urls')
                 ->label('Colours')
                 ->schema([
