@@ -1,7 +1,6 @@
 import { router } from '@inertiajs/react';
 import { useEffect, useMemo, useState } from 'react';
 import AddToCartToast from '@/components/add-to-cart-toast';
-import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { CartSummary, Product } from '@/types/shop';
 
@@ -16,6 +15,24 @@ type Props = {
 };
 
 export default function ProductShow({ product, discount, relatedProducts, cartSummary }: Props) {
+    const resolveImageUrl = (path: string | null | undefined): string | null => {
+        if (!path) {
+            return null;
+        }
+
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+            return path;
+        }
+
+        return `/storage/${path}`;
+    };
+
+    const resolveCardImage = (relatedProduct: Product): string => {
+        const colorImage = relatedProduct.color_image_urls?.find((entry) => Boolean(entry?.product_image))?.product_image;
+
+        return resolveImageUrl(colorImage) ?? resolveImageUrl(relatedProduct.image_url) ?? '';
+    };
+
     const sizeOptions = product.sizes ?? [];
     const colorOptions = product.colors ?? [];
 
@@ -76,6 +93,18 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
         return () => window.clearTimeout(timeout);
     }, [showCartMessage]);
 
+    const selectedCollectionProducts = relatedProducts.filter((relatedProduct) => {
+        if (!product.category?.id) {
+            return true;
+        }
+
+        return relatedProduct.category?.id === product.category.id;
+    });
+
+    const viewProductDetails = (productId: number) => {
+        router.get(`/products/${productId}`);
+    };
+
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
@@ -84,7 +113,6 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
 
                     {productImageThumbnails.length > 1 && (
                         <div className="mt-4">
-
                             <div className="flex flex-wrap gap-2">
                                 {productImageThumbnails.map((imageUrl) => {
                                     const isActive = imageUrl === displayedImageUrl;
@@ -199,11 +227,24 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
             <section className="mt-10">
                 <h2 className="mb-4 text-xl font-semibold">More shoes you may like</h2>
                 <div className="grid gap-4 md:grid-cols-4">
-                    {relatedProducts.map((item) => (
-                        <AppLink key={item.id} href={`/products/${item.id}`} className="rounded border border-slate-200 bg-white p-3 shadow-sm">
-                            <img src={item.image_url ?? ''} alt={item.name} className="mb-2 h-28 w-full rounded object-cover" />
-                            <p className="font-medium">{item.name}</p>
-                        </AppLink>
+                    {selectedCollectionProducts.map((product) => (
+                        <article key={product.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                            <div className="flex h-44 items-center justify-center rounded-xl bg-slate-50 p-3">
+                                <img src={resolveCardImage(product)} alt={product.name} className="h-full w-full object-contain" />
+                            </div>
+                            <h4 className="mt-4 text-base font-bold text-black">{product.name}</h4>
+                            <p className="mt-1 text-sm text-slate-400">{product.category?.name ?? 'Training Shoes'}</p>
+                            <div className="mt-3 flex items-center justify-between">
+                                <span className="text-lg font-bold text-black">${Number(product.price).toFixed(2)}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => viewProductDetails(product.id)}
+                                    className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
+                                >
+                                    Buy now
+                                </button>
+                            </div>
+                        </article>
                     ))}
                 </div>
             </section>
