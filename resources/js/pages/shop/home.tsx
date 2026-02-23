@@ -185,7 +185,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                 </section>
             )}
 
-            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-[#f3f4f6] px-6 py-10 lg:px-10">
+            <section className="relative mb-10 min-h-[calc(100vh-10rem)] w-screen overflow-hidden bg-[#f3f4f6] px-6 py-10 -mx-[calc(50vw-50%)] lg:px-10">
                 <div className="pointer-events-none absolute inset-0">
                     <div className="absolute -top-8 left-20 h-48 w-48 rounded-full bg-red-500/25 blur-3xl" />
                     <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-red-600/20 blur-3xl" />
