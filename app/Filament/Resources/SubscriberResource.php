@@ -7,7 +7,6 @@ use App\Models\Subscriber;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -30,7 +29,6 @@ class SubscriberResource extends Resource
             TextInput::make('name')->maxLength(255),
             TextInput::make('email')->email()->required()->maxLength(255)->unique(ignoreRecord: true),
             DateTimePicker::make('subscribed_at')->required(),
-            Select::make('segments')->relationship('segments', 'name')->multiple()->preload(),
         ]);
     }
 
@@ -41,7 +39,6 @@ class SubscriberResource extends Resource
                 TextColumn::make('name')->searchable()->sortable()->placeholder('—'),
                 TextColumn::make('email')->searchable()->sortable(),
                 TextColumn::make('subscribed_at')->dateTime()->sortable(),
-                TextColumn::make('segments.name')->badge()->separator(', '),
             ])
             ->recordActions([EditAction::make()])
             ->toolbarActions([DeleteBulkAction::make()]);
