@@ -44,43 +44,6 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         router.get(`/products/${productId}`);
     };
 
-    const featureCallouts = {
-        left: [
-            {
-                title: 'Extraordinary Performance',
-                description: 'Designed with a lightweight aerodynamic frame for maximum speed.',
-                icon: <path d="M10 4L5 12h5l-1 8 5-8H9l1-8z" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />,
-            },
-            {
-                title: 'Premium Air Cushioning',
-                description: 'The visible Air Max unit in the heel provides responsive, all-day comfort.',
-                icon: <path d="M7 15c-2 0-4-1.6-4-3.7A4.1 4.1 0 017.7 7 4.8 4.8 0 0117 9.4c2.2 0 4 1.8 4 4s-1.8 3.6-4 3.6H7z" strokeWidth="1.6" />,
-            },
-            {
-                title: 'Breathable Mesh Upper',
-                description: 'Engineered mesh offers targeted support and enhanced airflow.',
-                icon: <path d="M12 5a7 7 0 100 14 7 7 0 000-14zm-4 7h8M12 8v8" strokeWidth="1.6" />,
-            },
-        ],
-        right: [
-            {
-                title: 'Superior Grip & Traction',
-                description: 'Rugged gum-rubber outsole ensures stability on various surfaces.',
-                icon: <path d="M12 3l8 4v5c0 4.4-2.8 7.8-8 9-5.2-1.2-8-4.6-8-9V7l8-4z" strokeWidth="1.6" />,
-            },
-            {
-                title: 'Affordable Premium',
-                description: 'Elite-level athletic technology delivered at an accessible price point.',
-                icon: <path d="M4 8h9l7 7-5 5-7-7V4h4" strokeWidth="1.6" strokeLinejoin="round" />,
-            },
-            {
-                title: 'Modern Aesthetic',
-                description: 'A versatile silhouette that blends gym performance with street style.',
-                icon: <path d="M12 4l2.4 4.8L20 10l-4 3.8.9 5.2-4.9-2.6L7.1 19l.9-5.2L4 10l5.6-1.2L12 4z" strokeWidth="1.6" strokeLinejoin="round" />,
-            },
-        ],
-    };
-
     const submitFilters = (e: React.FormEvent) => {
         e.preventDefault();
         router.get('/', search.data, { preserveState: true, replace: true });
@@ -203,54 +166,74 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                 </section>
             )}
 
-            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-10 lg:px-10">
-                <div className="pointer-events-none absolute inset-0 opacity-70">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(148,163,184,0.16),transparent_55%)]" />
-                    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 120c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#dbe1e7" strokeWidth="1" />
-                        <path d="M0 190c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#e2e8f0" strokeWidth="1" />
-                        <path d="M0 260c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#dbe1e7" strokeWidth="1" />
+            <section className="relative left-1/2 right-1/2 mb-10 min-h-[88vh] w-screen -translate-x-1/2 overflow-hidden bg-[#f6f6f3]">
+                <div className="pointer-events-none absolute inset-0">
+                    <div className="absolute -left-28 top-16 h-80 w-80 rounded-full bg-red-500/15 blur-3xl" />
+                    <div className="absolute right-10 top-24 h-72 w-72 rounded-full bg-red-500/10 blur-3xl" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(239,68,68,0.17),transparent_34%),radial-gradient(circle_at_75%_28%,rgba(244,63,94,0.12),transparent_33%)]" />
+
+                    <svg className="absolute inset-0 h-full w-full opacity-45" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M-50 170c190-85 345 60 530-8 183-67 342-73 520 10 179 84 337 84 614-49" stroke="#d5d9df" strokeWidth="1.5" />
+                        <path d="M-50 250c190-85 345 60 530-8 183-67 342-73 520 10 179 84 337 84 614-49" stroke="#d8dde3" strokeWidth="1.2" />
+                        <path d="M-50 330c190-85 345 60 530-8 183-67 342-73 520 10 179 84 337 84 614-49" stroke="#d9dee4" strokeWidth="1" />
+                        <path d="M-50 420c190-85 345 60 530-8 183-67 342-73 520 10 179 84 337 84 614-49" stroke="#d9dee4" strokeWidth="1" />
                     </svg>
                 </div>
 
-                <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
-                    <div className="space-y-6">
-                        {featureCallouts.left.map((feature) => (
-                            <article key={feature.title} className="group">
-                                <div className="flex items-center gap-3">
-                                    <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 shrink-0 text-blue-600" stroke="currentColor">
-                                        {feature.icon}
-                                    </svg>
-                                    <h3 className="text-lg font-bold text-slate-950">{feature.title}</h3>
-                                    <span className="hidden h-px flex-1 bg-slate-300 lg:block" />
-                                </div>
-                                <p className="mt-2 pl-10 text-sm text-slate-500">{feature.description}</p>
-                            </article>
-                        ))}
+                <button
+                    type="button"
+                    aria-label="Previous slide"
+                    className="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-black/15 bg-white/80 p-3 text-black transition hover:bg-white"
+                >
+                    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor" strokeWidth="1.8">
+                        <path d="M14.5 6L8.5 12l6 6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </button>
+
+                <button
+                    type="button"
+                    aria-label="Next slide"
+                    className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-black/15 bg-white/80 p-3 text-black transition hover:bg-white"
+                >
+                    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor" strokeWidth="1.8">
+                        <path d="M9.5 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </button>
+
+                <div className="relative z-10 mx-auto grid min-h-[88vh] w-full max-w-7xl gap-8 px-8 pb-16 pt-14 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:px-14">
+                    <div className="max-w-lg space-y-6">
+                        <p className="text-sm font-semibold uppercase tracking-[0.35em] text-red-600">Our Exclusive</p>
+                        <h1 className="text-5xl font-black leading-[0.95] text-slate-950 md:text-7xl">Adidas Campus</h1>
+                        <p className="max-w-md text-base leading-relaxed text-slate-600 md:text-lg">
+                            Step into the future of comfort with our latest high-performance athletic collection designed for speed,
+                            durability, and standout street-ready style.
+                        </p>
+                        <button className="inline-flex items-center justify-center bg-black px-9 py-4 text-sm font-bold tracking-[0.18em] text-white transition hover:bg-slate-900">
+                            VIEW COLLECTIONS
+                        </button>
                     </div>
 
-                    <div className="relative mx-auto flex w-full max-w-md items-center justify-center py-8 lg:py-0">
+                    <div className="relative flex min-h-[420px] items-center justify-center lg:min-h-[540px]">
+                        <span className="pointer-events-none absolute -top-2 right-0 text-[120px] font-black uppercase leading-none tracking-[0.06em] text-red-600/90 md:text-[190px]">
+                            RUN
+                        </span>
+
                         <img
-                            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80"
-                            alt="Nike Air Max side profile in grey mesh with black accents and gum outsole"
-                            className="relative z-10 w-full max-w-md rounded-2xl object-cover shadow-xl shadow-slate-300/60"
+                            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1400&q=80"
+                            alt="High-performance red and black athletic sneaker"
+                            className="relative z-10 w-full max-w-3xl -rotate-6 object-contain drop-shadow-[0_34px_26px_rgba(15,23,42,0.25)]"
                         />
-                    </div>
 
-                    <div className="space-y-6">
-                        {featureCallouts.right.map((feature) => (
-                            <article key={feature.title} className="group">
-                                <div className="flex items-center gap-3">
-                                    <span className="hidden h-px flex-1 bg-slate-300 lg:block" />
-                                    <h3 className="text-right text-lg font-bold text-slate-950">{feature.title}</h3>
-                                    <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 shrink-0 text-blue-600" stroke="currentColor">
-                                        {feature.icon}
-                                    </svg>
-                                </div>
-                                <p className="mt-2 pr-10 text-right text-sm text-slate-500">{feature.description}</p>
-                            </article>
-                        ))}
+                        <div className="absolute bottom-[30%] right-[22%] z-20 flex h-24 w-24 items-center justify-center rounded-full bg-red-600 text-3xl font-black text-white shadow-lg shadow-red-600/35 md:h-28 md:w-28">
+                            $34
+                        </div>
                     </div>
+                </div>
+
+                <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5">
+                    <span className="h-3 w-3 rounded-full border-2 border-black bg-white" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-black/30" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-black/30" />
                 </div>
             </section>
 
