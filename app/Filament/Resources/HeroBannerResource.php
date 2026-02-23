@@ -14,7 +14,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -46,7 +45,7 @@ class HeroBannerResource extends Resource
                 ->maxLength(255),
             Select::make('product_id')
                 ->label('Button Product')
-                ->relationship('product', 'name')
+                ->relationship('product', 'name', fn ($query) => $query->whereHas('discount'))
                 ->searchable()
                 ->preload()
                 ->live()
@@ -92,9 +91,6 @@ class HeroBannerResource extends Resource
         return $table
             ->defaultSort('sort_order')
             ->columns([
-                ImageColumn::make('image_url')
-                    ->label('Image')
-                    ->square(),
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
