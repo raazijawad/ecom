@@ -7,6 +7,7 @@ use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CollectionController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\HomeController;
+use App\Http\Controllers\Shop\NewsletterSubscriptionController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ShoesController;
 use App\Http\Controllers\Shop\TestimonialController;
@@ -40,3 +41,5 @@ Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])-
 Route::post('/testimonials', [TestimonialController::class, 'store'])
     ->middleware('auth')
     ->name('testimonials.store');
+
+Route::post('/newsletter/subscribe', [NewsletterSubscriptionController::class, 'store'])->name('newsletter.subscribe');

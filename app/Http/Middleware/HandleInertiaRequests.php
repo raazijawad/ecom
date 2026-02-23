@@ -42,6 +42,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+            ],
             'collections' => Category::query()
                 ->select(['id', 'name', 'slug'])
                 ->orderBy('name')
