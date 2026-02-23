@@ -146,6 +146,14 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         });
     };
 
+    const getProductCardImage = (product: Product) => {
+        if (product.image_url) {
+            return product.image_url;
+        }
+
+        return product.color_image_urls?.find((colorImage) => colorImage.product_image)?.product_image ?? '';
+    };
+
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
 
@@ -308,7 +316,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                     <div className="grid gap-4 md:grid-cols-4">
                         {searchedProducts.map((product) => (
                             <article key={product.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                                <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
+                                <img src={getProductCardImage(product)} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
                                 <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
