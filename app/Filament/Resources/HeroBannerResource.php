@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\HeroBannerResource\Pages\ManageHeroBanners;
 use App\Models\Discount;
 use App\Models\HeroBanner;
+use App\Models\Product;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -63,6 +64,18 @@ class HeroBannerResource extends Resource
 
                     $set('off_percentage', $discountPercentage ? (int) $discountPercentage : null);
                 }),
+            Select::make('home_banner_product_id')
+                ->label('Home Banner Product Image')
+                ->options(fn (): array => Product::query()->orderBy('name')->pluck('name', 'id')->all())
+                ->searchable()
+                ->preload()
+                ->nullable()
+                ->helperText('Select a product to show its image in the home banner.'),
+            TextInput::make('image_url')
+                ->label('Banner Image URL')
+                ->maxLength(2048)
+                ->nullable()
+                ->helperText('Optional fallback image URL if no Home Banner Product Image is selected.'),
             Select::make('off_percentage')
                 ->label('Off Percentage')
                 ->options([
@@ -100,6 +113,10 @@ class HeroBannerResource extends Resource
                     ->sortable(),
                 TextColumn::make('product.name')
                     ->label('Button Product')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('homeBannerProduct.name')
+                    ->label('Banner Image Product')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('off_percentage')
