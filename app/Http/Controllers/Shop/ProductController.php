@@ -58,15 +58,24 @@ class ProductController extends Controller
             ->values()
             ->all();
 
+        $relatedProducts = Product::query()
+            ->with('category')
+            ->isVisible()
+            ->where('category_id', $product->category_id)
+            ->whereKeyNot($product->id)
+            ->take(4)
+            ->get()
+            ->map(function (Product $relatedProduct) {
+                $relatedProduct->image_url = $this->resolveImagePath($relatedProduct->image_url)
+                    ?? $this->resolveFirstColorImagePath($relatedProduct->color_image_urls);
+
+                return $relatedProduct;
+            });
+
         return Inertia::render('shop/product-show', [
             'product' => $product,
             'discount' => $discount,
-            'relatedProducts' => Product::query()
-                ->isVisible()
-                ->where('category_id', $product->category_id)
-                ->whereKeyNot($product->id)
-                ->take(4)
-                ->get(),
+            'relatedProducts' => $relatedProducts,
             'cartSummary' => Cart::summary(),
         ]);
     }
@@ -82,5 +91,24 @@ class ProductController extends Controller
         }
 
         return Storage::disk('public')->url($path);
+    }
+
+    private function resolveFirstColorImagePath(mixed $colorImageUrls): ?string
+    {
+        if (! is_array($colorImageUrls)) {
+            return null;
+        }
+
+        foreach ($colorImageUrls as $key => $entry) {
+            if (is_array($entry) && array_key_exists('product_image', $entry)) {
+                return $this->resolveImagePath($entry['product_image']);
+            }
+
+            if (is_string($key)) {
+                return $this->resolveImagePath($entry);
+            }
+        }
+
+        return null;
     }
 }
