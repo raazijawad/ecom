@@ -102,6 +102,46 @@ class HeroBannerTest extends TestCase
                 ->component('shop/home')
                 ->where('heroBanners.0.cta_link', null));
     }
+
+
+    public function test_home_prefers_product_image_for_banner_when_product_is_linked(): void
+    {
+        $category = Category::create([
+            'name' => 'Training',
+            'slug' => 'training',
+            'description' => 'Training shoes',
+        ]);
+
+        $product = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Lift Pro',
+            'slug' => 'lift-pro',
+            'description' => 'Stable training shoe',
+            'price' => 140,
+            'stock' => 8,
+            'image_url' => 'https://example.com/product.jpg',
+            'is_featured' => false,
+            'is_visible' => true,
+        ]);
+
+        HeroBanner::create([
+            'title' => 'Training Deal',
+            'image_url' => 'https://example.com/banner.jpg',
+            'product_id' => $product->id,
+            'off_percentage' => null,
+            'sort_order' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('shop/home')
+                ->where('heroBanners.0.image_url', 'https://example.com/product.jpg')
+                ->where('heroBanners.0.off_percentage', null)
+                ->where('heroBanners.0.discount_price', null));
+    }
+
     public function test_home_receives_only_active_hero_banners_in_sort_order(): void
     {
         $firstBanner = HeroBanner::create([
