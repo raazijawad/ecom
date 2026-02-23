@@ -44,43 +44,6 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         router.get(`/products/${productId}`);
     };
 
-    const featureCallouts = {
-        left: [
-            {
-                title: 'Extraordinary Performance',
-                description: 'Designed with a lightweight aerodynamic frame for maximum speed.',
-                icon: <path d="M10 4L5 12h5l-1 8 5-8H9l1-8z" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />,
-            },
-            {
-                title: 'Premium Air Cushioning',
-                description: 'The visible Air Max unit in the heel provides responsive, all-day comfort.',
-                icon: <path d="M7 15c-2 0-4-1.6-4-3.7A4.1 4.1 0 017.7 7 4.8 4.8 0 0117 9.4c2.2 0 4 1.8 4 4s-1.8 3.6-4 3.6H7z" strokeWidth="1.6" />,
-            },
-            {
-                title: 'Breathable Mesh Upper',
-                description: 'Engineered mesh offers targeted support and enhanced airflow.',
-                icon: <path d="M12 5a7 7 0 100 14 7 7 0 000-14zm-4 7h8M12 8v8" strokeWidth="1.6" />,
-            },
-        ],
-        right: [
-            {
-                title: 'Superior Grip & Traction',
-                description: 'Rugged gum-rubber outsole ensures stability on various surfaces.',
-                icon: <path d="M12 3l8 4v5c0 4.4-2.8 7.8-8 9-5.2-1.2-8-4.6-8-9V7l8-4z" strokeWidth="1.6" />,
-            },
-            {
-                title: 'Affordable Premium',
-                description: 'Elite-level athletic technology delivered at an accessible price point.',
-                icon: <path d="M4 8h9l7 7-5 5-7-7V4h4" strokeWidth="1.6" strokeLinejoin="round" />,
-            },
-            {
-                title: 'Modern Aesthetic',
-                description: 'A versatile silhouette that blends gym performance with street style.',
-                icon: <path d="M12 4l2.4 4.8L20 10l-4 3.8.9 5.2-4.9-2.6L7.1 19l.9-5.2L4 10l5.6-1.2L12 4z" strokeWidth="1.6" strokeLinejoin="round" />,
-            },
-        ],
-    };
-
     const submitFilters = (e: React.FormEvent) => {
         e.preventDefault();
         router.get('/', search.data, { preserveState: true, replace: true });
@@ -203,54 +166,67 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                 </section>
             )}
 
-            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-10 lg:px-10">
-                <div className="pointer-events-none absolute inset-0 opacity-70">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(148,163,184,0.16),transparent_55%)]" />
-                    <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 120c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#dbe1e7" strokeWidth="1" />
-                        <path d="M0 190c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#e2e8f0" strokeWidth="1" />
-                        <path d="M0 260c120-40 220 35 340 0s220-35 340 0 220 40 520-20" stroke="#dbe1e7" strokeWidth="1" />
+            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-[#f3f4f6] px-6 py-10 lg:px-10">
+                <div className="pointer-events-none absolute inset-0">
+                    <div className="absolute -top-8 left-20 h-48 w-48 rounded-full bg-red-500/25 blur-3xl" />
+                    <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-red-600/20 blur-3xl" />
+                    <svg className="absolute inset-0 h-full w-full opacity-70" viewBox="0 0 1200 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M36 70c28-24 64-24 92 0 28 24 64 24 92 0" stroke="#cdd4de" strokeWidth="1.2" />
+                        <path d="M840 32c38-18 84-9 112 22 22 24 58 30 88 14" stroke="#d3dae3" strokeWidth="1.2" />
+                        <path d="M10 170c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
+                        <path d="M10 222c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
+                        <path d="M10 274c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
+                        <path d="M10 326c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
                     </svg>
                 </div>
 
-                <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
-                    <div className="space-y-6">
-                        {featureCallouts.left.map((feature) => (
-                            <article key={feature.title} className="group">
-                                <div className="flex items-center gap-3">
-                                    <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 shrink-0 text-blue-600" stroke="currentColor">
-                                        {feature.icon}
-                                    </svg>
-                                    <h3 className="text-lg font-bold text-slate-950">{feature.title}</h3>
-                                    <span className="hidden h-px flex-1 bg-slate-300 lg:block" />
-                                </div>
-                                <p className="mt-2 pl-10 text-sm text-slate-500">{feature.description}</p>
-                            </article>
-                        ))}
+                <button
+                    type="button"
+                    aria-label="Previous hero slide"
+                    className="absolute top-1/2 left-3 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-xl text-slate-700 shadow-sm transition hover:bg-white lg:flex"
+                >
+                    ‹
+                </button>
+
+                <button
+                    type="button"
+                    aria-label="Next hero slide"
+                    className="absolute top-1/2 right-3 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-xl text-slate-700 shadow-sm transition hover:bg-white lg:flex"
+                >
+                    ›
+                </button>
+
+                <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+                    <div className="max-w-lg space-y-5">
+                        <p className="text-sm font-semibold tracking-[0.2em] text-red-600 uppercase">Our Exclusive</p>
+                        <h1 className="text-5xl leading-tight font-black text-slate-950 md:text-6xl">Adidas Campus</h1>
+                        <p className="max-w-md text-sm leading-7 text-slate-600 md:text-base">
+                            Step into the future of comfort with our latest high-performance athletic collection.
+                        </p>
+                        <button className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800">
+                            View Collections
+                        </button>
                     </div>
 
-                    <div className="relative mx-auto flex w-full max-w-md items-center justify-center py-8 lg:py-0">
+                    <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-10 lg:py-0">
+                        <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-[clamp(6rem,20vw,12rem)] font-black tracking-[0.2em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
+                            RUN
+                        </span>
                         <img
-                            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80"
-                            alt="Nike Air Max side profile in grey mesh with black accents and gum outsole"
-                            className="relative z-10 w-full max-w-md rounded-2xl object-cover shadow-xl shadow-slate-300/60"
+                            src="https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80"
+                            alt="Red and black performance sneaker in side profile"
+                            className="relative z-10 w-full max-w-xl -rotate-6 object-contain drop-shadow-[0_30px_35px_rgba(15,23,42,0.3)]"
                         />
+                        <div className="absolute right-8 bottom-10 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-center text-2xl font-black text-white shadow-lg shadow-red-500/40">
+                            $34
+                        </div>
                     </div>
+                </div>
 
-                    <div className="space-y-6">
-                        {featureCallouts.right.map((feature) => (
-                            <article key={feature.title} className="group">
-                                <div className="flex items-center gap-3">
-                                    <span className="hidden h-px flex-1 bg-slate-300 lg:block" />
-                                    <h3 className="text-right text-lg font-bold text-slate-950">{feature.title}</h3>
-                                    <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 shrink-0 text-blue-600" stroke="currentColor">
-                                        {feature.icon}
-                                    </svg>
-                                </div>
-                                <p className="mt-2 pr-10 text-right text-sm text-slate-500">{feature.description}</p>
-                            </article>
-                        ))}
-                    </div>
+                <div className="relative z-20 mt-4 flex justify-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />
+                    <span className="h-3 w-3 rounded-full border border-black bg-white" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />
                 </div>
             </section>
 
