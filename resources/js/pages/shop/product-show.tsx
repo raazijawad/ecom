@@ -228,6 +228,50 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
                     ))}
                 </div>
             </section>
+
+            <footer className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="grid gap-6 md:grid-cols-4">
+                    <div>
+                        <h3 className="font-semibold text-slate-900">Quick Links</h3>
+                        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                            <li>
+                                <AppLink href="/shoes" className="hover:text-slate-900 hover:underline">
+                                    All Shoes
+                                </AppLink>
+                            </li>
+                            <li>Featured Kicks</li>
+                            <li>Best Sellers</li>
+                            <li>New Arrivals</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-slate-900">Contact Info</h3>
+                        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                            <li>support@solestyle.com</li>
+                            <li>+1 (800) 555-0199</li>
+                            <li>Mon–Fri, 9AM–6PM</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-slate-900">Community</h3>
+                        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                            <li>Instagram</li>
+                            <li>Run Club</li>
+                            <li>Sneaker News</li>
+                            <li>YouTube</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="font-semibold text-slate-900">Policies & FAQ</h3>
+                        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                            <li>Shipping Policy</li>
+                            <li>Returns & Exchanges</li>
+                            <li>Size Guide</li>
+                            <li>FAQ</li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
         </ShopLayout>
     );
 }
