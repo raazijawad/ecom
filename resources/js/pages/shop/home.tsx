@@ -134,6 +134,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         image_url: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1200&q=80',
         cta_label: 'Purchase Now',
         product_id: null,
+        home_banner_product_id: null,
         cta_link: '/shoes',
         off_percentage: null,
         product_price: null,

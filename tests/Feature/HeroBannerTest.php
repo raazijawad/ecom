@@ -102,6 +102,56 @@ class HeroBannerTest extends TestCase
                 ->component('shop/home')
                 ->where('heroBanners.0.cta_link', null));
     }
+
+
+    public function test_home_banner_uses_selected_home_banner_product_image(): void
+    {
+        $category = Category::create([
+            'name' => 'Training',
+            'slug' => 'training',
+            'description' => 'Training shoes',
+        ]);
+
+        $buttonProduct = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Button Product',
+            'slug' => 'button-product',
+            'description' => 'Button product description',
+            'price' => 99,
+            'stock' => 10,
+            'image_url' => 'https://example.com/button-product.jpg',
+            'is_featured' => false,
+            'is_visible' => true,
+        ]);
+
+        $homeImageProduct = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Home Image Product',
+            'slug' => 'home-image-product',
+            'description' => 'Home image product description',
+            'price' => 149,
+            'stock' => 5,
+            'image_url' => 'https://example.com/home-image.jpg',
+            'is_featured' => false,
+            'is_visible' => true,
+        ]);
+
+        HeroBanner::create([
+            'title' => 'Image From Product',
+            'image_url' => 'https://example.com/fallback.jpg',
+            'product_id' => $buttonProduct->id,
+            'home_banner_product_id' => $homeImageProduct->id,
+            'sort_order' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('shop/home')
+                ->where('heroBanners.0.image_url', 'https://example.com/home-image.jpg'));
+    }
+
     public function test_home_receives_only_active_hero_banners_in_sort_order(): void
     {
         $firstBanner = HeroBanner::create([

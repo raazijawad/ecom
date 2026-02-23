@@ -17,6 +17,7 @@ class HeroBanner extends Model
         'image_url',
         'cta_label',
         'product_id',
+        'home_banner_product_id',
         'off_percentage',
         'cta_link',
         'sort_order',
@@ -34,5 +35,10 @@ class HeroBanner extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function homeBannerProduct(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'home_banner_product_id');
     }
 }
