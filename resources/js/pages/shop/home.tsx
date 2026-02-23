@@ -15,6 +15,7 @@ type Props = {
     featuredProducts: Product[];
     products: PaginatedProducts;
     bestSellingShoes: Product[];
+    heroBannerImageUrl: string | null;
     categories: Category[];
     testimonials: Testimonial[];
     cartSummary: CartSummary;
@@ -27,7 +28,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, heroBannerImageUrl, categories, testimonials, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -39,6 +40,12 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     const bestSellers = bestSellingShoes.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
+
+    const heroImageUrl = heroBannerImageUrl
+        ? heroBannerImageUrl.startsWith('http')
+            ? heroBannerImageUrl
+            : `/storage/${heroBannerImageUrl}`
+        : 'https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80';
 
     const viewProductDetails = (productId: number) => {
         router.get(`/products/${productId}`);
@@ -213,7 +220,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                             RUN
                         </span>
                         <img
-                            src="https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80"
+                            src={heroImageUrl}
                             alt="Red and black performance sneaker in side profile"
                             className="relative z-10 w-full max-w-xl -rotate-6 object-contain drop-shadow-[0_30px_35px_rgba(15,23,42,0.3)]"
                         />
