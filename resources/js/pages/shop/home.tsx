@@ -199,23 +199,29 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                             return (
                                 <div key={slide.id} className="w-full shrink-0">
                                     <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-                                        <div className="max-w-lg space-y-5">
-                                            <p className="text-sm font-semibold tracking-[0.2em] text-red-600 uppercase">{slideBadgeText}</p>
-                                            <h1 className="text-5xl leading-tight font-black text-slate-950 md:text-6xl">{slideHeadline}</h1>
-                                            <p className="max-w-md text-sm leading-7 text-slate-600 md:text-base">{slideDescription}</p>
+                                        <div className="max-w-lg space-y-5 text-left">
+                                            <p className="text-sm tracking-[0.14em] text-slate-400">Skip the Impossible</p>
+                                            <div className="space-y-1">
+                                                <p className="text-[2.3rem] leading-none font-medium text-slate-800 md:text-5xl">Extraordinary</p>
+                                                <h1 className="text-[3.8rem] leading-[0.92] font-black text-black md:text-7xl">Performance</h1>
+                                            </div>
+                                            <p className="max-w-md text-base leading-7 text-slate-700 md:text-lg">
+                                                <span className="font-semibold text-red-600">Our Exclusive </span>
+                                                <span className="font-semibold text-black">Adidas Campus</span>
+                                            </p>
                                             {slide.product_id ? (
                                                 <AppLink
                                                     href={`/products/${slide.product_id}`}
                                                     className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
                                                 >
-                                                    {slideCtaText}
+                                                    VIEW COLLECTIONS
                                                 </AppLink>
                                             ) : (
                                                 <button
                                                     type="button"
                                                     className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
                                                 >
-                                                    {slideCtaText}
+                                                    VIEW COLLECTIONS
                                                 </button>
                                             )}
                                         </div>
