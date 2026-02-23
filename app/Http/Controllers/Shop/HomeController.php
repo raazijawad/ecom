@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Testimonial;
 use App\Support\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -48,7 +49,7 @@ class HomeController extends Controller
                 ->get()
                 ->map(function (HeroBanner $banner) {
                     $banner->cta_link = $banner->product_id ? "/products/{$banner->product_id}" : null;
-                    $banner->image_url = $banner->product?->image_url ?: $banner->image_url;
+                    $banner->image_url = $banner->product?->resolveColorImageUrl() ?: $this->resolveImagePath($banner->image_url);
 
                     $productPrice = $banner->product ? (float) $banner->product->price : null;
                     $offPercentage = $banner->off_percentage;
@@ -69,5 +70,18 @@ class HomeController extends Controller
                 ->get(),
             'cartSummary' => Cart::summary(),
         ]);
+    }
+
+    private function resolveImagePath(?string $path): ?string
+    {
+        if (! is_string($path) || trim($path) === '') {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/')) {
+            return $path;
+        }
+
+        return Storage::disk('public')->url($path);
     }
 }
