@@ -60,7 +60,7 @@ class Product extends Model
     public function resolveColorImageUrl(?string $color = null): ?string
     {
         if (! is_string($color) || trim($color) === '') {
-            return $this->resolveImagePath($this->image_url);
+            return $this->resolveImagePath($this->image_url) ?? $this->resolveFirstColorImageUrl();
         }
 
         $lookup = mb_strtolower(trim($color));
@@ -84,6 +84,20 @@ class Product extends Model
             });
 
         return $this->resolveImagePath($colorImage['product_image'] ?? null) ?? $this->resolveImagePath($this->image_url);
+    }
+
+    private function resolveFirstColorImageUrl(): ?string
+    {
+        $entries = $this->color_image_urls ?? [];
+
+        if ($this->isAssocArray($entries)) {
+            return $this->resolveImagePath(collect($entries)->first());
+        }
+
+        $firstImage = collect($entries)
+            ->first(fn ($entry) => is_array($entry) && filled($entry['product_image'] ?? null));
+
+        return $this->resolveImagePath($firstImage['product_image'] ?? null);
     }
 
     private function resolveImagePath(mixed $path): ?string

@@ -140,6 +140,49 @@ class HeroBannerTest extends TestCase
                 ->where('heroBanners.0.image_url', '/storage/products/core-trainer.jpg'));
     }
 
+    public function test_home_uses_linked_product_first_color_image_when_base_image_is_missing(): void
+    {
+        $category = Category::create([
+            'name' => 'Trail',
+            'slug' => 'trail',
+            'description' => 'Trail shoes',
+        ]);
+
+        $product = Product::create([
+            'category_id' => $category->id,
+            'name' => 'Mountain Grip',
+            'slug' => 'mountain-grip',
+            'description' => 'All-terrain stability',
+            'price' => 180,
+            'stock' => 5,
+            'image_url' => null,
+            'color_image_urls' => [
+                [
+                    'color' => 'Sand',
+                    'product_image' => 'products/mountain-grip-sand.jpg',
+                    'image_gallery' => [],
+                ],
+            ],
+            'is_featured' => false,
+            'is_visible' => true,
+        ]);
+
+        $banner = HeroBanner::create([
+            'title' => 'Trail Special',
+            'image_url' => 'hero-banners/fallback.jpg',
+            'product_id' => $product->id,
+            'sort_order' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('shop/home')
+                ->where('heroBanners.0.id', $banner->id)
+                ->where('heroBanners.0.image_url', '/storage/products/mountain-grip-sand.jpg'));
+    }
+
     public function test_home_receives_only_active_hero_banners_in_sort_order(): void
     {
         $firstBanner = HeroBanner::create([
