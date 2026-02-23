@@ -135,6 +135,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         cta_label: 'Purchase Now',
         product_id: null,
         home_banner_product_id: null,
+        home_banner_product_image_url: null,
         cta_link: '/shoes',
         off_percentage: null,
         product_price: null,
@@ -339,7 +340,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
                                     <div className="relative flex min-h-[280px] items-center justify-center lg:min-h-[360px]">
                                         <img
-                                            src={banner.image_url ?? ''}
+                                            src={banner.home_banner_product_image_url ?? banner.image_url ?? ''}
                                             alt={banner.title}
                                             className="h-[300px] w-full rounded-2xl object-cover shadow-2xl shadow-slate-500/25 lg:h-[360px]"
                                         />

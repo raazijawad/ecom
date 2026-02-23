@@ -49,6 +49,7 @@ class HomeController extends Controller
                 ->get()
                 ->map(function (HeroBanner $banner) {
                     $banner->cta_link = $banner->product_id ? "/products/{$banner->product_id}" : null;
+                    $banner->home_banner_product_image_url = $banner->homeBannerProduct?->resolveColorImageUrl();
                     $banner->image_url = $banner->homeBannerProduct?->resolveColorImageUrl()
                         ?? $this->resolveImagePath($banner->image_url)
                         ?? $banner->product?->resolveColorImageUrl();
