@@ -60,6 +60,9 @@ class HomeController extends Controller
                     $banner->discount_price = $productPrice !== null && $offPercentage
                         ? round($productPrice * ((100 - $offPercentage) / 100), 2)
                         : null;
+                    $banner->badge_price = $banner->badge_price !== null
+                        ? (float) $banner->badge_price
+                        : ($banner->discount_price ?? $productPrice);
 
                     return $banner;
                 }),

@@ -14,11 +14,13 @@ class HeroBanner extends Model
         'eyebrow',
         'title',
         'description',
+        'accent_text',
         'image_url',
         'cta_label',
         'product_id',
         'home_banner_product_id',
         'off_percentage',
+        'badge_price',
         'cta_link',
         'sort_order',
         'is_active',
@@ -29,6 +31,7 @@ class HeroBanner extends Model
         return [
             'is_active' => 'boolean',
             'off_percentage' => 'integer',
+            'badge_price' => 'decimal:2',
         ];
     }
 
