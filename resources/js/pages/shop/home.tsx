@@ -17,6 +17,7 @@ type Props = {
     bestSellingShoes: Product[];
     heroBanners: {
         id: number;
+        title: string | null;
         image_path: string | null;
         badge_text: string | null;
         headline: string | null;
@@ -51,6 +52,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
     const fallbackHeroBanner = {
         id: 0,
+        title: null,
         image_path: 'https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80',
         badge_text: 'Our Exclusive',
         headline: 'Adidas Campus',
@@ -195,40 +197,39 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                             const slideHeadline = slide.headline || fallbackHeroBanner.headline;
                             const slideDescription = slide.description || fallbackHeroBanner.description;
                             const slideCtaText = slide.cta_text || fallbackHeroBanner.cta_text;
+                            const slideTitle = slide.title || slideHeadline;
 
                             return (
                                 <div key={slide.id} className="w-full shrink-0">
                                     <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
                                         <div className="max-w-lg space-y-5 text-left">
-                                            <p className="text-sm tracking-[0.14em] text-slate-400">Skip the Impossible</p>
+                                            <p className="text-sm tracking-[0.14em] text-slate-400">{slideBadgeText}</p>
                                             <div className="space-y-1">
-                                                <p className="text-[2.3rem] leading-none font-medium text-slate-800 md:text-5xl">Extraordinary</p>
-                                                <h1 className="text-[3.8rem] leading-[0.92] font-black text-black md:text-7xl">Performance</h1>
+                                                <h1 className="text-[3.8rem] leading-[0.92] font-black text-black md:text-7xl">{slideHeadline}</h1>
                                             </div>
                                             <p className="max-w-md text-base leading-7 text-slate-700 md:text-lg">
-                                                <span className="font-semibold text-red-600">Our Exclusive </span>
-                                                <span className="font-semibold text-black">Adidas Campus</span>
+                                                {slideDescription}
                                             </p>
                                             {slide.product_id ? (
                                                 <AppLink
                                                     href={`/products/${slide.product_id}`}
                                                     className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
                                                 >
-                                                    VIEW COLLECTIONS
+                                                    {slideCtaText}
                                                 </AppLink>
                                             ) : (
                                                 <button
                                                     type="button"
                                                     className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
                                                 >
-                                                    VIEW COLLECTIONS
+                                                    {slideCtaText}
                                                 </button>
                                             )}
                                         </div>
 
                                         <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-10 lg:py-0">
-                                            <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-[clamp(6rem,20vw,12rem)] font-black tracking-[0.2em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
-                                                RUN
+                                            <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center text-[clamp(4rem,16vw,10rem)] leading-none font-black tracking-[0.1em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
+                                                {slideTitle}
                                             </span>
                                             <img
                                                 src={slideImageUrl}
