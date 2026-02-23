@@ -61,19 +61,6 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
     const heroSlides = heroBanners.length > 0 ? heroBanners : [fallbackHeroBanner];
     const [activeHeroSlide, setActiveHeroSlide] = useState(0);
-    const heroSlide = heroSlides[activeHeroSlide] ?? fallbackHeroBanner;
-
-    const heroImageUrl = heroSlide.image_path
-        ? heroSlide.image_path.startsWith('http')
-            ? heroSlide.image_path
-            : `/storage/${heroSlide.image_path}`
-        : fallbackHeroBanner.image_path;
-
-    const heroBadgeText = heroSlide.badge_text || fallbackHeroBanner.badge_text;
-    const heroHeadline = heroSlide.headline || fallbackHeroBanner.headline;
-    const heroDescription = heroSlide.description || fallbackHeroBanner.description;
-    const heroCtaText = heroSlide.cta_text || fallbackHeroBanner.cta_text;
-
     const showNextHeroSlide = () => {
         setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
     };
@@ -84,6 +71,20 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
     useEffect(() => {
         setActiveHeroSlide((current) => (current < heroSlides.length ? current : 0));
+    }, [heroSlides.length]);
+
+    useEffect(() => {
+        if (heroSlides.length <= 1) {
+            return;
+        }
+
+        const intervalId = window.setInterval(() => {
+            setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
+        }, 3000);
+
+        return () => {
+            window.clearInterval(intervalId);
+        };
     }, [heroSlides.length]);
 
     const viewProductDetails = (productId: number) => {
@@ -179,40 +180,63 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                     ›
                 </button>
 
-                <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-                    <div className="max-w-lg space-y-5">
-                        <p className="text-sm font-semibold tracking-[0.2em] text-red-600 uppercase">{heroBadgeText}</p>
-                        <h1 className="text-5xl leading-tight font-black text-slate-950 md:text-6xl">{heroHeadline}</h1>
-                        <p className="max-w-md text-sm leading-7 text-slate-600 md:text-base">{heroDescription}</p>
-                        {heroSlide.product_id ? (
-                            <AppLink
-                                href={`/products/${heroSlide.product_id}`}
-                                className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
-                            >
-                                {heroCtaText}
-                            </AppLink>
-                        ) : (
-                            <button
-                                type="button"
-                                className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
-                            >
-                                {heroCtaText}
-                            </button>
-                        )}
-                    </div>
+                <div className="relative z-10 overflow-hidden">
+                    <div
+                        className="flex transition-transform duration-700 ease-in-out"
+                        style={{ transform: `translateX(-${activeHeroSlide * 100}%)` }}
+                    >
+                        {heroSlides.map((slide) => {
+                            const slideImageUrl = slide.image_path
+                                ? slide.image_path.startsWith('http')
+                                    ? slide.image_path
+                                    : `/storage/${slide.image_path}`
+                                : fallbackHeroBanner.image_path;
+                            const slideBadgeText = slide.badge_text || fallbackHeroBanner.badge_text;
+                            const slideHeadline = slide.headline || fallbackHeroBanner.headline;
+                            const slideDescription = slide.description || fallbackHeroBanner.description;
+                            const slideCtaText = slide.cta_text || fallbackHeroBanner.cta_text;
 
-                    <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-10 lg:py-0">
-                        <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-[clamp(6rem,20vw,12rem)] font-black tracking-[0.2em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
-                            RUN
-                        </span>
-                        <img
-                            src={heroImageUrl}
-                            alt="Red and black performance sneaker in side profile"
-                            className="relative z-10 w-full max-w-xl -rotate-6 object-contain drop-shadow-[0_30px_35px_rgba(15,23,42,0.3)]"
-                        />
-                        <div className="absolute right-8 bottom-10 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-center text-2xl font-black text-white shadow-lg shadow-red-500/40">
-                            $34
-                        </div>
+                            return (
+                                <div key={slide.id} className="w-full shrink-0">
+                                    <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+                                        <div className="max-w-lg space-y-5">
+                                            <p className="text-sm font-semibold tracking-[0.2em] text-red-600 uppercase">{slideBadgeText}</p>
+                                            <h1 className="text-5xl leading-tight font-black text-slate-950 md:text-6xl">{slideHeadline}</h1>
+                                            <p className="max-w-md text-sm leading-7 text-slate-600 md:text-base">{slideDescription}</p>
+                                            {slide.product_id ? (
+                                                <AppLink
+                                                    href={`/products/${slide.product_id}`}
+                                                    className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
+                                                >
+                                                    {slideCtaText}
+                                                </AppLink>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
+                                                >
+                                                    {slideCtaText}
+                                                </button>
+                                            )}
+                                        </div>
+
+                                        <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-10 lg:py-0">
+                                            <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-[clamp(6rem,20vw,12rem)] font-black tracking-[0.2em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
+                                                RUN
+                                            </span>
+                                            <img
+                                                src={slideImageUrl}
+                                                alt="Red and black performance sneaker in side profile"
+                                                className="relative z-10 w-full max-w-xl -rotate-6 object-contain drop-shadow-[0_30px_35px_rgba(15,23,42,0.3)]"
+                                            />
+                                            <div className="absolute right-8 bottom-10 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-center text-2xl font-black text-white shadow-lg shadow-red-500/40">
+                                                $34
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
