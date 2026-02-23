@@ -1,5 +1,5 @@
 import { router, useForm, usePage } from '@inertiajs/react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { Auth } from '@/types/auth';
@@ -15,14 +15,15 @@ type Props = {
     featuredProducts: Product[];
     products: PaginatedProducts;
     bestSellingShoes: Product[];
-    heroBanner: {
+    heroBanners: {
+        id: number;
         image_path: string | null;
         badge_text: string | null;
         headline: string | null;
         description: string | null;
         cta_text: string | null;
         product_id: number | null;
-    } | null;
+    }[];
     categories: Category[];
     testimonials: Testimonial[];
     cartSummary: CartSummary;
@@ -35,7 +36,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, heroBanner, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, heroBanners, categories, testimonials, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -48,16 +49,42 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
 
-    const heroImageUrl = heroBanner?.image_path
-        ? heroBanner.image_path.startsWith('http')
-            ? heroBanner.image_path
-            : `/storage/${heroBanner.image_path}`
-        : 'https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80';
+    const fallbackHeroBanner = {
+        id: 0,
+        image_path: 'https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80',
+        badge_text: 'Our Exclusive',
+        headline: 'Adidas Campus',
+        description: 'Step into the future of comfort with our latest high-performance athletic collection.',
+        cta_text: 'View Collections',
+        product_id: null,
+    };
 
-    const heroBadgeText = heroBanner?.badge_text || 'Our Exclusive';
-    const heroHeadline = heroBanner?.headline || 'Adidas Campus';
-    const heroDescription = heroBanner?.description || 'Step into the future of comfort with our latest high-performance athletic collection.';
-    const heroCtaText = heroBanner?.cta_text || 'View Collections';
+    const heroSlides = heroBanners.length > 0 ? heroBanners : [fallbackHeroBanner];
+    const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+    const heroSlide = heroSlides[activeHeroSlide] ?? fallbackHeroBanner;
+
+    const heroImageUrl = heroSlide.image_path
+        ? heroSlide.image_path.startsWith('http')
+            ? heroSlide.image_path
+            : `/storage/${heroSlide.image_path}`
+        : fallbackHeroBanner.image_path;
+
+    const heroBadgeText = heroSlide.badge_text || fallbackHeroBanner.badge_text;
+    const heroHeadline = heroSlide.headline || fallbackHeroBanner.headline;
+    const heroDescription = heroSlide.description || fallbackHeroBanner.description;
+    const heroCtaText = heroSlide.cta_text || fallbackHeroBanner.cta_text;
+
+    const showNextHeroSlide = () => {
+        setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
+    };
+
+    const showPreviousHeroSlide = () => {
+        setActiveHeroSlide((current) => (current - 1 + heroSlides.length) % heroSlides.length);
+    };
+
+    useEffect(() => {
+        setActiveHeroSlide((current) => (current < heroSlides.length ? current : 0));
+    }, [heroSlides.length]);
 
     const viewProductDetails = (productId: number) => {
         router.get(`/products/${productId}`);
@@ -137,6 +164,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                 <button
                     type="button"
                     aria-label="Previous hero slide"
+                    onClick={showPreviousHeroSlide}
                     className="absolute top-1/2 left-3 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-xl text-slate-700 shadow-sm transition hover:bg-white lg:flex"
                 >
                     ‹
@@ -145,6 +173,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                 <button
                     type="button"
                     aria-label="Next hero slide"
+                    onClick={showNextHeroSlide}
                     className="absolute top-1/2 right-3 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-xl text-slate-700 shadow-sm transition hover:bg-white lg:flex"
                 >
                     ›
@@ -155,9 +184,9 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                         <p className="text-sm font-semibold tracking-[0.2em] text-red-600 uppercase">{heroBadgeText}</p>
                         <h1 className="text-5xl leading-tight font-black text-slate-950 md:text-6xl">{heroHeadline}</h1>
                         <p className="max-w-md text-sm leading-7 text-slate-600 md:text-base">{heroDescription}</p>
-                        {heroBanner?.product_id ? (
+                        {heroSlide.product_id ? (
                             <AppLink
-                                href={`/products/${heroBanner.product_id}`}
+                                href={`/products/${heroSlide.product_id}`}
                                 className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
                             >
                                 {heroCtaText}
@@ -188,9 +217,17 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                 </div>
 
                 <div className="relative z-20 mt-4 flex justify-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />
-                    <span className="h-3 w-3 rounded-full border border-black bg-white" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />
+                    {heroSlides.map((slide, index) => (
+                        <button
+                            key={slide.id}
+                            type="button"
+                            aria-label={`Go to hero slide ${index + 1}`}
+                            onClick={() => setActiveHeroSlide(index)}
+                            className={`rounded-full transition ${
+                                index === activeHeroSlide ? 'h-3 w-3 border border-black bg-white' : 'h-2.5 w-2.5 bg-slate-400 hover:bg-slate-500'
+                            }`}
+                        />
+                    ))}
                 </div>
             </section>
 
