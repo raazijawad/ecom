@@ -76,6 +76,12 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
         return () => window.clearTimeout(timeout);
     }, [showCartMessage]);
 
+    const resolveCardImage = (item: Product) => item.image_url ?? '';
+
+    const viewProductDetails = (productId: number) => {
+        router.visit(`/products/${productId}`);
+    };
+
     return (
         <ShopLayout title={product.name} cartSummary={cartSummary}>
             <div className="grid gap-8 md:grid-cols-2">
@@ -200,10 +206,25 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
                 <h2 className="mb-4 text-xl font-semibold">More shoes you may like</h2>
                 <div className="grid gap-4 md:grid-cols-4">
                     {relatedProducts.map((item) => (
-                        <AppLink key={item.id} href={`/products/${item.id}`} className="rounded border border-slate-200 bg-white p-3 shadow-sm">
-                            <img src={item.image_url ?? ''} alt={item.name} className="mb-2 h-28 w-full rounded object-cover" />
-                            <p className="font-medium">{item.name}</p>
-                        </AppLink>
+                        <article key={item.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                            <AppLink href={`/products/${item.id}`} className="block">
+                                <div className="flex h-44 items-center justify-center rounded-xl bg-slate-50 p-3">
+                                    <img src={resolveCardImage(item)} alt={item.name} className="h-full w-full object-contain" />
+                                </div>
+                            </AppLink>
+                            <h4 className="mt-4 text-base font-bold text-black">{item.name}</h4>
+                            <p className="mt-1 text-sm text-slate-400">{item.category?.name ?? 'Shoes'}</p>
+                            <div className="mt-3 flex items-center justify-between">
+                                <span className="text-lg font-bold text-black">${Number(item.price).toFixed(2)}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => viewProductDetails(item.id)}
+                                    className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
+                                >
+                                    Buy now
+                                </button>
+                            </div>
+                        </article>
                     ))}
                 </div>
             </section>
