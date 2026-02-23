@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\BestSellingShoe;
 use App\Models\Category;
+use App\Models\HomeBanner;
 use App\Models\Product;
 use App\Models\Testimonial;
 use App\Support\Cart;
@@ -31,6 +32,11 @@ class HomeController extends Controller
                 'category' => $categorySlug,
             ],
             'featuredProducts' => Product::query()->isVisible()->where('is_featured', true)->take(4)->get(),
+            'homeBanners' => HomeBanner::query()
+                ->where('is_active', true)
+                ->with(['product' => fn ($query) => $query->isVisible()->with('category')])
+                ->orderBy('sort_order')
+                ->get(),
             'bestSellingShoes' => BestSellingShoe::query()
                 ->where('is_active', true)
                 ->orderBy('sort_order')

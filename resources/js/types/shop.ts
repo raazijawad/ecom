@@ -24,8 +24,19 @@ export type Product = {
         image_gallery: string[];
     }[] | null;
     image_url: string | null;
+    primary_image_url?: string | null;
     is_featured: boolean;
     category?: Category;
+};
+
+export type HomeBanner = {
+    id: number;
+    product_id: number | null;
+    manual_image_path: string | null;
+    resolved_image_url: string | null;
+    sort_order: number;
+    is_active: boolean;
+    product?: Product | null;
 };
 
 export type CartItem = {

@@ -15,7 +15,7 @@ class Product extends Model
 
     protected $with = ['discount'];
 
-    protected $appends = ['original_price', 'discount_percentage', 'discounted_price'];
+    protected $appends = ['original_price', 'discount_percentage', 'discounted_price', 'primary_image_url'];
 
     protected $fillable = [
         'category_id',
@@ -84,6 +84,27 @@ class Product extends Model
             });
 
         return $this->resolveImagePath($colorImage['product_image'] ?? null) ?? $this->resolveImagePath($this->image_url);
+    }
+
+    public function getPrimaryImageUrlAttribute(): ?string
+    {
+        $entries = $this->color_image_urls ?? [];
+
+        if (is_array($entries)) {
+            foreach ($entries as $entry) {
+                if (! is_array($entry)) {
+                    continue;
+                }
+
+                $resolved = $this->resolveImagePath($entry['product_image'] ?? null);
+
+                if ($resolved) {
+                    return $resolved;
+                }
+            }
+        }
+
+        return $this->resolveImagePath($this->image_url);
     }
 
     private function resolveImagePath(mixed $path): ?string

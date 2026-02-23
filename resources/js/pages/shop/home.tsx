@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { Auth } from '@/types/auth';
-import type { CartSummary, Category, Product, Testimonial } from '@/types/shop';
+import type { CartSummary, Category, HomeBanner, Product, Testimonial } from '@/types/shop';
 
 type PaginatedProducts = {
     data: Product[];
@@ -13,6 +13,7 @@ type PaginatedProducts = {
 type Props = {
     filters: { q: string; category: string };
     featuredProducts: Product[];
+    homeBanners: HomeBanner[];
     products: PaginatedProducts;
     bestSellingShoes: Product[];
     categories: Category[];
@@ -27,7 +28,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, homeBanners, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -39,6 +40,12 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     const bestSellers = bestSellingShoes.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
+    const activeBanner = homeBanners[0] ?? null;
+    const activeBannerTitle = activeBanner?.product?.name ?? 'Adidas Campus';
+    const activeBannerDescription =
+        activeBanner?.product?.description ?? 'Step into the future of comfort with our latest high-performance athletic collection.';
+    const activeBannerImage = activeBanner?.resolved_image_url ?? 'https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80';
+    const activeBannerPrice = activeBanner?.product ? Number(activeBanner.product.discounted_price ?? activeBanner.product.price).toFixed(0) : '34';
 
     const viewProductDetails = (productId: number) => {
         router.get(`/products/${productId}`);
@@ -199,13 +206,22 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                 <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
                     <div className="max-w-lg space-y-5">
                         <p className="text-sm font-semibold tracking-[0.2em] text-red-600 uppercase">Our Exclusive</p>
-                        <h1 className="text-5xl leading-tight font-black text-slate-950 md:text-6xl">Adidas Campus</h1>
+                        <h1 className="text-5xl leading-tight font-black text-slate-950 md:text-6xl">{activeBannerTitle}</h1>
                         <p className="max-w-md text-sm leading-7 text-slate-600 md:text-base">
-                            Step into the future of comfort with our latest high-performance athletic collection.
+                            {activeBannerDescription}
                         </p>
-                        <button className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800">
-                            View Collections
-                        </button>
+                        {activeBanner?.product ? (
+                            <button
+                                onClick={() => viewProductDetails(activeBanner.product.id)}
+                                className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
+                            >
+                                View Product
+                            </button>
+                        ) : (
+                            <button className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800">
+                                View Collections
+                            </button>
+                        )}
                     </div>
 
                     <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-10 lg:py-0">
@@ -213,12 +229,12 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                             RUN
                         </span>
                         <img
-                            src="https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80"
-                            alt="Red and black performance sneaker in side profile"
+                            src={activeBannerImage}
+                            alt={activeBannerTitle}
                             className="relative z-10 w-full max-w-xl -rotate-6 object-contain drop-shadow-[0_30px_35px_rgba(15,23,42,0.3)]"
                         />
                         <div className="absolute right-8 bottom-10 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-center text-2xl font-black text-white shadow-lg shadow-red-500/40">
-                            $34
+                            ${activeBannerPrice}
                         </div>
                     </div>
                 </div>
