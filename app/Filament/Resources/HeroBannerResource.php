@@ -4,9 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\HeroBannerResource\Pages\ManageHeroBanners;
 use App\Models\HeroBanner;
+use App\Models\Product;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -45,6 +47,11 @@ class HeroBannerResource extends Resource
             TextInput::make('cta_text')
                 ->label('CTA text')
                 ->maxLength(255),
+            Select::make('product_id')
+                ->label('CTA product')
+                ->options(Product::query()->orderBy('name')->pluck('name', 'id'))
+                ->searchable()
+                ->preload(),
             FileUpload::make('image_path')
                 ->label('Banner image')
                 ->image()

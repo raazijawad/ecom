@@ -21,6 +21,7 @@ type Props = {
         headline: string | null;
         description: string | null;
         cta_text: string | null;
+        product_id: number | null;
     } | null;
     categories: Category[];
     testimonials: Testimonial[];
@@ -219,9 +220,21 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                         <p className="text-sm font-semibold tracking-[0.2em] text-red-600 uppercase">{heroBadgeText}</p>
                         <h1 className="text-5xl leading-tight font-black text-slate-950 md:text-6xl">{heroHeadline}</h1>
                         <p className="max-w-md text-sm leading-7 text-slate-600 md:text-base">{heroDescription}</p>
-                        <button className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800">
-                            {heroCtaText}
-                        </button>
+                        {heroBanner?.product_id ? (
+                            <AppLink
+                                href={`/products/${heroBanner.product_id}`}
+                                className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
+                            >
+                                {heroCtaText}
+                            </AppLink>
+                        ) : (
+                            <button
+                                type="button"
+                                className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
+                            >
+                                {heroCtaText}
+                            </button>
+                        )}
                     </div>
 
                     <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-10 lg:py-0">
