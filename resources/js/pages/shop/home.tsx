@@ -118,72 +118,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
-            <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
-                <input
-                    value={search.data.q}
-                    onChange={(e) => {
-                        const q = e.target.value;
-                        const nextFilters = { ...search.data, q };
 
-                        search.setData('q', q);
-                        queueSearch(nextFilters);
-                    }}
-                    placeholder="Search shoes..."
-                    list="shoe-suggestions"
-                    className="col-span-2 rounded border border-slate-300 px-3 py-2"
-                />
-                <datalist id="shoe-suggestions">
-                    {suggestions.map((name) => (
-                        <option key={name} value={name} />
-                    ))}
-                </datalist>
-                <select
-                    value={search.data.category}
-                    onChange={(e) => {
-                        const category = e.target.value;
-                        const nextFilters = { ...search.data, category };
-
-                        search.setData('category', category);
-                        applyFilters(nextFilters);
-                    }}
-                    className="rounded border border-slate-300 px-3 py-2"
-                >
-                    <option value="">All collections</option>
-                    {categories.map((category) => (
-                        <option key={category.id} value={category.slug}>
-                            {category.name}
-                        </option>
-                    ))}
-                </select>
-                <button className="rounded bg-slate-900 px-4 py-2 font-semibold text-white">Apply</button>
-            </form>
-
-            {searchedProducts.length > 0 && (
-                <section className="mb-8">
-                    <h2 className="mb-4 text-xl font-semibold">Search results</h2>
-                    <div className="grid gap-4 md:grid-cols-4">
-                        {searchedProducts.map((product) => (
-                            <article key={product.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                                <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
-                                <h3 className="font-semibold">{product.name}</h3>
-                                <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
-                                <div className="mt-4 flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
-                                        {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
-                                    </div>
-                                    <button
-                                        onClick={() => viewProductDetails(product.id)}
-                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
-                                    >
-                                        Buy Now
-                                    </button>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                </section>
-            )}
 
             <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-[#f3f4f6] px-6 py-10 lg:px-10">
                 <div className="pointer-events-none absolute inset-0">
@@ -258,6 +193,73 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                     <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />
                 </div>
             </section>
+
+            <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
+                <input
+                    value={search.data.q}
+                    onChange={(e) => {
+                        const q = e.target.value;
+                        const nextFilters = { ...search.data, q };
+
+                        search.setData('q', q);
+                        queueSearch(nextFilters);
+                    }}
+                    placeholder="Search shoes..."
+                    list="shoe-suggestions"
+                    className="col-span-2 rounded border border-slate-300 px-3 py-2"
+                />
+                <datalist id="shoe-suggestions">
+                    {suggestions.map((name) => (
+                        <option key={name} value={name} />
+                    ))}
+                </datalist>
+                <select
+                    value={search.data.category}
+                    onChange={(e) => {
+                        const category = e.target.value;
+                        const nextFilters = { ...search.data, category };
+
+                        search.setData('category', category);
+                        applyFilters(nextFilters);
+                    }}
+                    className="rounded border border-slate-300 px-3 py-2"
+                >
+                    <option value="">All collections</option>
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.slug}>
+                            {category.name}
+                        </option>
+                    ))}
+                </select>
+                <button className="rounded bg-slate-900 px-4 py-2 font-semibold text-white">Apply</button>
+            </form>
+
+            {searchedProducts.length > 0 && (
+                <section className="mb-8">
+                    <h2 className="mb-4 text-xl font-semibold">Search results</h2>
+                    <div className="grid gap-4 md:grid-cols-4">
+                        {searchedProducts.map((product) => (
+                            <article key={product.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                                <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
+                                <h3 className="font-semibold">{product.name}</h3>
+                                <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
+                                <div className="mt-4 flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                        {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
+                                    </div>
+                                    <button
+                                        onClick={() => viewProductDetails(product.id)}
+                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                    >
+                                        Buy Now
+                                    </button>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {categories.length > 0 && (
                 <section className="mb-10">
