@@ -150,7 +150,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
 
 
-            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-[#f3f4f6] px-6 py-10 lg:px-10">
+            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-[#f3f4f6] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
                 <div className="pointer-events-none absolute inset-0">
                     <div className="absolute -top-8 left-20 h-48 w-48 rounded-full bg-red-500/25 blur-3xl" />
                     <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-red-600/20 blur-3xl" />
@@ -201,11 +201,11 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
                             return (
                                 <div key={slide.id} className="w-full shrink-0">
-                                    <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+                                    <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
                                         <div className="max-w-lg space-y-5 text-left">
                                             <p className="text-sm tracking-[0.14em] text-slate-400">{slideBadgeText}</p>
                                             <div className="space-y-1">
-                                                <h1 className="text-[3.8rem] leading-[0.92] font-black text-black md:text-7xl">{slideHeadline}</h1>
+                                                <h1 className="text-[clamp(2.4rem,11vw,4.5rem)] leading-[0.95] font-black text-black">{slideHeadline}</h1>
                                             </div>
                                             <p className="max-w-md text-base leading-7 text-slate-700 md:text-lg">
                                                 {slideDescription}
@@ -213,22 +213,22 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                             {slide.product_id ? (
                                                 <AppLink
                                                     href={`/products/${slide.product_id}`}
-                                                    className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
+                                                    className="inline-flex w-full items-center justify-center rounded-sm bg-black px-6 py-3 text-center text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800 sm:w-auto"
                                                 >
                                                     {slideCtaText}
                                                 </AppLink>
                                             ) : (
                                                 <button
                                                     type="button"
-                                                    className="inline-flex rounded-sm bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800"
+                                                    className="inline-flex w-full items-center justify-center rounded-sm bg-black px-6 py-3 text-center text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800 sm:w-auto"
                                                 >
                                                     {slideCtaText}
                                                 </button>
                                             )}
                                         </div>
 
-                                        <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-10 lg:py-0">
-                                            <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center text-[clamp(4rem,16vw,10rem)] leading-none font-black tracking-[0.1em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
+                                        <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-6 sm:py-10 lg:py-0">
+                                            <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center text-[clamp(2.4rem,14vw,10rem)] leading-none font-black tracking-[0.1em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
                                                 {slideTitle}
                                             </span>
                                             <img
@@ -236,7 +236,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                                 alt="Red and black performance sneaker in side profile"
                                                 className="relative z-10 w-full max-w-xl -rotate-6 object-contain drop-shadow-[0_30px_35px_rgba(15,23,42,0.3)]"
                                             />
-                                            <div className="absolute right-8 bottom-10 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-center text-2xl font-black text-white shadow-lg shadow-red-500/40">
+                                            <div className="absolute right-2 bottom-4 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-center text-lg font-black text-white shadow-lg shadow-red-500/40 sm:right-8 sm:bottom-10 sm:h-20 sm:w-20 sm:text-2xl">
                                                 $34
                                             </div>
                                         </div>
@@ -274,7 +274,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                     }}
                     placeholder="Search shoes..."
                     list="shoe-suggestions"
-                    className="col-span-2 rounded border border-slate-300 px-3 py-2"
+                    className="w-full rounded border border-slate-300 px-3 py-2 sm:col-span-2"
                 />
                 <datalist id="shoe-suggestions">
                     {suggestions.map((name) => (
@@ -299,7 +299,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                         </option>
                     ))}
                 </select>
-                <button className="rounded bg-slate-900 px-4 py-2 font-semibold text-white">Apply</button>
+                <button className="w-full rounded bg-slate-900 px-4 py-2 font-semibold text-white sm:w-auto">Apply</button>
             </form>
 
             {searchedProducts.length > 0 && (
@@ -311,14 +311,14 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                 <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
-                                <div className="mt-4 flex items-center justify-between">
+                                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="flex items-center gap-2">
                                         <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
                                         {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
                                     </div>
                                     <button
                                         onClick={() => viewProductDetails(product.id)}
-                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                        className="w-full rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white sm:w-auto"
                                     >
                                         Buy Now
                                     </button>
@@ -361,14 +361,14 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                 <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
-                                <div className="mt-4 flex items-center justify-between">
+                                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="flex items-center gap-2">
                                         <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
                                         {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
                                     </div>
                                     <button
                                         onClick={() => viewProductDetails(product.id)}
-                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                        className="w-full rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white sm:w-auto"
                                     >
                                         Buy Now
                                     </button>
@@ -388,14 +388,14 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                 <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
-                                <div className="mt-4 flex items-center justify-between">
+                                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="flex items-center gap-2">
                                         <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
                                         {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
                                     </div>
                                     <button
                                         onClick={() => viewProductDetails(product.id)}
-                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                        className="w-full rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white sm:w-auto"
                                     >
                                         Buy Now
                                     </button>
@@ -415,14 +415,14 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                 <img src={product.image_url ?? ''} alt={product.name} className="mb-3 h-36 w-full rounded object-cover" />
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
-                                <div className="mt-4 flex items-center justify-between">
+                                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="flex items-center gap-2">
                                         <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
                                         {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
                                     </div>
                                     <button
                                         onClick={() => viewProductDetails(product.id)}
-                                        className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
+                                        className="w-full rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white sm:w-auto"
                                     >
                                         Buy Now
                                     </button>
