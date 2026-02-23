@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\BestSellingShoe;
 use App\Models\Category;
-use App\Models\HeroBanner;
 use App\Models\Product;
 use App\Models\Testimonial;
 use App\Support\Cart;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -41,31 +39,6 @@ class HomeController extends Controller
                 ->pluck('product')
                 ->filter()
                 ->values(),
-            'heroBanners' => HeroBanner::query()
-                ->where('is_active', true)
-                ->orderBy('sort_order')
-                ->orderByDesc('id')
-                ->with(['product:id,name,image_url,color_image_urls,price', 'homeBannerProduct:id,name,image_url,color_image_urls'])
-                ->get()
-                ->map(function (HeroBanner $banner) {
-                    $banner->cta_link = $banner->product_id ? "/products/{$banner->product_id}" : null;
-                    $banner->image_url = $banner->homeBannerProduct?->resolveColorImageUrl()
-                        ?? $this->resolveImagePath($banner->image_url)
-                        ?? $banner->product?->resolveColorImageUrl();
-
-                    $productPrice = $banner->product ? (float) $banner->product->price : null;
-                    $offPercentage = $banner->off_percentage;
-
-                    $banner->product_price = $productPrice;
-                    $banner->discount_price = $productPrice !== null && $offPercentage
-                        ? round($productPrice * ((100 - $offPercentage) / 100), 2)
-                        : null;
-                    $banner->badge_price = $banner->badge_price !== null
-                        ? (float) $banner->badge_price
-                        : ($banner->discount_price ?? $productPrice);
-
-                    return $banner;
-                }),
             'products' => $productsQuery->paginate(8)->withQueryString(),
             'categories' => Category::query()->orderBy('name')->get(),
             'testimonials' => Testimonial::query()
@@ -75,18 +48,5 @@ class HomeController extends Controller
                 ->get(),
             'cartSummary' => Cart::summary(),
         ]);
-    }
-
-    private function resolveImagePath(?string $path): ?string
-    {
-        if (! is_string($path) || trim($path) === '') {
-            return null;
-        }
-
-        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/')) {
-            return $path;
-        }
-
-        return Storage::disk('public')->url($path);
     }
 }
