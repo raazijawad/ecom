@@ -23,12 +23,19 @@ type Props = {
 
 type SharedProps = {
     auth: Auth;
+    flash?: {
+        success?: string;
+    };
 };
 
 export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary, heroBanners }: Props) {
-    const { auth } = usePage<SharedProps>().props;
+    const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
+    const newsletterForm = useForm({
+        name: auth.user?.name ?? '',
+        email: auth.user?.email ?? '',
+    });
     const searchDebounce = useRef<number | null>(null);
     const bestSellers = bestSellingShoes.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
@@ -636,13 +643,39 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
             <section className="mb-10 rounded-2xl bg-slate-900 p-6 text-white">
                 <h2 className="text-xl font-semibold">SoleStyle Newsletter</h2>
                 <p className="mt-2 max-w-2xl text-sm text-slate-300">Get alerts on limited releases, runner picks, and member-only discounts.</p>
-                <form className="mt-4 flex flex-col gap-3 sm:flex-row">
+                {flash?.success ? <p className="mt-3 rounded border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">{flash.success}</p> : null}
+                <form
+                    className="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]"
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                        newsletterForm.post('/newsletter/subscribe', { preserveScroll: true });
+                    }}
+                >
                     <input
-                        type="email"
-                        placeholder="Enter your email"
+                        type="text"
+                        placeholder="Your name (optional)"
+                        value={newsletterForm.data.name}
+                        onChange={(event) => newsletterForm.setData('name', event.target.value)}
                         className="w-full rounded border border-slate-500 bg-slate-800 px-4 py-2 text-white placeholder:text-slate-400"
                     />
-                    <button className="rounded bg-blue-600 px-5 py-2 font-semibold text-white">Subscribe</button>
+                    <div>
+                        <input
+                            type="email"
+                            placeholder="Enter your email"
+                            required
+                            value={newsletterForm.data.email}
+                            onChange={(event) => newsletterForm.setData('email', event.target.value)}
+                            className="w-full rounded border border-slate-500 bg-slate-800 px-4 py-2 text-white placeholder:text-slate-400"
+                        />
+                        {newsletterForm.errors.email ? <p className="mt-1 text-xs text-red-300">{newsletterForm.errors.email}</p> : null}
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={newsletterForm.processing}
+                        className="rounded bg-blue-600 px-5 py-2 font-semibold text-white disabled:opacity-60"
+                    >
+                        {newsletterForm.processing ? 'Subscribing...' : 'Subscribe'}
+                    </button>
                 </form>
             </section>
 
