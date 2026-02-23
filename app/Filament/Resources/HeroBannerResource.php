@@ -7,6 +7,7 @@ use App\Models\HeroBanner;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -33,6 +34,17 @@ class HeroBannerResource extends Resource
         return $schema->components([
             TextInput::make('title')
                 ->maxLength(255),
+            TextInput::make('badge_text')
+                ->label('Badge text')
+                ->maxLength(255),
+            TextInput::make('headline')
+                ->label('Headline')
+                ->maxLength(255),
+            Textarea::make('description')
+                ->rows(3),
+            TextInput::make('cta_text')
+                ->label('CTA text')
+                ->maxLength(255),
             FileUpload::make('image_path')
                 ->label('Banner image')
                 ->image()
@@ -55,6 +67,14 @@ class HeroBannerResource extends Resource
                     ->disk('public')
                     ->square(),
                 TextColumn::make('title')
+                    ->searchable(),
+                TextColumn::make('badge_text')
+                    ->label('Badge')
+                    ->searchable(),
+                TextColumn::make('headline')
+                    ->searchable(),
+                TextColumn::make('cta_text')
+                    ->label('CTA')
                     ->searchable(),
                 IconColumn::make('is_active')
                     ->label('Active')

@@ -11,6 +11,10 @@ class HeroBanner extends Model
 
     protected $fillable = [
         'title',
+        'badge_text',
+        'headline',
+        'description',
+        'cta_text',
         'image_path',
         'is_active',
     ];
