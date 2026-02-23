@@ -40,10 +40,10 @@ class HomeController extends Controller
                 ->pluck('product')
                 ->filter()
                 ->values(),
-            'heroBanner' => HeroBanner::query()
+            'heroBanners' => HeroBanner::query()
                 ->where('is_active', true)
                 ->latest('id')
-                ->first(['image_path', 'badge_text', 'headline', 'description', 'cta_text', 'product_id']),
+                ->get(['id', 'image_path', 'badge_text', 'headline', 'description', 'cta_text', 'product_id']),
             'products' => $productsQuery->paginate(8)->withQueryString(),
             'categories' => Category::query()->orderBy('name')->get(),
             'testimonials' => Testimonial::query()
