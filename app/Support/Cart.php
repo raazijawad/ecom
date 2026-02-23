@@ -50,11 +50,11 @@ class Cart
                     'product_id' => $product->id,
                     'name' => $product->name,
                     'slug' => $product->slug,
-                    'price' => (float) $product->price,
+                    'price' => (float) ($product->discounted_price ?? $product->price),
                     'quantity' => $quantity,
                     'size' => is_string($size) ? $size : null,
                     'color' => is_string($color) ? $color : null,
-                    'line_total' => (float) bcmul((string) $product->price, (string) $quantity, 2),
+                    'line_total' => (float) bcmul((string) ($product->discounted_price ?? $product->price), (string) $quantity, 2),
                     'image_url' => self::resolveImageUrl($product, $color),
                 ];
             })

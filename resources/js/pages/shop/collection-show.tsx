@@ -77,7 +77,12 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
                                     <h3 className="font-semibold">{product.name}</h3>
                                     <p className="mt-2 text-sm text-slate-700">{product.description}</p>
                                     <div className="mt-4 flex items-center justify-between">
-                                        <span className="font-bold">${Number(product.price).toFixed(2)}</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                            {product.discounted_price && (
+                                                <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>
+                                            )}
+                                        </div>
                                         <div className="flex gap-2">
                                             <AppLink href={`/products/${product.id}`} className="rounded border border-slate-300 px-3 py-2 text-sm">
                                                 View

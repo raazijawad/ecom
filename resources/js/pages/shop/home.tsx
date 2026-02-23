@@ -395,7 +395,10 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
                                 <div className="mt-4 flex items-center justify-between">
-                                    <span className="font-bold">${Number(product.price).toFixed(2)}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                        {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
+                                    </div>
                                     <button
                                         onClick={() => viewProductDetails(product.id)}
                                         className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
@@ -493,7 +496,10 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
                                 <div className="mt-4 flex items-center justify-between">
-                                    <span className="font-bold">${Number(product.price).toFixed(2)}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                        {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
+                                    </div>
                                     <button
                                         onClick={() => viewProductDetails(product.id)}
                                         className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
@@ -517,7 +523,10 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
                                 <div className="mt-4 flex items-center justify-between">
-                                    <span className="font-bold">${Number(product.price).toFixed(2)}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                        {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
+                                    </div>
                                     <button
                                         onClick={() => viewProductDetails(product.id)}
                                         className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
@@ -541,7 +550,10 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                                 <h3 className="font-semibold">{product.name}</h3>
                                 <p className="mt-1 text-sm text-slate-600">{product.category?.name}</p>
                                 <div className="mt-4 flex items-center justify-between">
-                                    <span className="font-bold">${Number(product.price).toFixed(2)}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                        {product.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>}
+                                    </div>
                                     <button
                                         onClick={() => viewProductDetails(product.id)}
                                         className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
@@ -562,13 +574,13 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                     <div className="mt-4 grid gap-4 md:grid-cols-3">
                         {dealOfTheDay.map((product) => {
                             const basePrice = Number(product.price);
-                            const discountedPrice = (basePrice * 0.8).toFixed(2);
+                            const discountedPrice = Number(product.discounted_price ?? product.price);
 
                             return (
                                 <article key={product.id} className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
                                     <h3 className="font-semibold">{product.name}</h3>
-                                    <p className="mt-2 text-sm line-through opacity-80">${basePrice.toFixed(2)}</p>
-                                    <p className="text-lg font-bold">${discountedPrice}</p>
+                                    {product.discounted_price && <p className="mt-2 text-sm line-through opacity-80">${basePrice.toFixed(2)}</p>}
+                                    <p className="text-lg font-bold">${discountedPrice.toFixed(2)}</p>
                                 </article>
                             );
                         })}

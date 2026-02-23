@@ -199,7 +199,12 @@ export default function Shoes({ products, cartSummary }: Props) {
                                             <h4 className="mt-4 text-base font-bold text-black">{product.name}</h4>
                                             <p className="mt-1 text-sm text-slate-400">{categoryName}</p>
                                             <div className="mt-3 flex items-center justify-between">
-                                                <span className="text-lg font-bold text-black">${Number(product.price).toFixed(2)}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-lg font-bold text-black">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                                    {product.discounted_price && (
+                                                        <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>
+                                                    )}
+                                                </div>
                                                 <button
                                                     type="button"
                                                     onClick={() => viewProductDetails(product.id)}

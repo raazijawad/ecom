@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
     use HasFactory;
+
+    protected $with = ['discount'];
+
+    protected $appends = ['original_price', 'discount_percentage', 'discounted_price'];
 
     protected $fillable = [
         'category_id',
@@ -106,5 +111,31 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function discount(): HasOne
+    {
+        return $this->hasOne(Discount::class);
+    }
+
+    public function getOriginalPriceAttribute(): float
+    {
+        return (float) $this->getRawOriginal('price');
+    }
+
+    public function getDiscountPercentageAttribute(): ?int
+    {
+        return $this->discount?->percentage;
+    }
+
+    public function getDiscountedPriceAttribute(): ?float
+    {
+        $percentage = $this->discount_percentage;
+
+        if (! $percentage) {
+            return null;
+        }
+
+        return round($this->original_price * ((100 - $percentage) / 100), 2);
     }
 }
