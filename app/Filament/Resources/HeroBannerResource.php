@@ -3,8 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\HeroBannerResource\Pages\ManageHeroBanners;
+use App\Models\Category;
 use App\Models\Discount;
 use App\Models\HeroBanner;
+use App\Models\Product;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -18,6 +20,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class HeroBannerResource extends Resource
 {
@@ -49,13 +52,60 @@ class HeroBannerResource extends Resource
                 ->relationship('product', 'name')
                 ->searchable()
                 ->preload()
+                ->createOptionForm([
+                    Select::make('category_id')
+                        ->label('Collection')
+                        ->options(Category::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable()
+                        ->required(),
+                    TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('price')
+                        ->required()
+                        ->numeric()
+                        ->minValue(0),
+                    TextInput::make('stock')
+                        ->required()
+                        ->numeric()
+                        ->minValue(0)
+                        ->default(0),
+                    TextInput::make('image_url')
+                        ->label('Product Image URL')
+                        ->required()
+                        ->url()
+                        ->maxLength(2048),
+                    Textarea::make('description')
+                        ->required()
+                        ->rows(3),
+                ])
+                ->createOptionUsing(function (array $data): int {
+                    $product = Product::query()->create([
+                        'category_id' => $data['category_id'],
+                        'name' => $data['name'],
+                        'slug' => Str::slug($data['name']).'-'.Str::random(6),
+                        'description' => $data['description'],
+                        'price' => $data['price'],
+                        'stock' => $data['stock'],
+                        'image_url' => $data['image_url'],
+                        'is_featured' => false,
+                        'is_visible' => true,
+                    ]);
+
+                    return $product->getKey();
+                })
                 ->live()
                 ->afterStateUpdated(function ($state, callable $set): void {
                     if (! $state) {
                         $set('off_percentage', null);
+                        $set('image_url', null);
 
                         return;
                     }
+
+                    $product = Product::query()->find($state);
+
+                    $set('image_url', self::resolveProductImage($product));
 
                     $discountPercentage = Discount::query()
                         ->where('product_id', $state)
@@ -76,6 +126,11 @@ class HeroBannerResource extends Resource
                     50 => '50% Off',
                 ])
                 ->nullable(),
+            TextInput::make('image_url')
+                ->label('Banner Image URL')
+                ->helperText('Auto-filled from selected product image; you can override manually.')
+                ->maxLength(2048)
+                ->columnSpanFull(),
             TextInput::make('sort_order')
                 ->numeric()
                 ->required()
@@ -128,5 +183,31 @@ class HeroBannerResource extends Resource
         return [
             'index' => ManageHeroBanners::route('/'),
         ];
+    }
+
+    private static function resolveProductImage(?Product $product): ?string
+    {
+        if (! $product) {
+            return null;
+        }
+
+        if (filled($product->image_url)) {
+            return $product->image_url;
+        }
+
+        $colorImages = collect($product->color_image_urls ?? []);
+
+        if ($colorImages->isEmpty()) {
+            return null;
+        }
+
+        if ($colorImages->keys()->every(fn ($key) => is_string($key))) {
+            return $colorImages->filter(fn ($path) => is_string($path) && filled($path))->first();
+        }
+
+        return $colorImages
+            ->pluck('product_image')
+            ->filter(fn ($path) => is_string($path) && filled($path))
+            ->first();
     }
 }
