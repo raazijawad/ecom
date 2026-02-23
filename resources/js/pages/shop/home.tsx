@@ -99,7 +99,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
-            <section className="relative left-1/2 right-1/2 mb-10 min-h-[88vh] w-screen -translate-x-1/2 overflow-hidden bg-[#f6f6f3]">
+            <section className="relative mb-10 min-h-[88vh] w-screen overflow-hidden bg-[#f6f6f3] [margin-left:calc(50%-50vw)]">
                 <div className="pointer-events-none absolute inset-0">
                     <div className="absolute -left-28 top-16 h-80 w-80 rounded-full bg-red-500/15 blur-3xl" />
                     <div className="absolute right-10 top-24 h-72 w-72 rounded-full bg-red-500/10 blur-3xl" />
