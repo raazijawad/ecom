@@ -1,6 +1,4 @@
 import { router } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
-import AddToCartToast from '@/components/add-to-cart-toast';
 import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { CartSummary, Category, Product } from '@/types/shop';
@@ -17,9 +15,6 @@ type Props = {
 };
 
 export default function CollectionShow({ category, products, cartSummary }: Props) {
-    const [showCartMessage, setShowCartMessage] = useState(false);
-    const [lastAddedProductName, setLastAddedProductName] = useState('');
-
     const resolveImageUrl = (path: string | null | undefined): string | null => {
         if (!path) {
             return null;
@@ -38,30 +33,8 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
         return resolveImageUrl(colorImage) ?? resolveImageUrl(product.image_url) ?? '';
     };
 
-    useEffect(() => {
-        if (!showCartMessage) {
-            return;
-        }
-
-        const timeout = window.setTimeout(() => {
-            setShowCartMessage(false);
-        }, 3000);
-
-        return () => window.clearTimeout(timeout);
-    }, [showCartMessage]);
-
-    const addToCart = (productId: number, productName: string) => {
-        router.post(
-            '/cart',
-            { product_id: productId, quantity: 1 },
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    setLastAddedProductName(productName);
-                    setShowCartMessage(true);
-                },
-            },
-        );
+    const viewProductDetails = (productId: number) => {
+        router.visit(`/products/${productId}`);
     };
 
     return (
@@ -71,8 +44,6 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
                 <h1 className="mt-2 text-3xl font-bold text-slate-900">{category.name}</h1>
                 <p className="mt-3 text-slate-600">{category.description ?? `Browse products from the ${category.name} collection.`}</p>
             </section>
-
-            <AddToCartToast productName={lastAddedProductName} isVisible={showCartMessage} />
 
             <section>
                 <div className="mb-4 flex items-center justify-between gap-2">
@@ -90,28 +61,28 @@ export default function CollectionShow({ category, products, cartSummary }: Prop
                     <>
                         <div className="grid gap-4 md:grid-cols-3">
                             {products.data.map((product) => (
-                                <article key={product.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                                    <img src={resolveCardImage(product)} alt={product.name} className="mb-3 h-40 w-full rounded object-cover" />
-                                    <h3 className="font-semibold">{product.name}</h3>
-                                    <p className="mt-2 text-sm text-slate-700">{product.description}</p>
-                                    <div className="mt-4 flex items-center justify-between">
+                                <article key={product.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                                    <AppLink href={`/products/${product.id}`} className="block">
+                                        <div className="flex h-44 items-center justify-center rounded-xl bg-slate-50 p-3">
+                                            <img src={resolveCardImage(product)} alt={product.name} className="h-full w-full object-contain" />
+                                        </div>
+                                    </AppLink>
+                                    <h4 className="mt-4 text-base font-bold text-black">{product.name}</h4>
+                                    <p className="mt-1 text-sm text-slate-400">{product.category?.name ?? 'Shoes'}</p>
+                                    <div className="mt-3 flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-bold">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                            <span className="text-lg font-bold text-black">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
                                             {product.discounted_price && (
                                                 <span className="text-sm text-slate-400 line-through">${Number(product.price).toFixed(2)}</span>
                                             )}
                                         </div>
-                                        <div className="flex gap-2">
-                                            <AppLink href={`/products/${product.id}`} className="rounded border border-slate-300 px-3 py-2 text-sm">
-                                                View
-                                            </AppLink>
-                                            <button
-                                                onClick={() => addToCart(product.id, product.name)}
-                                                className="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white"
-                                            >
-                                                Add
-                                            </button>
-                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => viewProductDetails(product.id)}
+                                            className="rounded-full bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-700"
+                                        >
+                                            Buy now
+                                        </button>
                                     </div>
                                 </article>
                             ))}
