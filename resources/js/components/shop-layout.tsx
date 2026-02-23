@@ -27,7 +27,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
     return (
         <>
             <Head title={title} />
-            <div className="min-h-screen bg-[#f7f8fa] text-slate-900">
+            <div className="min-h-screen overflow-x-hidden bg-[#f7f8fa] text-slate-900">
                 <header className="relative z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur">
                     <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-5">
                         <AppLink href="/" className="text-xl font-bold tracking-tight text-slate-900">
@@ -185,7 +185,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                     </div>
                 ) : null}
 
-                <main className="relative z-0 mx-auto max-w-6xl px-4 py-8">{children}</main>
+                <main className="relative z-0 mx-auto max-w-6xl px-4 pb-8 pt-0">{children}</main>
             </div>
         </>
     );
