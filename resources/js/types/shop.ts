@@ -46,11 +46,13 @@ export type HeroBanner = {
     eyebrow: string | null;
     title: string;
     description: string | null;
+    accent_text: string | null;
     image_url: string | null;
     cta_label: string | null;
     product_id: number | null;
     home_banner_product_id: number | null;
     off_percentage: number | null;
+    badge_price: number | null;
     product_price?: number | null;
     discount_price?: number | null;
     cta_link: string | null;

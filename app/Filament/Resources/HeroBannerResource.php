@@ -42,6 +42,10 @@ class HeroBannerResource extends Resource
             Textarea::make('description')
                 ->rows(4)
                 ->columnSpanFull(),
+            TextInput::make('accent_text')
+                ->label('Accent Text (e.g., RUN)')
+                ->maxLength(255)
+                ->default('RUN'),
             TextInput::make('cta_label')
                 ->label('Button Label')
                 ->maxLength(255),
@@ -89,6 +93,14 @@ class HeroBannerResource extends Resource
                     50 => '50% Off',
                 ])
                 ->nullable(),
+            TextInput::make('badge_price')
+                ->label('Price Badge')
+                ->numeric()
+                ->prefix('$')
+                ->minValue(0)
+                ->step(0.01)
+                ->nullable()
+                ->helperText('Optional price shown inside the red badge (e.g. 34.00).'),
             TextInput::make('sort_order')
                 ->numeric()
                 ->required()
@@ -119,6 +131,13 @@ class HeroBannerResource extends Resource
                     ->label('Banner Image Product')
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('accent_text')
+                    ->label('Accent')
+                    ->toggleable(),
+                TextColumn::make('badge_price')
+                    ->label('Badge Price')
+                    ->money('USD')
+                    ->sortable(),
                 TextColumn::make('off_percentage')
                     ->label('Discount')
                     ->formatStateUsing(fn (?int $state): string => $state ? "{$state}% Off" : '—')
