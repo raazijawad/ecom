@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\HeroBannerResource\Pages\ManageHeroBanners;
+use App\Models\Discount;
 use App\Models\HeroBanner;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DeleteAction;
@@ -40,11 +41,6 @@ class HeroBannerResource extends Resource
             Textarea::make('description')
                 ->rows(4)
                 ->columnSpanFull(),
-            TextInput::make('image_url')
-                ->label('Image URL')
-                ->url()
-                ->maxLength(2048)
-                ->helperText('Optional. If left empty, the selected product image will be used.'),
             TextInput::make('cta_label')
                 ->label('Button Label')
                 ->maxLength(255),
@@ -52,7 +48,21 @@ class HeroBannerResource extends Resource
                 ->label('Button Product')
                 ->relationship('product', 'name')
                 ->searchable()
-                ->preload(),
+                ->preload()
+                ->live()
+                ->afterStateUpdated(function ($state, callable $set): void {
+                    if (! $state) {
+                        $set('off_percentage', null);
+
+                        return;
+                    }
+
+                    $discountPercentage = Discount::query()
+                        ->where('product_id', $state)
+                        ->value('percentage');
+
+                    $set('off_percentage', $discountPercentage ? (int) $discountPercentage : null);
+                }),
             Select::make('off_percentage')
                 ->label('Off Percentage')
                 ->options([
