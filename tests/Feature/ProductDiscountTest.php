@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
-use App\Models\HeroBanner;
+use App\Models\Discount;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -13,7 +13,7 @@ class ProductDiscountTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_product_page_receives_discount_from_active_hero_banner(): void
+    public function test_product_page_receives_discount_from_product_discount(): void
     {
         $category = Category::create([
             'name' => 'Deals',
@@ -32,12 +32,9 @@ class ProductDiscountTest extends TestCase
             'is_visible' => true,
         ]);
 
-        HeroBanner::create([
-            'title' => '15 Off',
-            'image_url' => null,
+        Discount::create([
             'product_id' => $product->id,
-            'off_percentage' => 15,
-            'sort_order' => 0,
+            'percentage' => 15,
             'is_active' => true,
         ]);
 

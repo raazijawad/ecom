@@ -1,9 +1,9 @@
 import { router, useForm, usePage } from '@inertiajs/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { Auth } from '@/types/auth';
-import type { CartSummary, Category, HeroBanner, Product, Testimonial } from '@/types/shop';
+import type { CartSummary, Category, Product, Testimonial } from '@/types/shop';
 
 type PaginatedProducts = {
     data: Product[];
@@ -18,7 +18,6 @@ type Props = {
     categories: Category[];
     testimonials: Testimonial[];
     cartSummary: CartSummary;
-    heroBanners: HeroBanner[];
 };
 
 type SharedProps = {
@@ -28,7 +27,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary, heroBanners }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -126,100 +125,6 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         return uniqueProducts.filter((product) => product.name.toLowerCase().includes(query)).slice(0, 8);
     }, [featuredProducts, products.data, search.data.q]);
 
-    const fallbackHeroBanner: HeroBanner = {
-        id: 0,
-        eyebrow: 'Our Exclusive',
-        title: 'Adidas Campus',
-        description: 'Step into the future of comfort with our latest high-performance athletic collection.',
-        accent_text: 'RUN',
-        image_url: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1200&q=80',
-        cta_label: 'VIEW COLLECTIONS',
-        product_id: null,
-        home_banner_product_id: null,
-        cta_link: '/shoes',
-        off_percentage: null,
-        badge_price: 34,
-        product_price: null,
-        discount_price: null,
-        sort_order: 0,
-        is_active: true,
-    };
-
-    const sliderBanners = heroBanners.length > 0 ? heroBanners : [fallbackHeroBanner];
-    const [activeHeroBanner, setActiveHeroBanner] = useState(0);
-    const [isDraggingBanner, setIsDraggingBanner] = useState(false);
-    const bannerDragStartX = useRef<number | null>(null);
-
-    useEffect(() => {
-        search.setData('q', filters.q);
-        search.setData('category', filters.category);
-    }, [filters.q, filters.category]);
-
-    useEffect(() => {
-        setActiveHeroBanner(0);
-    }, [sliderBanners.length]);
-
-    useEffect(() => {
-        if (sliderBanners.length < 2) {
-            return;
-        }
-
-        const interval = window.setInterval(() => {
-            setActiveHeroBanner((current) => (current + 1) % sliderBanners.length);
-        }, 3000);
-
-        return () => {
-            window.clearInterval(interval);
-        };
-    }, [sliderBanners.length]);
-
-    useEffect(() => {
-        return () => {
-            if (searchDebounce.current !== null) {
-                window.clearTimeout(searchDebounce.current);
-            }
-        };
-    }, []);
-
-    const handleBannerPointerDown = (event: React.PointerEvent<HTMLElement>) => {
-        if (sliderBanners.length < 2) {
-            return;
-        }
-
-        bannerDragStartX.current = event.clientX;
-        setIsDraggingBanner(true);
-        event.currentTarget.setPointerCapture(event.pointerId);
-    };
-
-    const handleBannerPointerUp = (event: React.PointerEvent<HTMLElement>) => {
-        if (bannerDragStartX.current === null) {
-            setIsDraggingBanner(false);
-            return;
-        }
-
-        const dragDistance = event.clientX - bannerDragStartX.current;
-        const dragThreshold = 40;
-
-        if (Math.abs(dragDistance) >= dragThreshold) {
-            setActiveHeroBanner((current) => {
-                if (dragDistance < 0) {
-                    return (current + 1) % sliderBanners.length;
-                }
-
-                return (current - 1 + sliderBanners.length) % sliderBanners.length;
-            });
-        }
-
-        bannerDragStartX.current = null;
-        setIsDraggingBanner(false);
-        event.currentTarget.releasePointerCapture(event.pointerId);
-    };
-
-    const handleBannerPointerCancel = () => {
-        bannerDragStartX.current = null;
-        setIsDraggingBanner(false);
-    };
-
     const submitTestimonial = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -231,100 +136,6 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
-            <section
-                className={`relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-[#f7f7f5] px-6 py-10 lg:px-10 lg:py-14 ${isDraggingBanner ? 'cursor-grabbing' : 'cursor-grab'}`}
-                onPointerDown={handleBannerPointerDown}
-                onPointerUp={handleBannerPointerUp}
-                onPointerCancel={handleBannerPointerCancel}
-            >
-                <div className="pointer-events-none absolute inset-0">
-                    <div className="absolute -top-16 left-12 h-52 w-52 rounded-full bg-red-200/40 blur-3xl" />
-                    <div className="absolute right-20 bottom-8 h-44 w-44 rounded-full bg-red-300/30 blur-3xl" />
-                    <svg className="absolute inset-0 h-full w-full opacity-70" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M80 120C210 40 350 180 500 120C640 70 720 180 860 130C980 90 1080 130 1140 180" stroke="#e5e7eb" strokeWidth="1.4" />
-                        <path d="M40 240C170 160 330 300 490 240C650 180 740 300 900 240C1030 190 1120 220 1180 280" stroke="#d1d5db" strokeWidth="1.4" />
-                        <path d="M20 360C150 280 320 420 470 360C630 300 740 420 900 360C1030 310 1120 340 1180 400" stroke="#e5e7eb" strokeWidth="1.4" />
-                    </svg>
-                </div>
-
-                <button
-                    type="button"
-                    onClick={() => setActiveHeroBanner((current) => (current - 1 + sliderBanners.length) % sliderBanners.length)}
-                    className="absolute top-1/2 left-2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-lg text-slate-700 shadow md:flex"
-                    aria-label="Previous slide"
-                >
-                    ‹
-                </button>
-                <button
-                    type="button"
-                    onClick={() => setActiveHeroBanner((current) => (current + 1) % sliderBanners.length)}
-                    className="absolute top-1/2 right-2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-lg text-slate-700 shadow md:flex"
-                    aria-label="Next slide"
-                >
-                    ›
-                </button>
-
-                <div className="relative z-10 overflow-hidden">
-                    <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${activeHeroBanner * 100}%)` }}>
-                        {sliderBanners.map((banner) => (
-                            <article key={banner.id} className="w-full shrink-0">
-                                <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.25fr]">
-                                    <div>
-                                        <p className="text-sm font-semibold tracking-[0.2em] text-red-500 uppercase">{banner.eyebrow ?? 'Our Exclusive'}</p>
-                                        <h1 className="mt-3 text-5xl font-black tracking-tight text-slate-950 lg:text-7xl">{banner.title}</h1>
-                                        <p className="mt-4 max-w-md text-slate-600">
-                                            {banner.description ?? 'Step into the future of comfort with our latest high-performance athletic collection.'}
-                                        </p>
-
-                                        {(() => {
-                                            const bannerHref = banner.product_id ? `/products/${banner.product_id}` : banner.cta_link;
-
-                                            return bannerHref ? (
-                                                <AppLink href={bannerHref} className="mt-7 inline-flex bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800">
-                                                    {banner.cta_label ?? 'VIEW COLLECTIONS'}
-                                                </AppLink>
-                                            ) : (
-                                                <button className="mt-7 inline-flex bg-black px-7 py-3 text-sm font-semibold tracking-wide text-white uppercase">
-                                                    {banner.cta_label ?? 'VIEW COLLECTIONS'}
-                                                </button>
-                                            );
-                                        })()}
-                                    </div>
-
-                                    <div className="relative flex min-h-[300px] items-center justify-center lg:min-h-[390px]">
-                                        <p className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-[110px] leading-none font-black tracking-[0.08em] text-red-600/85 md:text-[150px]">
-                                            {banner.accent_text ?? 'RUN'}
-                                        </p>
-                                        <img
-                                            src={banner.image_url ?? ''}
-                                            alt={banner.title}
-                                            className="relative z-10 h-[250px] w-full object-contain drop-shadow-[0_24px_20px_rgba(0,0,0,0.25)] lg:h-[340px]"
-                                        />
-                                        <div className="absolute right-10 top-10 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-red-600 text-center text-2xl font-black text-white shadow-lg">
-                                            ${Number(banner.badge_price ?? 34).toFixed(0)}
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                </div>
-
-                {sliderBanners.length > 1 && (
-                    <div className="relative z-20 mt-8 flex items-center justify-center gap-2">
-                        {sliderBanners.map((sliderBanner, index) => (
-                            <button
-                                key={sliderBanner.id}
-                                type="button"
-                                onClick={() => setActiveHeroBanner(index)}
-                                className={`h-3 w-3 rounded-full transition ${activeHeroBanner === index ? 'border border-black bg-white' : 'bg-slate-400/70 hover:bg-slate-600'}`}
-                                aria-label={`Show banner ${index + 1}`}
-                            />
-                        ))}
-                    </div>
-                )}
-            </section>
-
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
                     value={search.data.q}
