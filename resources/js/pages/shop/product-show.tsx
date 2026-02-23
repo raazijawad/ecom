@@ -215,7 +215,10 @@ export default function ProductShow({ product, discount, relatedProducts, cartSu
                             <h4 className="mt-4 text-base font-bold text-black">{item.name}</h4>
                             <p className="mt-1 text-sm text-slate-400">{item.category?.name ?? 'Shoes'}</p>
                             <div className="mt-3 flex items-center justify-between">
-                                <span className="text-lg font-bold text-black">${Number(item.price).toFixed(2)}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-lg font-bold text-black">${Number(item.discounted_price ?? item.price).toFixed(2)}</span>
+                                    {item.discounted_price && <span className="text-sm text-slate-400 line-through">${Number(item.price).toFixed(2)}</span>}
+                                </div>
                                 <button
                                     type="button"
                                     onClick={() => viewProductDetails(item.id)}

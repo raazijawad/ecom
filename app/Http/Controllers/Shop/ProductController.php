@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
-use App\Models\HeroBanner;
 use App\Models\Product;
 use App\Support\Cart;
 use Illuminate\Support\Facades\Storage;
@@ -13,23 +12,12 @@ class ProductController extends Controller
 {
     public function show(Product $product)
     {
-        $heroBanner = HeroBanner::query()
-            ->where('is_active', true)
-            ->where('product_id', $product->id)
-            ->whereNotNull('off_percentage')
-            ->orderBy('sort_order')
-            ->orderByDesc('id')
-            ->first();
-
-        $discount = null;
-
-        if ($heroBanner?->off_percentage) {
-            $basePrice = (float) $product->price;
-            $discount = [
-                'off_percentage' => $heroBanner->off_percentage,
-                'discount_price' => round($basePrice * ((100 - $heroBanner->off_percentage) / 100), 2),
-            ];
-        }
+        $discount = $product->discount_percentage
+            ? [
+                'off_percentage' => $product->discount_percentage,
+                'discount_price' => $product->discounted_price,
+            ]
+            : null;
 
         $product->load('category');
         $product->color_image_urls = collect($product->color_image_urls ?? [])

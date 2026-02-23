@@ -12,6 +12,9 @@ export type Product = {
     slug: string;
     description: string;
     price: string;
+    original_price?: number | null;
+    discount_percentage?: number | null;
+    discounted_price?: number | null;
     stock: number;
     sizes: string[] | null;
     colors: string[] | null;
