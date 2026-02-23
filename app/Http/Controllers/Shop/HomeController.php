@@ -48,7 +48,7 @@ class HomeController extends Controller
                 ->get()
                 ->map(function (HeroBanner $banner) {
                     $banner->cta_link = $banner->product_id ? "/products/{$banner->product_id}" : null;
-                    $banner->image_url = $banner->image_url ?: $banner->product?->image_url;
+                    $banner->image_url = $banner->product?->image_url ?: $banner->image_url;
 
                     $productPrice = $banner->product ? (float) $banner->product->price : null;
                     $offPercentage = $banner->off_percentage;
