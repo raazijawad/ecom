@@ -28,6 +28,17 @@ export type Product = {
     category?: Category;
 };
 
+export type HeroBanner = {
+    id: number;
+    title: string;
+    badge_text: string | null;
+    headline: string | null;
+    description: string | null;
+    cta_text: string | null;
+    image_path: string | null;
+    product_id: number | null;
+};
+
 export type CartItem = {
     item_key: string;
     product_id: number;
