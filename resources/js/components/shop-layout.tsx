@@ -17,12 +17,44 @@ type SharedProps = {
         name: string;
         slug: string;
     }>;
+    heroBanners: Array<{
+        id: number;
+        title: string | null;
+        image_path: string;
+        badge_text: string | null;
+        headline: string | null;
+        description: string | null;
+        cta_text: string | null;
+        product_id: number | null;
+    }>;
 };
 
 export default function ShopLayout({ title, cartSummary, children }: Props) {
-    const { auth, collections } = usePage<SharedProps>().props;
+    const { auth, collections, heroBanners } = usePage<SharedProps>().props;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const dashboardHref = auth.user?.role === 'admin' ? '/admin' : '/customer/dashboard';
+
+    const activeHeroBanner = heroBanners[0] ?? null;
+
+    const resolveImageUrl = (path: string | null | undefined): string | null => {
+        if (!path) {
+            return null;
+        }
+
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+            return path;
+        }
+
+        return `/storage/${path}`;
+    };
+
+    const heroImageUrl = resolveImageUrl(activeHeroBanner?.image_path);
+    const heroTitle = activeHeroBanner?.headline || activeHeroBanner?.title || 'Step into your next favorite pair';
+    const heroDescription = activeHeroBanner?.description || 'Explore the latest drops, timeless styles, and everyday performance shoes curated for every stride.';
+    const heroBadge = activeHeroBanner?.badge_text;
+    const heroCtaText = activeHeroBanner?.cta_text || 'Shop now';
+    const heroCtaHref = activeHeroBanner?.product_id ? `/products/${activeHeroBanner.product_id}` : '/shoes';
+
 
     return (
         <>
@@ -186,61 +218,41 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                 ) : null}
 
                 <section className="mb-10">
-
-                    {/* Hero Section */}
-                    <div className="relative bg-gray-900 py-12 sm:py-16 lg:py-20 xl:pt-32 xl:pb-44">
-                        <div className="absolute inset-0 hidden lg:block">
-                            <img
-                                className="h-full w-full object-cover object-right-bottom"
-                                src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/hero/1/background.png"
-                                alt=""
-                            />
-                        </div>
+                    <div className="relative overflow-hidden bg-gray-900 py-12 sm:py-16 lg:py-20 xl:pt-24 xl:pb-28">
+                        {heroImageUrl && (
+                            <div className="absolute inset-0">
+                                <img className="h-full w-full object-cover object-center" src={heroImageUrl} alt={activeHeroBanner?.title ?? 'Hero banner'} />
+                                <div className="absolute inset-0 bg-gray-950/60" />
+                            </div>
+                        )}
 
                         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                            <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-md lg:text-left xl:max-w-lg">
+                            <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-2xl lg:text-left">
+                                {heroBadge && (
+                                    <p className="inline-flex rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase">
+                                        {heroBadge}
+                                    </p>
+                                )}
 
-                                <h1 className="text-3xl font-bold text-white sm:text-4xl xl:text-5xl xl:leading-tight">
-                                    Build SaaS Landing Page without Writing a Single Code
-                                </h1>
+                                <h1 className="mt-4 text-3xl font-bold text-white sm:text-4xl xl:text-5xl xl:leading-tight">{heroTitle}</h1>
 
-                                <p className="mt-8 text-base leading-7 font-normal text-gray-400 lg:max-w-md lg:pr-16 xl:pr-0">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In nunc nisl eu
-                                    consectetur. Mi massa elementum odio eu viverra amet.
-                                </p>
+                                <p className="mt-6 text-base leading-7 font-normal text-gray-200 lg:max-w-xl">{heroDescription}</p>
 
-                                <div className="mt-8 flex items-center justify-center space-x-5 lg:justify-start xl:mt-16">
-                                    <a
-                                        href="#"
-                                        className="inline-flex items-center justify-center rounded-md border border-transparent
-                       bg-white px-3 py-3 text-base leading-7 font-bold text-gray-900 transition-all
-                       duration-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-white
-                       focus:ring-offset-2 focus:ring-offset-gray-900 sm:px-6"
+                                <div className="mt-8 flex items-center justify-center gap-4 lg:justify-start">
+                                    <AppLink
+                                        href={heroCtaHref}
+                                        className="inline-flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base leading-7 font-bold text-gray-900 transition-all duration-200 hover:bg-gray-200"
                                     >
-                                        Get UI Kit Now
-                                    </a>
-
-                                    <a
-                                        href="#"
-                                        className="inline-flex items-center justify-center rounded-md border border-transparent
-                       bg-transparent px-2 py-3 text-base leading-7 font-bold text-white transition-all
-                       duration-200 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700
-                       focus:ring-offset-2 focus:ring-offset-gray-900 sm:px-4"
+                                        {heroCtaText}
+                                    </AppLink>
+                                    <AppLink
+                                        href="/shoes"
+                                        className="inline-flex items-center justify-center rounded-md border border-white/50 bg-transparent px-4 py-3 text-base leading-7 font-bold text-white transition-all duration-200 hover:bg-white/10"
                                     >
-                                        Check live preview
-                                    </a>
+                                        Browse shoes
+                                    </AppLink>
                                 </div>
-
                             </div>
-                        </div>
-
-                        {/* Mobile Background Image */}
-                        <div className="mt-8 lg:hidden">
-                            <img
-                                className="h-full w-full object-cover"
-                                src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/hero/1/bg.png"
-                                alt=""
-                            />
                         </div>
                     </div>
                 </section>

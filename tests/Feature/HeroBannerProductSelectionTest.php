@@ -47,6 +47,7 @@ class HeroBannerProductSelectionTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('shop/home')
-                ->where('heroBanner.product_id', $product->id));
+                ->has('heroBanners', 1)
+                ->where('heroBanners.0.product_id', $product->id));
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Category;
+use App\Models\HeroBanner;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -49,6 +50,10 @@ class HandleInertiaRequests extends Middleware
                 ->select(['id', 'name', 'slug'])
                 ->orderBy('name')
                 ->get(),
+            'heroBanners' => HeroBanner::query()
+                ->where('is_active', true)
+                ->latest('id')
+                ->get(['id', 'title', 'image_path', 'badge_text', 'headline', 'description', 'cta_text', 'product_id']),
         ];
     }
 }
