@@ -1,4 +1,5 @@
 import { router } from '@inertiajs/react';
+import ShoeScroll from '@/components/shoe-scroll';
 import ShopLayout from '@/components/shop-layout';
 import type { CartSummary, Product } from '@/types/shop';
 
@@ -181,6 +182,8 @@ export default function Shoes({ products, cartSummary }: Props) {
 
     return (
         <ShopLayout title="All Shoes" cartSummary={cartSummary}>
+            <ShoeScroll />
+
             <section className="space-y-12">
                 <div>
                     <h2 className="text-2xl font-bold text-black">Shop Performance Shoes</h2>
