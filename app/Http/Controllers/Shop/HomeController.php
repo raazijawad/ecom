@@ -44,6 +44,11 @@ class HomeController extends Controller
                 ->where('is_active', true)
                 ->latest('id')
                 ->get(['id', 'title', 'image_path', 'badge_text', 'headline', 'description', 'cta_text', 'product_id']),
+            // also expose a single banner for legacy tests or components
+            'heroBanner' => HeroBanner::query()
+                ->where('is_active', true)
+                ->latest('id')
+                ->first(['id', 'title', 'image_path', 'badge_text', 'headline', 'description', 'cta_text', 'product_id']),
             'products' => $productsQuery->paginate(8)->withQueryString(),
             'categories' => Category::query()->orderBy('name')->get(),
             'testimonials' => Testimonial::query()

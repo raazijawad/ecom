@@ -10,6 +10,17 @@ type PaginatedProducts = {
     links: { url: string | null; label: string; active: boolean }[];
 };
 
+type HeroBannerType = {
+    id: number;
+    title: string;
+    image_path: string;
+    badge_text?: string;
+    headline?: string;
+    description?: string;
+    cta_text?: string;
+    product_id?: number;
+};
+
 type Props = {
     filters: { q: string; category: string };
     featuredProducts: Product[];
@@ -18,6 +29,7 @@ type Props = {
     categories: Category[];
     testimonials: Testimonial[];
     cartSummary: CartSummary;
+    heroBanners: HeroBannerType[];
 };
 
 type SharedProps = {
@@ -27,8 +39,9 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary, heroBanners }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
+    const banner = heroBanners.length > 0 ? heroBanners[0] : null;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
     const newsletterForm = useForm({
@@ -118,8 +131,62 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
 
+            {banner && (
+                <section className="relative rounded-3xl overflow-hidden bg-white py-8">
+                    <div className="mx-auto rounded-3xl max-w-7xl px-4 pb-5 sm:px-6 lg:px-8">
+                        <div className="rounded-2xl bg-white p-8 shadow-lg relative overflow-hidden">
+                            <div
+                                className="absolute -inset-6 -z-10 transform-gpu blur-3xl opacity-40"
 
-            
+                            />
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+                            style={{
+                                    background:
+                                        'radial-gradient(circle at 10% 20%, rgba(16,185,129,0.12) 0%, rgba(16,185,129,0.06) 20%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(34,197,94,0.10) 0%, rgba(34,197,94,0.04) 25%, transparent 50%)',
+                                }}>
+                            <div className="text-center pl-15 lg:text-left text-4xl"
+                            >
+                                <span className="inline-block mb-2 text-sm uppercase tracking-wider text-green-600">
+                                    {banner.badge_text || banner.title}
+                                </span>
+                                <h1 className="text-6xl font-extrabold text-slate-900 font-montserrat"
+                                >
+                                    {banner.headline}
+                                </h1>
+                                {/* year badge */}
+                                <div className="mt-2 inline-block rounded border-2 border-green-600 px-3 py-1 text-green-600 font-semibold">
+                                    2023
+                                </div>
+                                {banner.description && (
+                                    <p className="mt-6 max-w-md text-base text-slate-600">
+                                        {banner.description}
+                                    </p>
+                                )}
+                                <div className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start">
+                                    <a
+                                        href={banner.product_id ? `/products/${banner.product_id}` : '#'}
+                                        className="inline-flex items-center justify-center rounded-md bg-green-600 px-6 py-3 text-base font-semibold text-white shadow hover:bg-green-700"
+                                    >
+                                        {banner.cta_text || 'Shop Now'}
+                                    </a>
+                                </div>
+
+
+                            </div>
+                            <div className="relative flex justify-center lg:justify-end">
+                                {banner.image_path && (
+                                    <img
+                                        className="w-full max-w-md object-contain transform -translate-x-12 lg:-translate-x-24 rotate-[-25deg]"
+                                        src={resolveImageUrl(banner.image_path) ?? undefined}
+                                        alt={banner.title}
+                                    />
+                                )}
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
@@ -160,6 +227,56 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
                 </select>
                 <button className="w-full rounded bg-slate-900 px-4 py-2 font-semibold text-white sm:w-auto">Apply</button>
             </form>
+
+            {/* Advertisement promo-style banners (3) */}
+            {featuredProducts.length > 0 && (
+                <section className="mb-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {featuredProducts.slice(0, 3).map((product, idx) => (
+                            <article
+                                key={product.id}
+                                className="relative overflow-hidden rounded-2xl p-4 text-white shadow-lg"
+                                style={{ background: idx % 2 === 0 ? 'linear-gradient(90deg,#0b57a4,#0f75d1)' : 'linear-gradient(90deg,#08366e,#1465b3)' }}
+                            >
+                                <div className="relative flex items-center justify-between gap-4">
+                                    <div className="max-w-[60%]">
+                                        <p className="text-xs uppercase tracking-wider opacity-90">New Collection</p>
+                                        <h3 className="mt-1 text-lg font-bold leading-tight">{product.name}</h3>
+                                        <p className="mt-2 text-sm opacity-90">{product.category?.name ?? 'Sneakers'}</p>
+
+                                        <div className="mt-4 flex items-center gap-3">
+                                            <span className="rounded bg-yellow-400 px-3 py-1 text-sm font-bold text-blue-900">${Number(product.discounted_price ?? product.price).toFixed(2)}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => viewProductDetails(product.id)}
+                                                className="rounded bg-yellow-500 px-4 py-2 text-sm font-semibold text-blue-900 hover:brightness-95"
+                                            >
+                                                Order Now
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="relative w-36 h-36 flex-shrink-0">
+                                        <img
+                                            src={resolveCardImage(product)}
+                                            alt={product.name}
+                                            className="absolute right-0 top-0 h-36 w-36 object-contain transform rotate-[-15deg]"
+                                        />
+
+                                        {/* discount badge */}
+                                        <div className="absolute -right-3 top-8 flex h-14 w-14 items-center justify-center rounded-full bg-yellow-400 text-sm font-bold text-blue-900">
+                                            <div className="text-center">
+                                                <div>50%</div>
+                                                <div className="text-xs">OFF</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {searchedProducts.length > 0 && (
                 <section className="mb-8">
