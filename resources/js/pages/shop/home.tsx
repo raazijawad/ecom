@@ -1,6 +1,7 @@
 import { router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import AppLink from '@/components/app-link';
+import ShoeScroll from '@/components/shoe-scroll';
 import ShopLayout from '@/components/shop-layout';
 import type { Auth } from '@/types/auth';
 import type { CartSummary, Category, Product, Testimonial } from '@/types/shop';
@@ -37,7 +38,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, heroBanners, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -49,45 +50,6 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     const bestSellers = bestSellingShoes.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
-
-    const fallbackHeroBanner = {
-        id: 0,
-        title: null,
-        image_path: 'https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80',
-        badge_text: 'Our Exclusive',
-        headline: 'Adidas Campus',
-        description: 'Step into the future of comfort with our latest high-performance athletic collection.',
-        cta_text: 'View Collections',
-        product_id: null,
-    };
-
-    const heroSlides = heroBanners.length > 0 ? heroBanners : [fallbackHeroBanner];
-    const [activeHeroSlide, setActiveHeroSlide] = useState(0);
-    const showNextHeroSlide = () => {
-        setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
-    };
-
-    const showPreviousHeroSlide = () => {
-        setActiveHeroSlide((current) => (current - 1 + heroSlides.length) % heroSlides.length);
-    };
-
-    useEffect(() => {
-        setActiveHeroSlide((current) => (current < heroSlides.length ? current : 0));
-    }, [heroSlides.length]);
-
-    useEffect(() => {
-        if (heroSlides.length <= 1) {
-            return;
-        }
-
-        const intervalId = window.setInterval(() => {
-            setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
-        }, 3000);
-
-        return () => {
-            window.clearInterval(intervalId);
-        };
-    }, [heroSlides.length]);
 
     const viewProductDetails = (productId: number) => {
         router.get(`/products/${productId}`);
@@ -166,119 +128,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
     return (
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
-
-
-            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-[#f3f4f6] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
-                <div className="pointer-events-none absolute inset-0">
-                    <div className="absolute -top-8 left-20 h-48 w-48 rounded-full bg-red-500/25 blur-3xl" />
-                    <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-red-600/20 blur-3xl" />
-                    <svg className="absolute inset-0 h-full w-full opacity-70" viewBox="0 0 1200 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36 70c28-24 64-24 92 0 28 24 64 24 92 0" stroke="#cdd4de" strokeWidth="1.2" />
-                        <path d="M840 32c38-18 84-9 112 22 22 24 58 30 88 14" stroke="#d3dae3" strokeWidth="1.2" />
-                        <path d="M10 170c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
-                        <path d="M10 222c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
-                        <path d="M10 274c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
-                        <path d="M10 326c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
-                    </svg>
-                </div>
-
-                <button
-                    type="button"
-                    aria-label="Previous hero slide"
-                    onClick={showPreviousHeroSlide}
-                    className="absolute top-1/2 left-3 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-xl text-slate-700 shadow-sm transition hover:bg-white lg:flex"
-                >
-                    ‹
-                </button>
-
-                <button
-                    type="button"
-                    aria-label="Next hero slide"
-                    onClick={showNextHeroSlide}
-                    className="absolute top-1/2 right-3 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-xl text-slate-700 shadow-sm transition hover:bg-white lg:flex"
-                >
-                    ›
-                </button>
-
-                <div className="relative z-10 overflow-hidden">
-                    <div
-                        className="flex transition-transform duration-700 ease-in-out"
-                        style={{ transform: `translateX(-${activeHeroSlide * 100}%)` }}
-                    >
-                        {heroSlides.map((slide) => {
-                            const slideImageUrl = slide.image_path
-                                ? slide.image_path.startsWith('http')
-                                    ? slide.image_path
-                                    : `/storage/${slide.image_path}`
-                                : fallbackHeroBanner.image_path;
-                            const slideBadgeText = slide.badge_text || fallbackHeroBanner.badge_text;
-                            const slideHeadline = slide.headline || fallbackHeroBanner.headline;
-                            const slideDescription = slide.description || fallbackHeroBanner.description;
-                            const slideCtaText = slide.cta_text || fallbackHeroBanner.cta_text;
-                            const slideTitle = slide.title || slideHeadline;
-
-                            return (
-                                <div key={slide.id} className="w-full shrink-0">
-                                    <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-                                        <div className="max-w-lg space-y-5 text-left">
-                                            <p className="text-sm tracking-[0.14em] text-slate-400">{slideBadgeText}</p>
-                                            <div className="space-y-1">
-                                                <h1 className="text-[clamp(2.4rem,11vw,4.5rem)] leading-[0.95] font-black text-black">{slideHeadline}</h1>
-                                            </div>
-                                            <p className="max-w-md text-base leading-7 text-slate-700 md:text-lg">
-                                                {slideDescription}
-                                            </p>
-                                            {slide.product_id ? (
-                                                <AppLink
-                                                    href={`/products/${slide.product_id}`}
-                                                    className="inline-flex w-full items-center justify-center rounded-sm bg-black px-6 py-3 text-center text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800 sm:w-auto"
-                                                >
-                                                    {slideCtaText}
-                                                </AppLink>
-                                            ) : (
-                                                <button
-                                                    type="button"
-                                                    className="inline-flex w-full items-center justify-center rounded-sm bg-black px-6 py-3 text-center text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800 sm:w-auto"
-                                                >
-                                                    {slideCtaText}
-                                                </button>
-                                            )}
-                                        </div>
-
-                                        <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-6 sm:py-10 lg:py-0">
-                                            <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center text-[clamp(2.4rem,14vw,10rem)] leading-none font-black tracking-[0.1em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
-                                                {slideTitle}
-                                            </span>
-                                            <img
-                                                src={slideImageUrl}
-                                                alt="Red and black performance sneaker in side profile"
-                                                className="relative z-10 w-full max-w-xl -rotate-6 object-contain drop-shadow-[0_30px_35px_rgba(15,23,42,0.3)]"
-                                            />
-                                            <div className="absolute right-2 bottom-4 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-center text-lg font-black text-white shadow-lg shadow-red-500/40 sm:right-8 sm:bottom-10 sm:h-20 sm:w-20 sm:text-2xl">
-                                                $34
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <div className="relative z-20 mt-4 flex justify-center gap-2">
-                    {heroSlides.map((slide, index) => (
-                        <button
-                            key={slide.id}
-                            type="button"
-                            aria-label={`Go to hero slide ${index + 1}`}
-                            onClick={() => setActiveHeroSlide(index)}
-                            className={`rounded-full transition ${
-                                index === activeHeroSlide ? 'h-3 w-3 border border-black bg-white' : 'h-2.5 w-2.5 bg-slate-400 hover:bg-slate-500'
-                            }`}
-                        />
-                    ))}
-                </div>
-            </section>
+            <ShoeScroll />
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
