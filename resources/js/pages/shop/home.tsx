@@ -3,7 +3,7 @@ import { useMemo, useRef } from 'react';
 import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { Auth } from '@/types/auth';
-import type { CartSummary, Category, Product, Testimonial } from '@/types/shop';
+import type { CartSummary, Category, HeroBanner, Product, Testimonial } from '@/types/shop';
 
 type PaginatedProducts = {
     data: Product[];
@@ -17,6 +17,7 @@ type Props = {
     bestSellingShoes: Product[];
     categories: Category[];
     testimonials: Testimonial[];
+    heroBanners: HeroBanner[];
     cartSummary: CartSummary;
 };
 
@@ -27,7 +28,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, heroBanners, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -39,6 +40,10 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     const bestSellers = bestSellingShoes.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
+
+    const activeHeroBanner = heroBanners[0] ?? null;
+    const heroProduct = activeHeroBanner?.product_id ? [...featuredProducts, ...products.data].find((product) => product.id === activeHeroBanner.product_id) : null;
+    const heroImage = resolveImageUrl(activeHeroBanner?.image_path) ?? resolveCardImage(heroProduct ?? featuredProducts[0] ?? products.data[0]);
 
     const viewProductDetails = (productId: number) => {
         router.get(`/products/${productId}`);
@@ -120,6 +125,53 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
 
             
+
+            <section className="relative mb-8 overflow-hidden rounded-3xl bg-[#16261f] px-6 py-10 text-white shadow-2xl sm:px-10 lg:px-14">
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(145,175,137,0.35),transparent_45%),radial-gradient(circle_at_75%_25%,rgba(95,120,88,0.35),transparent_40%),linear-gradient(145deg,#101c17_15%,#1f3229_85%)]" />
+                <div className="pointer-events-none absolute -left-10 top-8 h-48 w-48 rounded-full bg-emerald-200/10 blur-3xl" />
+                <div className="pointer-events-none absolute -right-16 bottom-0 h-56 w-56 rounded-full bg-lime-100/10 blur-3xl" />
+                <div className="relative grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+                    <div className="space-y-5">
+                        <p className="inline-flex w-fit rounded-full border border-white/30 bg-white/10 px-4 py-1 text-xs font-semibold tracking-[0.22em] uppercase text-emerald-100">
+                            {activeHeroBanner?.badge_text || 'Editorial spotlight'}
+                        </p>
+                        <h1 className="max-w-xl text-3xl leading-tight font-semibold text-balance sm:text-4xl lg:text-5xl">
+                            {activeHeroBanner?.headline || 'Earth-crafted performance for every stride'}
+                        </h1>
+                        <p className="max-w-lg text-sm leading-relaxed text-emerald-50/90 sm:text-base">
+                            {activeHeroBanner?.description ||
+                                'A high-end cinematic drop inspired by olive suede, cream leather, and breathable white mesh. Built to feel premium from pavement to trail.'}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-3">
+                            <AppLink
+                                href={heroProduct ? `/products/${heroProduct.id}` : '/shoes'}
+                                className="rounded-full bg-[#e8e0cf] px-5 py-2.5 text-sm font-semibold tracking-wide text-[#223227] transition hover:bg-[#f1ebde]"
+                            >
+                                {activeHeroBanner?.cta_text || 'Shop the look'}
+                            </AppLink>
+                            <AppLink
+                                href="/shoes"
+                                className="rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+                            >
+                                Explore collections
+                            </AppLink>
+                        </div>
+                    </div>
+                    <div className="relative mx-auto w-full max-w-md">
+                        <div className="rounded-[2rem] border border-white/20 bg-[#2b392f] p-4 shadow-[0_35px_70px_-35px_rgba(0,0,0,0.85)]">
+                            <div className="aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[#4b4231]">
+                                {heroImage ? (
+                                    <img src={heroImage} alt={activeHeroBanner?.title || heroProduct?.name || 'Featured sneaker'} className="h-full w-full object-cover" />
+                                ) : (
+                                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#6f644f] to-[#3f3527] text-sm font-medium text-[#efe7d9]">
+                                        Sneaker editorial preview
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
