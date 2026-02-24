@@ -85,13 +85,6 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     const activeHeroBanner = heroBanners[0] ?? null;
     const heroImage = resolveImageUrl(activeHeroBanner?.image_path) ?? null;
     const heroTitle = activeHeroBanner?.headline ?? 'Grounded Performance';
-    const heroDescription =
-        activeHeroBanner?.description ??
-        'A high-end cinematic product shot of a chunky lifestyle sneaker resting on a rugged natural rock, built for movement and editorial-level style.';
-    const heroBadge = activeHeroBanner?.badge_text ?? 'Minimalist editorial drop';
-    const heroCtaText = activeHeroBanner?.cta_text ?? 'Shop the spotlight';
-
-
     const suggestions = useMemo(() => {
         const allNames = [...featuredProducts, ...products.data].map((product) => product.name.trim()).filter(Boolean);
         const uniqueNames = [...new Set(allNames)];
@@ -133,52 +126,79 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
             
 
 
-            <section className="relative mb-10 overflow-hidden rounded-3xl bg-[#0f211d] p-8 text-white shadow-2xl md:p-12">
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(158,177,143,0.35),transparent_55%),radial-gradient(circle_at_85%_15%,rgba(255,255,255,0.08),transparent_45%),linear-gradient(120deg,rgba(5,11,10,0.9),rgba(15,33,29,0.75))]" />
-                <div className="pointer-events-none absolute -right-14 top-8 h-44 w-44 rounded-full bg-[#d7cfbe]/15 blur-3xl" />
-                <div className="pointer-events-none absolute left-8 top-8 h-32 w-32 rounded-full bg-[#7b8e6e]/30 blur-2xl" />
+            <section className="relative mb-10 overflow-hidden rounded-[2rem] bg-[#08090d] p-6 text-white shadow-[0_35px_120px_rgba(0,0,0,0.65)] md:p-10">
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(255,70,70,0.26),transparent_36%),radial-gradient(circle_at_85%_15%,rgba(255,80,80,0.2),transparent_35%),linear-gradient(120deg,#05060a_0%,#0a0c12_55%,#12141d_100%)]" />
+                <div className="pointer-events-none absolute -left-20 top-16 h-72 w-72 rounded-full bg-red-600/20 blur-[120px]" />
+                <div className="pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-full bg-red-500/15 blur-[140px]" />
+                <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(circle_at_20%_75%,rgba(255,40,40,0.35),transparent_45%),radial-gradient(circle_at_75%_80%,rgba(140,150,170,0.2),transparent_40%)]" />
 
-                <div className="relative grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-                    <div>
-                        <p className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase text-[#dde4d6]">
-                            {heroBadge}
-                        </p>
-                        <h1 className="mt-5 max-w-xl text-3xl leading-tight font-semibold text-[#f5f1e7] sm:text-4xl lg:text-5xl">
-                            {heroTitle}
-                        </h1>
-                        <p className="mt-4 max-w-xl text-sm leading-7 text-[#d9e0d4] sm:text-base">{heroDescription}</p>
-                        <div className="mt-8 flex flex-wrap items-center gap-3">
-                            {activeHeroBanner?.product_id ? (
-                                <AppLink
-                                    href={`/products/${activeHeroBanner.product_id}`}
-                                    className="rounded-full bg-[#e6dfd0] px-6 py-3 text-sm font-semibold text-[#1a2119] transition hover:bg-white"
-                                >
-                                    {heroCtaText}
-                                </AppLink>
-                            ) : (
-                                <AppLink href="/shoes" className="rounded-full bg-[#e6dfd0] px-6 py-3 text-sm font-semibold text-[#1a2119] transition hover:bg-white">
-                                    {heroCtaText}
-                                </AppLink>
-                            )}
-                            <span className="text-xs tracking-[0.22em] uppercase text-[#b2bfac]">8K studio composition</span>
+                <div className="relative">
+                    <nav className="mb-10 flex flex-wrap items-center justify-between gap-4 rounded-full border border-white/15 bg-white/5 px-5 py-3 backdrop-blur-xl">
+                        <div className="text-sm font-semibold tracking-[0.18em] text-white/90 uppercase">Jordan Lab</div>
+                        <div className="flex items-center gap-5 text-sm font-medium text-white/80">
+                            <AppLink href="/" className="transition hover:text-white">Home</AppLink>
+                            <AppLink href="/shoes" className="transition hover:text-white">Shop</AppLink>
+                            <AppLink href="/shoes?sort=new" className="transition hover:text-white">New Arrival</AppLink>
+                            <AppLink href="/about" className="transition hover:text-white">About us</AppLink>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button className="grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-white/10 text-white/90" type="button" aria-label="Search">
+                                <svg viewBox="0 0 20 20" className="h-4 w-4 fill-none stroke-current stroke-2"><circle cx="9" cy="9" r="5"/><path d="m13 13 4 4"/></svg>
+                            </button>
+                            <button className="relative grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-white/10 text-white/90" type="button" aria-label="Bag">
+                                <svg viewBox="0 0 20 20" className="h-4 w-4 fill-none stroke-current stroke-2"><path d="M5 7h10l-1 9H6L5 7Z"/><path d="M8 7a2 2 0 1 1 4 0"/></svg>
+                                <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-red-500 text-[10px] font-bold">3</span>
+                            </button>
+                            <div className="h-9 w-9 rounded-full border border-white/20 bg-[linear-gradient(145deg,#ff5f5f,#661313)]" />
+                        </div>
+                    </nav>
+
+                    <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+                        <div>
+                            <div className="mb-5 inline-flex overflow-hidden rounded-full border border-red-400/55 bg-red-500/15 align-middle text-xs font-bold tracking-[0.2em] uppercase">
+                                <span className="px-4 py-2 text-white">Air Jordan Retro High</span>
+                                <span className="bg-red-600 px-3 py-2 text-white">ONE</span>
+                            </div>
+                            <h1 className="max-w-xl text-4xl leading-[0.95] font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+                                AIR JORDAN
+                                <br />
+                                RETRO HIGH
+                            </h1>
+                            <p className="mt-5 text-base text-white/75 sm:text-lg">Light on your feet. Heavy on the game.</p>
+                            <AppLink
+                                href={activeHeroBanner?.product_id ? `/products/${activeHeroBanner.product_id}` : '/shoes'}
+                                className="mt-8 inline-flex rounded-full bg-gradient-to-r from-[#4f0606] via-[#8b1010] to-[#cf2a2a] px-7 py-3 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(255,20,20,0.45)] transition hover:scale-[1.02]"
+                            >
+                                Place Order
+                            </AppLink>
+                        </div>
+
+                        <div className="relative">
+                            <div className="absolute inset-0 -m-5 rounded-[2.5rem] border border-red-500/70 shadow-[0_0_70px_rgba(255,35,35,0.55)]" />
+                            <div className="relative rounded-[2rem] border border-red-400/80 bg-white/[0.02] p-3 backdrop-blur-sm">
+                                {heroImage ? (
+                                    <img src={heroImage} alt={heroTitle} className="h-[360px] w-full rounded-[1.6rem] object-cover object-center drop-shadow-[0_30px_40px_rgba(0,0,0,0.55)]" />
+                                ) : (
+                                    <div className="flex h-[360px] w-full items-center justify-center rounded-[1.6rem] bg-[linear-gradient(135deg,#1c1f2a_0%,#11131a_50%,#1a0b0b_100%)] p-8 text-center text-sm text-white/65">
+                                        Dynamic 3D floating AIR JORDAN RETRO HIGH product frame.
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="relative">
-                        <div className="absolute -left-8 top-10 h-24 w-24 rounded-full bg-[#7b8e6e]/35 blur-2xl" />
-                        <div className="relative rounded-[2rem] border border-white/15 bg-white/5 p-4 shadow-[0_24px_60px_rgba(0,0,0,0.35)] backdrop-blur-sm">
-                            {heroImage ? (
-                                <img
-                                    src={heroImage}
-                                    alt={activeHeroBanner?.title ?? 'Featured sneaker hero'}
-                                    className="h-[340px] w-full rounded-[1.5rem] object-cover object-center"
-                                />
-                            ) : (
-                                <div className="flex h-[340px] w-full items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-[#26362d] via-[#15231f] to-[#0b1714] p-8 text-center text-sm text-[#dce4d7]">
-                                    Cinematic sneaker artwork placeholder for olive suede, cream leather, and white mesh styling.
-                                </div>
-                            )}
-                        </div>
+                    <div className="mt-10 grid gap-4 md:grid-cols-3">
+                        {[
+                            ['Lightweight', 'Built with responsive cushioning for all-day movement.'],
+                            ['Ankle Support', 'High-cut collar engineered for locked-in confidence.'],
+                            ['Breathable', 'Ventilated paneling keeps every stride cool and dry.'],
+                        ].map(([title, desc]) => (
+                            <article key={title} className="rounded-2xl border border-white/20 bg-white/[0.08] p-4 backdrop-blur-xl">
+                                <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-red-300">✦</div>
+                                <h3 className="text-base font-semibold text-white">{title}</h3>
+                                <p className="mt-1 text-sm text-white/70">{desc}</p>
+                            </article>
+                        ))}
                     </div>
                 </div>
             </section>
