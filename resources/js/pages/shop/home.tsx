@@ -3,7 +3,7 @@ import { useMemo, useRef } from 'react';
 import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { Auth } from '@/types/auth';
-import type { CartSummary, Category, Product, Testimonial } from '@/types/shop';
+import type { CartSummary, Category, HeroBanner, Product, Testimonial } from '@/types/shop';
 
 type PaginatedProducts = {
     data: Product[];
@@ -17,6 +17,7 @@ type Props = {
     bestSellingShoes: Product[];
     categories: Category[];
     testimonials: Testimonial[];
+    heroBanners: HeroBanner[];
     cartSummary: CartSummary;
 };
 
@@ -27,7 +28,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, heroBanners, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -81,6 +82,16 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         return resolveImageUrl(colorImage) ?? resolveImageUrl(product.image_url) ?? '';
     };
 
+    const activeHeroBanner = heroBanners[0] ?? null;
+    const heroImage = resolveImageUrl(activeHeroBanner?.image_path) ?? null;
+    const heroTitle = activeHeroBanner?.headline ?? 'Grounded Performance';
+    const heroDescription =
+        activeHeroBanner?.description ??
+        'A high-end cinematic product shot of a chunky lifestyle sneaker resting on a rugged natural rock, built for movement and editorial-level style.';
+    const heroBadge = activeHeroBanner?.badge_text ?? 'Minimalist editorial drop';
+    const heroCtaText = activeHeroBanner?.cta_text ?? 'Shop the spotlight';
+
+
     const suggestions = useMemo(() => {
         const allNames = [...featuredProducts, ...products.data].map((product) => product.name.trim()).filter(Boolean);
         const uniqueNames = [...new Set(allNames)];
@@ -120,6 +131,57 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
 
 
             
+
+
+            <section className="relative mb-10 overflow-hidden rounded-3xl bg-[#0f211d] p-8 text-white shadow-2xl md:p-12">
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(158,177,143,0.35),transparent_55%),radial-gradient(circle_at_85%_15%,rgba(255,255,255,0.08),transparent_45%),linear-gradient(120deg,rgba(5,11,10,0.9),rgba(15,33,29,0.75))]" />
+                <div className="pointer-events-none absolute -right-14 top-8 h-44 w-44 rounded-full bg-[#d7cfbe]/15 blur-3xl" />
+                <div className="pointer-events-none absolute left-8 top-8 h-32 w-32 rounded-full bg-[#7b8e6e]/30 blur-2xl" />
+
+                <div className="relative grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+                    <div>
+                        <p className="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1 text-xs font-semibold tracking-[0.18em] uppercase text-[#dde4d6]">
+                            {heroBadge}
+                        </p>
+                        <h1 className="mt-5 max-w-xl text-3xl leading-tight font-semibold text-[#f5f1e7] sm:text-4xl lg:text-5xl">
+                            {heroTitle}
+                        </h1>
+                        <p className="mt-4 max-w-xl text-sm leading-7 text-[#d9e0d4] sm:text-base">{heroDescription}</p>
+                        <div className="mt-8 flex flex-wrap items-center gap-3">
+                            {activeHeroBanner?.product_id ? (
+                                <AppLink
+                                    href={`/products/${activeHeroBanner.product_id}`}
+                                    className="rounded-full bg-[#e6dfd0] px-6 py-3 text-sm font-semibold text-[#1a2119] transition hover:bg-white"
+                                >
+                                    {heroCtaText}
+                                </AppLink>
+                            ) : (
+                                <AppLink href="/shoes" className="rounded-full bg-[#e6dfd0] px-6 py-3 text-sm font-semibold text-[#1a2119] transition hover:bg-white">
+                                    {heroCtaText}
+                                </AppLink>
+                            )}
+                            <span className="text-xs tracking-[0.22em] uppercase text-[#b2bfac]">8K studio composition</span>
+                        </div>
+                    </div>
+
+                    <div className="relative">
+                        <div className="absolute -left-8 top-10 h-24 w-24 rounded-full bg-[#7b8e6e]/35 blur-2xl" />
+                        <div className="relative rounded-[2rem] border border-white/15 bg-white/5 p-4 shadow-[0_24px_60px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+                            {heroImage ? (
+                                <img
+                                    src={heroImage}
+                                    alt={activeHeroBanner?.title ?? 'Featured sneaker hero'}
+                                    className="h-[340px] w-full rounded-[1.5rem] object-cover object-center"
+                                />
+                            ) : (
+                                <div className="flex h-[340px] w-full items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-[#26362d] via-[#15231f] to-[#0b1714] p-8 text-center text-sm text-[#dce4d7]">
+                                    Cinematic sneaker artwork placeholder for olive suede, cream leather, and white mesh styling.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
