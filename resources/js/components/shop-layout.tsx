@@ -6,9 +6,21 @@ import HeroBanner from '@/components/hero-banner';
 import type { Auth } from '@/types/auth';
 import type { CartSummary } from '@/types/shop';
 
+type HeroBannerData = {
+    id: number;
+    title: string | null;
+    image_path: string | null;
+    badge_text: string | null;
+    headline: string | null;
+    description: string | null;
+    cta_text: string | null;
+    product_id: number | null;
+};
+
 type Props = PropsWithChildren<{
     title: string;
     cartSummary?: CartSummary;
+    heroBanner?: HeroBannerData | null;
 }>;
 
 type SharedProps = {
@@ -20,7 +32,7 @@ type SharedProps = {
     }>;
 };
 
-export default function ShopLayout({ title, cartSummary, children }: Props) {
+export default function ShopLayout({ title, cartSummary, heroBanner, children }: Props) {
     const { auth, collections } = usePage<SharedProps>().props;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const dashboardHref = auth.user?.role === 'admin' ? '/admin' : '/customer/dashboard';
@@ -187,7 +199,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                 ) : null}
 
                 <section>
-                    <HeroBanner />
+                    <HeroBanner banner={heroBanner} />
                 </section>
 
                 <main className="relative z-0 mx-auto max-w-6xl px-4 py-8">{children}</main>

@@ -10,8 +10,21 @@ type PaginatedProducts = {
     links: { url: string | null; label: string; active: boolean }[];
 };
 
+
+type HeroBanner = {
+    id: number;
+    title: string | null;
+    image_path: string | null;
+    badge_text: string | null;
+    headline: string | null;
+    description: string | null;
+    cta_text: string | null;
+    product_id: number | null;
+};
+
 type Props = {
     filters: { q: string; category: string };
+    heroBanners: HeroBanner[];
     featuredProducts: Product[];
     products: PaginatedProducts;
     bestSellingShoes: Product[];
@@ -27,7 +40,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, heroBanners, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -115,8 +128,10 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         });
     };
 
+    const heroBanner = heroBanners[0] ?? null;
+
     return (
-        <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
+        <ShopLayout title="Shoe Store" cartSummary={cartSummary} heroBanner={heroBanner}>
 
 
             

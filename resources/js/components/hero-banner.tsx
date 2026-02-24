@@ -1,4 +1,50 @@
-export default function HeroBanner() {
+import AppLink from '@/components/app-link';
+
+type HeroBannerData = {
+    title?: string | null;
+    badge_text?: string | null;
+    headline?: string | null;
+    description?: string | null;
+    cta_text?: string | null;
+    image_path?: string | null;
+    product_id?: number | null;
+};
+
+type Props = {
+    banner?: HeroBannerData | null;
+};
+
+const FALLBACK_HEADLINE = ['CREATE', 'YOUR', 'OWN', 'STYLE'];
+
+const resolveStorageUrl = (path: string | null | undefined): string | null => {
+    if (!path) {
+        return null;
+    }
+
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+        return path;
+    }
+
+    return `/storage/${path}`;
+};
+
+export default function HeroBanner({ banner }: Props) {
+    const headlineParts = (banner?.headline ?? '')
+        .split(/\s+/)
+        .map((part) => part.trim())
+        .filter(Boolean);
+
+    const headlineLines = (headlineParts.length > 0 ? headlineParts : FALLBACK_HEADLINE).slice(0, 4);
+    const lineOne = headlineLines[0] ?? FALLBACK_HEADLINE[0];
+    const lineTwo = headlineLines[1] ?? FALLBACK_HEADLINE[1];
+    const lineThree = headlineLines[2] ?? FALLBACK_HEADLINE[2];
+    const lineFour = headlineLines[3] ?? FALLBACK_HEADLINE[3];
+    const ctaHref = banner?.product_id ? `/products/${banner.product_id}` : '/shoes';
+    const description =
+        banner?.description ??
+        'Step into premium comfort and style with our exclusive Nike collection. Elevate your game with cutting-edge design, ultimate performance, and unbeatable quality.';
+    const bannerImage = resolveStorageUrl(banner?.image_path) ?? '/images/hero/hero-shoe.png';
+
     return (
         <section className="relative w-full overflow-hidden bg-[#1a2e1a]" style={{ minHeight: '85vh' }}>
             {/* Background tropical leaves */}
@@ -19,11 +65,11 @@ export default function HeroBanner() {
                         className="hero-heading select-none text-[clamp(60px,10vw,140px)] leading-[0.85] font-extrabold tracking-tighter text-white uppercase"
                         style={{ fontFamily: "'Instrument Sans', sans-serif" }}
                     >
-                        CREATE
+                        {lineOne}
                     </h1>
 
                     <p className="mt-4 hidden max-w-[260px] text-[13px] leading-relaxed text-gray-300/90 md:block lg:mr-8">
-                        Step into premium comfort and style with our exclusive Nike collection. Elevate your game with cutting-edge design, ultimate performance, and unbeatable quality.
+                        {description}
                     </p>
                 </div>
 
@@ -33,7 +79,7 @@ export default function HeroBanner() {
                         className="hero-heading select-none text-[clamp(60px,10vw,140px)] leading-[0.85] font-extrabold tracking-tighter text-white uppercase"
                         style={{ fontFamily: "'Instrument Sans', sans-serif" }}
                     >
-                        YOUR
+                        {lineTwo}
                     </span>
                 </div>
 
@@ -47,14 +93,14 @@ export default function HeroBanner() {
                             color: 'transparent',
                         }}
                     >
-                        OWN
+                        {lineThree}
                     </span>
 
                     <span
                         className="hero-heading select-none text-[clamp(60px,10vw,140px)] leading-[0.85] font-extrabold tracking-tighter text-white uppercase"
                         style={{ fontFamily: "'Instrument Sans', sans-serif" }}
                     >
-                        STYLE
+                        {lineFour}
                     </span>
                 </div>
             </div>
@@ -62,11 +108,22 @@ export default function HeroBanner() {
             {/* Shoe image - centered overlay */}
             <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
                 <img
-                    src="/images/hero/hero-shoe.png"
-                    alt="Premium sneaker on rock"
+                    src={bannerImage}
+                    alt={banner?.title ?? 'Premium sneaker on rock'}
                     className="h-auto w-[55%] max-w-[650px] min-w-[280px] object-contain drop-shadow-2xl"
                 />
             </div>
+
+            {banner?.cta_text ? (
+                <div className="absolute right-6 bottom-8 z-30 lg:right-12 lg:bottom-12">
+                    <AppLink
+                        href={ctaHref}
+                        className="inline-flex rounded-full border border-white/30 px-5 py-3 text-xs font-semibold tracking-[0.15em] text-white uppercase transition-all hover:border-white/60"
+                    >
+                        {banner.cta_text}
+                    </AppLink>
+                </div>
+            ) : null}
 
             {/* SCROLL button - bottom left */}
             <div className="absolute bottom-8 left-6 z-30 lg:bottom-12 lg:left-12">
@@ -84,7 +141,7 @@ export default function HeroBanner() {
             {/* Mobile description - visible on small screens */}
             <div className="absolute right-6 bottom-24 z-30 md:hidden">
                 <p className="max-w-[200px] text-[11px] leading-relaxed text-gray-300/80">
-                    Step into premium comfort and style with our exclusive Nike collection.
+                    {description}
                 </p>
             </div>
         </section>
