@@ -1,5 +1,5 @@
 import { router, useForm, usePage } from '@inertiajs/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import AppLink from '@/components/app-link';
 import ShopLayout from '@/components/shop-layout';
 import type { Auth } from '@/types/auth';
@@ -15,16 +15,6 @@ type Props = {
     featuredProducts: Product[];
     products: PaginatedProducts;
     bestSellingShoes: Product[];
-    heroBanners: {
-        id: number;
-        title: string | null;
-        image_path: string | null;
-        badge_text: string | null;
-        headline: string | null;
-        description: string | null;
-        cta_text: string | null;
-        product_id: number | null;
-    }[];
     categories: Category[];
     testimonials: Testimonial[];
     cartSummary: CartSummary;
@@ -37,7 +27,7 @@ type SharedProps = {
     };
 };
 
-export default function Home({ filters, featuredProducts, products, bestSellingShoes, heroBanners, categories, testimonials, cartSummary }: Props) {
+export default function Home({ filters, featuredProducts, products, bestSellingShoes, categories, testimonials, cartSummary }: Props) {
     const { auth, flash } = usePage<SharedProps>().props;
     const search = useForm({ q: filters.q, category: filters.category });
     const testimonialForm = useForm({ comment: '' });
@@ -49,45 +39,6 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
     const bestSellers = bestSellingShoes.slice(0, 4);
     const newArrivals = products.data.slice(4, 8);
     const dealOfTheDay = products.data.slice(0, 3);
-
-    const fallbackHeroBanner = {
-        id: 0,
-        title: null,
-        image_path: 'https://images.unsplash.com/photo-1608667508764-33cf0726b13a?auto=format&fit=crop&w=1400&q=80',
-        badge_text: 'Our Exclusive',
-        headline: 'Adidas Campus',
-        description: 'Step into the future of comfort with our latest high-performance athletic collection.',
-        cta_text: 'View Collections',
-        product_id: null,
-    };
-
-    const heroSlides = heroBanners.length > 0 ? heroBanners : [fallbackHeroBanner];
-    const [activeHeroSlide, setActiveHeroSlide] = useState(0);
-    const showNextHeroSlide = () => {
-        setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
-    };
-
-    const showPreviousHeroSlide = () => {
-        setActiveHeroSlide((current) => (current - 1 + heroSlides.length) % heroSlides.length);
-    };
-
-    useEffect(() => {
-        setActiveHeroSlide((current) => (current < heroSlides.length ? current : 0));
-    }, [heroSlides.length]);
-
-    useEffect(() => {
-        if (heroSlides.length <= 1) {
-            return;
-        }
-
-        const intervalId = window.setInterval(() => {
-            setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
-        }, 3000);
-
-        return () => {
-            window.clearInterval(intervalId);
-        };
-    }, [heroSlides.length]);
 
     const viewProductDetails = (productId: number) => {
         router.get(`/products/${productId}`);
@@ -168,115 +119,62 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
 
 
-            <section className="relative mb-10 overflow-hidden rounded-3xl border border-slate-200 bg-[#f3f4f6] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
-                <div className="pointer-events-none absolute inset-0">
-                    <div className="absolute -top-8 left-20 h-48 w-48 rounded-full bg-red-500/25 blur-3xl" />
-                    <div className="absolute bottom-0 left-1/3 h-44 w-44 rounded-full bg-red-600/20 blur-3xl" />
-                    <svg className="absolute inset-0 h-full w-full opacity-70" viewBox="0 0 1200 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M36 70c28-24 64-24 92 0 28 24 64 24 92 0" stroke="#cdd4de" strokeWidth="1.2" />
-                        <path d="M840 32c38-18 84-9 112 22 22 24 58 30 88 14" stroke="#d3dae3" strokeWidth="1.2" />
-                        <path d="M10 170c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
-                        <path d="M10 222c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
-                        <path d="M10 274c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
-                        <path d="M10 326c70-25 130-25 200 0s130 25 200 0 130-25 200 0 130 25 200 0 130-25 200 0" stroke="#d6dde6" strokeWidth="1" />
-                    </svg>
-                </div>
+            <section className="mb-10">
+                <header className="border-b border-gray-800 bg-gray-900">
+                    <div className="mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+                        <div className="flex h-16 items-center justify-between lg:h-[72px]">
+                            <div className="flex flex-shrink-0 items-center">
+                                <a href="#" title="" className="inline-flex">
+                                    <span className="sr-only"> Rareblocks logo </span>
+                                    <img className="h-8 w-auto" src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/logo-alt.svg" alt="" />
+                                </a>
+                            </div>
 
-                <button
-                    type="button"
-                    aria-label="Previous hero slide"
-                    onClick={showPreviousHeroSlide}
-                    className="absolute top-1/2 left-3 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-xl text-slate-700 shadow-sm transition hover:bg-white lg:flex"
-                >
-                    ‹
-                </button>
+                            <div className="hidden lg:flex lg:justify-center lg:space-x-10 xl:space-x-14">
+                                <a href="#" title="" className="text-base font-medium text-gray-400 transition-all duration-200 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white hover:text-white"> Live Preview </a>
+                                <a href="#" title="" className="text-base font-medium text-gray-400 transition-all duration-200 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white hover:text-white"> Features </a>
+                                <a href="#" title="" className="text-base font-medium text-gray-400 transition-all duration-200 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white hover:text-white"> Documentation </a>
+                                <a href="#" title="" className="text-base font-medium text-gray-400 transition-all duration-200 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white hover:text-white"> Help </a>
+                            </div>
 
-                <button
-                    type="button"
-                    aria-label="Next hero slide"
-                    onClick={showNextHeroSlide}
-                    className="absolute top-1/2 right-3 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-300 bg-white/90 text-xl text-slate-700 shadow-sm transition hover:bg-white lg:flex"
-                >
-                    ›
-                </button>
+                            <div className="flex items-center justify-end space-x-5">
+                                <button type="button" className="p-2 -m-2 text-white transition-all duration-200 lg:hidden hover:text-gray-200">
+                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
 
-                <div className="relative z-10 overflow-hidden">
-                    <div
-                        className="flex transition-transform duration-700 ease-in-out"
-                        style={{ transform: `translateX(-${activeHeroSlide * 100}%)` }}
-                    >
-                        {heroSlides.map((slide) => {
-                            const slideImageUrl = slide.image_path
-                                ? slide.image_path.startsWith('http')
-                                    ? slide.image_path
-                                    : `/storage/${slide.image_path}`
-                                : fallbackHeroBanner.image_path;
-                            const slideBadgeText = slide.badge_text || fallbackHeroBanner.badge_text;
-                            const slideHeadline = slide.headline || fallbackHeroBanner.headline;
-                            const slideDescription = slide.description || fallbackHeroBanner.description;
-                            const slideCtaText = slide.cta_text || fallbackHeroBanner.cta_text;
-                            const slideTitle = slide.title || slideHeadline;
-
-                            return (
-                                <div key={slide.id} className="w-full shrink-0">
-                                    <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-                                        <div className="max-w-lg space-y-5 text-left">
-                                            <p className="text-sm tracking-[0.14em] text-slate-400">{slideBadgeText}</p>
-                                            <div className="space-y-1">
-                                                <h1 className="text-[clamp(2.4rem,11vw,4.5rem)] leading-[0.95] font-black text-black">{slideHeadline}</h1>
-                                            </div>
-                                            <p className="max-w-md text-base leading-7 text-slate-700 md:text-lg">
-                                                {slideDescription}
-                                            </p>
-                                            {slide.product_id ? (
-                                                <AppLink
-                                                    href={`/products/${slide.product_id}`}
-                                                    className="inline-flex w-full items-center justify-center rounded-sm bg-black px-6 py-3 text-center text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800 sm:w-auto"
-                                                >
-                                                    {slideCtaText}
-                                                </AppLink>
-                                            ) : (
-                                                <button
-                                                    type="button"
-                                                    className="inline-flex w-full items-center justify-center rounded-sm bg-black px-6 py-3 text-center text-sm font-semibold tracking-wide text-white uppercase transition hover:bg-slate-800 sm:w-auto"
-                                                >
-                                                    {slideCtaText}
-                                                </button>
-                                            )}
-                                        </div>
-
-                                        <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center py-6 sm:py-10 lg:py-0">
-                                            <span className="pointer-events-none absolute top-1/2 left-1/2 z-0 -translate-x-1/2 -translate-y-1/2 text-center text-[clamp(2.4rem,14vw,10rem)] leading-none font-black tracking-[0.1em] text-red-600/60 uppercase [transform:translate(-50%,-50%)_skew(-10deg)]">
-                                                {slideTitle}
-                                            </span>
-                                            <img
-                                                src={slideImageUrl}
-                                                alt="Red and black performance sneaker in side profile"
-                                                className="relative z-10 w-full max-w-xl -rotate-6 object-contain drop-shadow-[0_30px_35px_rgba(15,23,42,0.3)]"
-                                            />
-                                            <div className="absolute right-2 bottom-4 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-red-600 text-center text-lg font-black text-white shadow-lg shadow-red-500/40 sm:right-8 sm:bottom-10 sm:h-20 sm:w-20 sm:text-2xl">
-                                                $34
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                <button type="button" className="relative p-2 -m-2 text-white transition-all duration-200 hover:text-gray-200">
+                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                    </svg>
+                                    <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white"> 3 </span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </header>
 
-                <div className="relative z-20 mt-4 flex justify-center gap-2">
-                    {heroSlides.map((slide, index) => (
-                        <button
-                            key={slide.id}
-                            type="button"
-                            aria-label={`Go to hero slide ${index + 1}`}
-                            onClick={() => setActiveHeroSlide(index)}
-                            className={`rounded-full transition ${
-                                index === activeHeroSlide ? 'h-3 w-3 border border-black bg-white' : 'h-2.5 w-2.5 bg-slate-400 hover:bg-slate-500'
-                            }`}
-                        />
-                    ))}
+                <div className="relative bg-gray-900 py-12 sm:py-16 lg:py-20 xl:pt-32 xl:pb-44">
+                    <div className="absolute inset-0 hidden lg:block">
+                        <img className="h-full w-full object-cover object-right-bottom" src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/hero/1/background.png" alt="" />
+                    </div>
+
+                    <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-md lg:text-left xl:max-w-lg">
+                            <h1 className="text-3xl font-bold text-white sm:text-4xl xl:text-5xl xl:leading-tight">Build SaaS Landing Page without Writing a Single Code</h1>
+                            <p className="mt-8 text-base leading-7 font-normal text-gray-400 lg:max-w-md lg:pr-16 xl:pr-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In nunc nisl eu consectetur. Mi massa elementum odio eu viverra amet.</p>
+
+                            <div className="mt-8 flex items-center justify-center space-x-5 lg:justify-start xl:mt-16">
+                                <a href="#" title="" className="inline-flex items-center justify-center rounded-md border border-transparent bg-white px-3 py-3 text-base leading-7 font-bold text-gray-900 transition-all duration-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900 sm:px-6" role="button">Get UI Kit Now</a>
+                                <a href="#" title="" className="inline-flex items-center justify-center rounded-md border border-transparent bg-transparent px-2 py-3 text-base leading-7 font-bold text-white transition-all duration-200 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-900 sm:px-4" role="button">Check live preview</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 lg:hidden">
+                        <img className="h-full w-full object-cover" src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/hero/1/bg.png" alt="" />
+                    </div>
                 </div>
             </section>
 
