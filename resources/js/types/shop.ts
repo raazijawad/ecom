@@ -60,3 +60,14 @@ export type Testimonial = {
         email: string;
     };
 };
+
+export type HeroBanner = {
+    id: number;
+    title: string;
+    image_path: string | null;
+    badge_text: string | null;
+    headline: string | null;
+    description: string | null;
+    cta_text: string | null;
+    product_id: number | null;
+};
