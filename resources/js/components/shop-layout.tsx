@@ -188,7 +188,7 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
 
                 <HeroSection />
 
-                <main className="relative z-0 mx-auto max-w-6xl px-4 py-8">{children}</main>
+                <main id="content" className="relative z-0 mx-auto max-w-6xl px-4 py-8">{children}</main>
             </div>
         </>
     );

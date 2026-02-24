@@ -4,7 +4,7 @@ import sneakerImg from '@/assets/sneaker.png';
 
 const HeroSection = () => {
     const scrollToContent = () => {
-        const nextSection = document.querySelector('#features');
+        const nextSection = document.querySelector('#content');
         if (nextSection) {
             nextSection.scrollIntoView({ behavior: 'smooth' });
         }
