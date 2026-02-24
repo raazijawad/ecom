@@ -119,64 +119,7 @@ export default function Home({ filters, featuredProducts, products, bestSellingS
         <ShopLayout title="Shoe Store" cartSummary={cartSummary}>
 
 
-            <section className="mb-10">
-                <header className="border-b border-gray-800 bg-gray-900">
-                    <div className="mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
-                        <div className="flex h-16 items-center justify-between lg:h-[72px]">
-                            <div className="flex flex-shrink-0 items-center">
-                                <a href="#" title="" className="inline-flex">
-                                    <span className="sr-only"> Rareblocks logo </span>
-                                    <img className="h-8 w-auto" src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/logo-alt.svg" alt="" />
-                                </a>
-                            </div>
-
-                            <div className="hidden lg:flex lg:justify-center lg:space-x-10 xl:space-x-14">
-                                <a href="#" title="" className="text-base font-medium text-gray-400 transition-all duration-200 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white hover:text-white"> Live Preview </a>
-                                <a href="#" title="" className="text-base font-medium text-gray-400 transition-all duration-200 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white hover:text-white"> Features </a>
-                                <a href="#" title="" className="text-base font-medium text-gray-400 transition-all duration-200 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white hover:text-white"> Documentation </a>
-                                <a href="#" title="" className="text-base font-medium text-gray-400 transition-all duration-200 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white hover:text-white"> Help </a>
-                            </div>
-
-                            <div className="flex items-center justify-end space-x-5">
-                                <button type="button" className="p-2 -m-2 text-white transition-all duration-200 lg:hidden hover:text-gray-200">
-                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
-                                </button>
-
-                                <button type="button" className="relative p-2 -m-2 text-white transition-all duration-200 hover:text-gray-200">
-                                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                    </svg>
-                                    <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white"> 3 </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </header>
-
-                <div className="relative bg-gray-900 py-12 sm:py-16 lg:py-20 xl:pt-32 xl:pb-44">
-                    <div className="absolute inset-0 hidden lg:block">
-                        <img className="h-full w-full object-cover object-right-bottom" src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/hero/1/background.png" alt="" />
-                    </div>
-
-                    <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-md lg:text-left xl:max-w-lg">
-                            <h1 className="text-3xl font-bold text-white sm:text-4xl xl:text-5xl xl:leading-tight">Build SaaS Landing Page without Writing a Single Code</h1>
-                            <p className="mt-8 text-base leading-7 font-normal text-gray-400 lg:max-w-md lg:pr-16 xl:pr-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In nunc nisl eu consectetur. Mi massa elementum odio eu viverra amet.</p>
-
-                            <div className="mt-8 flex items-center justify-center space-x-5 lg:justify-start xl:mt-16">
-                                <a href="#" title="" className="inline-flex items-center justify-center rounded-md border border-transparent bg-white px-3 py-3 text-base leading-7 font-bold text-gray-900 transition-all duration-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900 sm:px-6" role="button">Get UI Kit Now</a>
-                                <a href="#" title="" className="inline-flex items-center justify-center rounded-md border border-transparent bg-transparent px-2 py-3 text-base leading-7 font-bold text-white transition-all duration-200 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 focus:ring-offset-gray-900 sm:px-4" role="button">Check live preview</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-8 lg:hidden">
-                        <img className="h-full w-full object-cover" src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/hero/1/bg.png" alt="" />
-                    </div>
-                </div>
-            </section>
+            
 
             <form onSubmit={submitFilters} className="mb-8 grid gap-3 rounded-xl bg-white p-4 shadow sm:grid-cols-4">
                 <input
