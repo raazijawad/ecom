@@ -186,61 +186,94 @@ export default function ShopLayout({ title, cartSummary, children }: Props) {
                 ) : null}
 
                 <section className="mb-10">
+                    <div className="relative overflow-hidden border-y border-slate-200 bg-[#f7f5f1]">
+                        <div className="pointer-events-none absolute inset-0 opacity-70 [background-image:radial-gradient(circle_at_1px_1px,rgba(148,163,184,0.25)_1px,transparent_0)] [background-size:28px_28px]" />
+                        <div className="pointer-events-none absolute right-[15%] top-12 h-52 w-52 rounded-full bg-red-500/20 blur-3xl" />
+                        <div className="pointer-events-none absolute bottom-12 right-[34%] h-44 w-44 rounded-full bg-red-400/20 blur-3xl" />
 
-                    {/* Hero Section */}
-                    <div className="relative bg-gray-900 py-12 sm:py-16 lg:py-20 xl:pt-32 xl:pb-44">
-                        <div className="absolute inset-0 hidden lg:block">
-                            <img
-                                className="h-full w-full object-cover object-right-bottom"
-                                src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/hero/1/background.png"
-                                alt=""
-                            />
-                        </div>
+                        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+                            <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.45fr]">
+                                <div className="max-w-md text-left">
+                                    <p className="text-sm font-medium tracking-wide text-slate-400">Skip the Impossible</p>
+                                    <h1 className="mt-3 text-4xl leading-tight font-black text-black sm:text-5xl">Extraordinary Performance</h1>
+                                    <p className="mt-4 text-sm font-semibold text-red-600">
+                                        Our Exclusive <span className="font-extrabold text-black">Nike Air Max Alpha Trainer</span>
+                                    </p>
 
-                        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                            <div className="mx-auto max-w-xl text-center lg:mx-0 lg:max-w-md lg:text-left xl:max-w-lg">
-
-                                <h1 className="text-3xl font-bold text-white sm:text-4xl xl:text-5xl xl:leading-tight">
-                                    Build SaaS Landing Page without Writing a Single Code
-                                </h1>
-
-                                <p className="mt-8 text-base leading-7 font-normal text-gray-400 lg:max-w-md lg:pr-16 xl:pr-0">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In nunc nisl eu
-                                    consectetur. Mi massa elementum odio eu viverra amet.
-                                </p>
-
-                                <div className="mt-8 flex items-center justify-center space-x-5 lg:justify-start xl:mt-16">
-                                    <a
-                                        href="#"
-                                        className="inline-flex items-center justify-center rounded-md border border-transparent
-                       bg-white px-3 py-3 text-base leading-7 font-bold text-gray-900 transition-all
-                       duration-200 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-white
-                       focus:ring-offset-2 focus:ring-offset-gray-900 sm:px-6"
+                                    <button
+                                        type="button"
+                                        className="mt-8 inline-flex bg-black px-6 py-3 text-sm font-bold tracking-wide text-white transition hover:bg-slate-800"
                                     >
-                                        Get UI Kit Now
-                                    </a>
-
-                                    <a
-                                        href="#"
-                                        className="inline-flex items-center justify-center rounded-md border border-transparent
-                       bg-transparent px-2 py-3 text-base leading-7 font-bold text-white transition-all
-                       duration-200 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700
-                       focus:ring-offset-2 focus:ring-offset-gray-900 sm:px-4"
-                                    >
-                                        Check live preview
-                                    </a>
+                                        VIEW COLLECTIONS
+                                    </button>
                                 </div>
 
+                                <div className="relative min-h-[360px] lg:min-h-[420px]">
+                                    <div className="absolute left-4 top-8 z-20 hidden space-y-7 lg:block">
+                                        {[
+                                            'Extraordinary Performance',
+                                            'Excellent Energy Return',
+                                            'Superior Grip',
+                                        ].map((feature) => (
+                                            <div key={feature} className="flex items-center gap-2 text-xs font-semibold text-black uppercase tracking-wide">
+                                                <span className="inline-block h-px w-14 bg-black" />
+                                                <span className="h-2 w-2 rounded-full bg-black" />
+                                                {feature}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="absolute right-2 top-8 z-20 hidden space-y-7 text-right lg:block">
+                                        <p className="text-xs font-semibold tracking-wide text-black uppercase">Durable Daily Trainer</p>
+                                        <div className="flex items-center justify-end gap-3">
+                                            <p className="text-xs font-semibold tracking-wide text-black uppercase">Affordable Price</p>
+                                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-sm font-bold text-white">$34</span>
+                                        </div>
+                                        <p className="text-xs font-semibold tracking-wide text-black uppercase">Modern Design</p>
+                                    </div>
+
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <img
+                                            className="relative z-10 w-full max-w-2xl object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.3)]"
+                                            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1600&q=80"
+                                            alt="Nike Air Max Alpha Trainer shoe"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-7 flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-2 text-slate-500">
+                                    <button type="button" className="rounded-full border border-slate-400 p-2 hover:bg-slate-100" aria-label="Previous slide">
+                                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="m15 5-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
+                                    <button type="button" className="rounded-full border border-slate-400 p-2 hover:bg-slate-100" aria-label="Next slide">
+                                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="m9 5 7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <span className="h-2 w-2 rounded-full bg-slate-400" />
+                                    <span className="h-2 w-2 rounded-full bg-slate-800" />
+                                    <span className="h-2 w-2 rounded-full bg-slate-400" />
+                                </div>
                             </div>
                         </div>
 
-                        {/* Mobile Background Image */}
-                        <div className="mt-8 lg:hidden">
-                            <img
-                                className="h-full w-full object-cover"
-                                src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/hero/1/bg.png"
-                                alt=""
-                            />
+                        <div className="relative border-t border-slate-300 bg-[#1f242a]">
+                            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+                                <div className="flex items-center gap-2 text-sm font-medium text-white">
+                                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-xs font-bold">✓</span>
+                                    Add to Cart
+                                </div>
+                                <button type="button" className="rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600">
+                                    View cart
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </section>
