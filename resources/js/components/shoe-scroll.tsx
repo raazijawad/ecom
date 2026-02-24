@@ -161,7 +161,7 @@ export default function ShoeScroll() {
     );
 
     return (
-        <section ref={sectionRef} className="relative mb-10 h-[400vh] bg-black font-['Inter','SF_Pro_Display','San_Francisco',system-ui,sans-serif]">
+        <section ref={sectionRef} className="relative left-1/2 right-1/2 mb-10 h-[400vh] w-screen -translate-x-1/2 bg-black font-['Inter','SF_Pro_Display','San_Francisco',system-ui,sans-serif]">
             <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden bg-black">
                 <canvas ref={canvasRef} className="h-screen w-full" />
 
